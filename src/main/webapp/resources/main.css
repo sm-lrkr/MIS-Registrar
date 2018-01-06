@@ -1,0 +1,276 @@
+
+
+* {
+  box-sizing: content-box;
+  position: relative;
+}
+
+body {
+  /*background-image: url('../images/background.jpg');*/
+  background-attachment: fixed;
+  background-position: center;
+  font-family: Century Gothic;
+  font-size: 14px;
+}
+
+select{
+	height: 22px;
+	min-width: 50px;
+}
+
+#studview{
+	cell-padding: 20px;
+}
+
+.tableContainer{
+	overflow-y: scroll; overflow-x: hidden; height: 350px; border: 2px solid #0333B3; 
+}
+
+.listTable{
+	table-layout: auto;
+	border-collapse: collapse;
+	width: 900px;
+	margin-bottom: 20px;
+}
+
+
+.listTable tr{
+	max-height: 15px;
+	
+}
+
+.listTable tr > th{
+	 border: 1px solid grey;
+	 height: 30px;
+	 text-align: center;
+	 
+}
+
+.listTable tr > td{
+	 border: 1px solid grey;
+	 height: 20px;
+	 padding-left: 10px;
+	 width: auto;
+}
+
+.linkButton{
+	display: inline-block;
+	padding: 10px;
+	border: 1px solid black;
+	font-weight: bold;
+	margin: auto;
+	min-width: 80px;
+	text-align: center;
+}
+
+a{
+	text-decoration: none;
+
+}
+
+.floatright{
+	float: right;
+}
+
+
+#subjectsList{
+	height: 300px;
+}
+
+#studview > *{
+	text-align: left;
+}
+
+#horizontalAlign{
+	display: inline-block;
+	padding: 15px;
+}
+
+
+.divElements{
+	
+	margin-top: 15px;
+	margin-left: 15px;
+}
+
+
+#nav-header {
+  background-color: #000;
+  /*background-image: url('../images/top-nav-bg.jpg');*/
+  background-repeat: no-repeat;
+  background-size: cover;
+  /* border: #000 1px solid; */
+  border-bottom: #000 15px solid;
+}
+
+#nav-header * {
+  margin: 0;
+  padding: 0;
+}
+
+#nav-header ul {
+  list-style: none;
+}
+
+#nav-header ul li {
+  display: inline-block;
+  position: relative;
+  text-align:left;
+}
+
+#nav-header ul li a {
+  color: #000;
+  display: inline-block;
+  font-family: Century Gothic;
+  font-weight: bold;
+  text-decoration: none;
+  padding: 10px 25px;
+}
+
+#nav-header ul li a:hover {
+  /*background-image: url('../images/top-nav-item-hover-bg.jpg');*/
+  background-repeat: no-repeat;
+  background-size: cover;
+  color: red;
+  transform: rotate(-10deg);
+  transition: width .5s, height .5s, transform .5s;
+}
+
+#nav-header ul li a:active,
+#nav-header a.active {
+  color: red;
+}
+
+#nav-header ul li ul.dropdown {
+  /*background-image: url('../images/top-nav-dropdown-bg.jpg');*/
+  color: white;
+  display: none;
+  left: 1;
+  min-width: 125px;
+  position: absolute;
+  z-index: 999;
+}
+
+#nav-header ul li:hover ul.dropdown {
+  display: block;
+}
+
+#nav-header ul li ul.dropdown li {
+  display: block;
+}
+
+#nav-header ul li ul.dropdown li a {
+  display: block;
+  text-align: left;
+}
+
+
+#main {
+  border-top: 10px solid #0333B3;
+  display: flex;
+  flex-direction: row;
+}
+
+#main > *{
+	margin-left: 50px;
+	margin-top: 30px;
+}
+
+
+#main-left {
+  width: 20%;
+  padding: 0;
+  margin: 0 5px 0 0;
+  display: flex;
+  flex-direction: column;
+  border-right: 2px solid #0333B3;
+  min-height: 600px;
+  max-height: 600px;
+		
+}
+
+#main-left > * {
+  margin-bottom: 5px;
+}
+
+#main-left > *:last-child {
+  margin-bottom: 0;
+  margin-left: 25%;
+}
+
+#main-left-nav-panel {
+  background-image: url('../images/main-left-nav-panel-bg.jpg');
+  height: 254px;
+  display: flex;
+  flex-direction: column-reverse;
+}
+
+#main-left-nav-panel * {
+  margin: 0;
+  padding: 0;
+}
+
+#main-left-nav-panel ul {
+  display: block;
+  font-family: Century Gothic;
+  list-style: none;
+  margin-bottom: 16px;
+  padding: 15px;
+}
+
+#main-left-nav-panel ul li {
+  display: block;
+  position: relative;
+  line-height: 21px;
+  text-align: left;
+}
+
+#main-left-nav-panel ul li a {
+  display: block;
+  padding: 8px 25px;
+  text-decoration: none;
+  font-weight: 900;
+  color: #000;
+}
+
+#main-left-nav-panel ul li a:hover {
+  color: blue;
+  /*background-image: url('../images/top-nav-item-hover-bg.jpg');*/
+  transition: width 3s, height .5s, transform .5s;
+}
+
+
+
+
+
+
+.arrows {
+  width: 280px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between
+}
+
+.arrows a {
+  display: block;
+}
+
+.arrows a img {
+  -webkit-transition: width 1s, height 1s, -webkit-transform 1s;
+  transition: width 1s, height 1s, -webkit-transform 1s;
+}
+
+.arrows a img:hover {
+  -webkit-transform: rotate(20deg);
+  transform: rotate(20deg);
+}
+
+.article > * {
+  margin-top: 0 !important;
+  margin-bottom: 16px !important;
+}
+
+.article > p {
+  line-height: 1.5em;
+}

@@ -1,0 +1,32 @@
+<div id="main-left">
+	
+	
+	<div id="main-left-nav-panel">
+		
+		<ul>
+			<li><a href="${pageContext.request.contextPath}/students/student/${student.studentNo}">Home</a></li>
+			<li>
+				<a href="${pageContext.request.contextPath}/students/spr/info/${student.studentNo}">SPR</a>
+				<ul>
+					<li> <a href="${pageContext.request.contextPath}/students/student/${student.studentNo}">Personal Information</a></li>
+					<li>
+						<a href="${pageContext.request.contextPath}/students/spr/profile/${student.studentNo}">Academic Background</a>
+					</li>
+					<li><a href="${pageContext.request.contextPath}/students/student/${student.studentNo}">Academic History</a></li>
+					<li> <a href="">More Information</a></li>
+				</ul>
+			</li>
+			<li><a href="${pageContext.request.contextPath}/students/registration/${student.studentNo}">Registration</a></li>
+			<li><a href="${pageContext.request.contextPath}/schedules/enlistment/${student.studentNo}">Enlistment</a></li>
+			<li><a href="${pageContext.request.contextPath}/grades/${student.studentNo}">Grades</a></li>
+			<li><a href="${pageContext.request.contextPath}/students/reports/${student.studentNo}">Reports</a></li>
+
+		</ul>
+		
+	</div>
+	
+	<div style="display:block; margin-top:20px; "><a href="${pageContext.request.contextPath}/" ><span class="linkButton" >Back to Main</span></a></div> 
+	
+	
+	
+</div>
