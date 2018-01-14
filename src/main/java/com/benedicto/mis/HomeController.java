@@ -236,7 +236,7 @@ public class HomeController {
 		System.out.println("The student status is: " + sc.getStudentStatus());
 
 		sc.setStudentID(s.getStudentID());
-		db.createCollegProfile(sc);
+		db.createCollegeProfile(sc);
 		db.createSPR(s);
 		return "Success";
 	}

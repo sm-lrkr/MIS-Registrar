@@ -5,15 +5,15 @@ public class StudentFBG {
 	private String studentNo;
 	private String f_Name;
 	private String f_Address;
-	private String f_Occupation;
 	private String f_ContactNo;
+	private String f_Occupation;
 	private String f_Income;
 
 	private String m_Name;
 	private String m_Address;
+	private String m_ContactNo;
 	private String m_Occupation;
 	private String m_Income;
-	private String m_ContactNo;
 	
 	private String g_Name;
 	private String g_Address;

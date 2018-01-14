@@ -52,7 +52,7 @@
 	
 		<jsp:include page="includes/main-left.jsp" />
 		
-		<form:form action="${pageContext.request.contextPath}/newSubject" modelAttribute="subject" >
+		<form:form action="${pageContext.request.contextPath}/subjects/newSubject" modelAttribute="subject" >
 			<table>
 				
 				<tr>

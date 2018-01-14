@@ -3,6 +3,9 @@ package com.benedicto.mis;
 
 import java.util.List;
 import java.util.Locale;
+
+import javax.validation.Valid;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
@@ -10,6 +13,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -17,6 +21,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.benedicto.mis.beans.*;
 import com.benedicto.mis.beans.containers.*;
+import com.benedicto.mis.beans.formbackers.SPRForm;
 
 /**
  * Handles requests for the application home page.
@@ -116,40 +121,42 @@ public class StudentController {
 
 
 	@RequestMapping(value = "/spr/saveEdited", method = RequestMethod.POST)
-	@ResponseBody
-	public String save(@ModelAttribute("student") Student s, @ModelAttribute("studentCAB") StudentProfile sc,
-			BindingResult result) {
-		logger.info("The student ID is: {}.", s.getStudentID());
-		db.updateSPR(s);
-	
-		return "success";
+	public ModelAndView save(@ModelAttribute("sprForm") SPRForm spr, BindingResult result, @RequestParam("profileForm") String profileForm) {
+		logger.info("The student ID is: {}.", spr.getStudent().getStudentNo());
+		
+		db.updateSPR(spr.getStudent());
+		db.updateStudentFBG(spr.getFbg());
+		if(profileForm.equals("collegeProfile")) {
+			db.updateCollegeProfile(spr.getProfile());
+		}
+		else if(profileForm.equals("shProfile")) {
+			db.updateSHProfile(spr.getProfile());
+		}
+		return new ModelAndView("redirect:/students/spr/info/"+ spr.getStudent().getStudentNo());
 	}
 
 	@RequestMapping(value = "/spr/saveNew", method = RequestMethod.POST)
-	@ResponseBody
-	public String saveNew(@ModelAttribute("student") Student s, @ModelAttribute("studentFBG") StudentFBG fbg,
-			BindingResult result) {
-		logger.info("The student Name is: {}.", s.getFirstName());
-		
-		String studentNo = String.valueOf(db.createSPR(s));
-		fbg.setStudentNo(studentNo);
-		db.createFBG(fbg);
-		return studentNo;
+	public ModelAndView saveNew(@ModelAttribute("sprForm") @Valid SPRForm spr, BindingResult result) {
+		logger.info("The student Name is: {}.", spr.getStudent().getFirstName());
+		System.out.println("asdfasf");
+		String studentNo = String.valueOf(db.createSPR(spr.getStudent()));
+		spr.getFbg().setStudentNo(studentNo);
+		db.createFBG(spr.getFbg());
+		return new ModelAndView("redirect:/students/student/"+ studentNo);
 	}
 
 
 	@RequestMapping(value = "/newspr")
 	public ModelAndView sprFormNew() {
 		logger.info("sprForm");
-		List<Course> courses = db.getCollegeCourses("");
-		List<Curriculum> currics = db.getCollegeCurriculums("");
 
 		ModelAndView model = new ModelAndView();
+		SPRForm spr = new SPRForm();
+		spr.setStudent(new Student());
+		spr.setFbg(new StudentFBG());
+		
 		model.setViewName("newspr");
-		model.addObject("student", new Student());
-		model.addObject("studentFBG", new StudentFBG());
-		model.addObject("courses", courses);
-		model.addObject("curriculums", currics);
+		model.addObject("sprForm", spr);
 		model.addObject("saveType", "saveNew");
 		return model;
 	}
@@ -254,10 +261,14 @@ public class StudentController {
 		System.out.println("Student No.: "+ stud.getStudentNo());
 		System.out.println("Student ID : "+ stud.getStudentID());
 		
-		
+		SPRForm sprForm = new SPRForm();
+		sprForm.setStudent(stud);
+		sprForm.setFbg(fbg);
+		sprForm.setProfile(profile);
 		
 		ModelAndView model = new ModelAndView();
 		model.setViewName("student");
+		model.addObject("sprForm", sprForm);
 		model.addObject("student", stud);
 		model.addObject("profile", profile);
 		model.addObject("profileForm", profileForm);
@@ -272,6 +283,8 @@ public class StudentController {
 	@RequestMapping(value = "/spr/newProfile/clg/{studentNo}")
 	public ModelAndView newCollegeProfile(@PathVariable("studentNo") String studentNo) {
 		Student stud = db.getStudentByNo(studentNo);
+		StudentProfile sp = new StudentProfile();
+		sp.setLRN("------------");
 		
 		List<Course> courses = db.getCollegeCourses("");
 		List<Curriculum> clgcurrics = db.getCollegeCurriculums("");
@@ -283,7 +296,7 @@ public class StudentController {
 		model.setViewName("studentAB");
 		model.addObject("student", stud);
 		model.addObject("form", "collegeProfile");
-		model.addObject("profile", new StudentProfile());
+		model.addObject("profile", sp);
 		model.addObject("courses", courses);
 		model.addObject("clgcurrics", clgcurrics);
 		
@@ -292,8 +305,10 @@ public class StudentController {
 	}
 	
 	@RequestMapping(value = "/spr/newProfile/clg/save/{studentNo}")
-	public ModelAndView saveNewCLGProfile(@PathVariable("studentNo") String studentNo, @ModelAttribute("profile") StudentProfile sp) {
-		db.createCollegProfile(sp);
+	public ModelAndView saveNewCLGProfile(@PathVariable("studentNo") String studentNo, @ModelAttribute("profile") @Valid StudentProfile sp,
+			BindingResult result) {
+	
+		db.createCollegeProfile(sp);
 		return new ModelAndView("redirect:/students/registration/"+ sp.getStudentNo());
 	}
 	

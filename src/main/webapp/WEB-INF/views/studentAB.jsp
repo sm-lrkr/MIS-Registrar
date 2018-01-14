@@ -5,7 +5,9 @@
 
     
 <spring:url value="/resources/jquery-3.2.1.js" var="jscript" />
-    
+<spring:url value="/resources/jquery.validate.js" var="jqueryValidate" />   
+<spring:url value="/resources/clgProfileForm.js" var="clgProfileForm" />   
+
     
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
@@ -16,6 +18,10 @@
 	<link href="<c:url value="/resources/main2.css" />" rel="stylesheet">
 	
 	<script type="text/javascript" src="${jscript}" ></script>
+	<script type="text/javascript" src="${jqueryValidate}" ></script>
+	<script type="text/javascript" src="${clgProfileForm}" ></script>
+	
+	
 	<script type = "text/javascript">
 		$(document).ready(function(){
 			$("#db_Course").on('change', function(){
@@ -57,9 +63,10 @@
 			
 			
 			$("#submit").click(function() {
-		        $("#profileForm").submit();
-		      });
+				$("#profileForm").submit();
+		     });
 		});
+		
 	</script>
 	
 	

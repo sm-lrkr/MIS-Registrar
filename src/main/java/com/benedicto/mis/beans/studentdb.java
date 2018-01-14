@@ -46,28 +46,52 @@ public class studentdb {
 	// }
 	public int createSPR(Student s) {
 		GeneratedKeyHolder holder = new GeneratedKeyHolder();
-		final String sql = "insert into std_pinfo(StudentNo, FirstName, MiddleName, LastName, Gender, BirthDate, BirthPlace) "
-				+ "values(?,?,?,?,?,?,?)";
+		final String sql = "insert into std_pinfo "
+				+ "values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 		final Student _s = s;
-		template.update(new PreparedStatementCreator() {
+		
+		try {
+			template.update(new PreparedStatementCreator() {
+				@Override
+				public PreparedStatement createPreparedStatement(Connection con) throws SQLException {
+					PreparedStatement statement = con.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS);
+					statement.setString(1, null);
+					statement.setString(2, _s.getFirstName());
+					statement.setString(3, _s.getMiddleName());
+					statement.setString(4, _s.getLastName());
+					statement.setString(5, _s.getGender());
+					statement.setString(6, _s.getBirthDate());
+					statement.setString(7, _s.getBirthPlace());
+					statement.setString(8, _s.getEmailAddress());
+					statement.setString(9, _s.getTelephoneNo());
+					statement.setString(10, _s.getContactNo());
+					statement.setString(11, _s.getCityAddress());
 
-			@Override
-			public PreparedStatement createPreparedStatement(Connection con) throws SQLException {
-				PreparedStatement statement = con.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS);
-				statement.setString(1, null);
-				statement.setString(2, _s.getFirstName());
-				statement.setString(3, _s.getMiddleName());
-				statement.setString(4, _s.getLastName());
-				statement.setString(5, _s.getGender());
-				statement.setString(6, _s.getBirthDate());
-				statement.setString(7, _s.getBirthPlace());
+					statement.setString(12, _s.getRegion());
+					statement.setString(13, _s.getProvincialAddress());
+					statement.setString(14, _s.getCountry());
+					statement.setString(15, _s.getCitizenship());
 
-				return statement;
-			}
+					statement.setString(16, _s.getReligion());
+					statement.setString(17, _s.getMaritalStatus());
+					
+					statement.setString(18, _s.getAPR());
+					statement.setBoolean(19, _s.getWorking());
+					statement.setString(20, _s.getWorkingAddress());
 
-		}, holder);
-		System.out.println("ID:" + holder.getKey().intValue());
-		return holder.getKey().intValue();
+					
+					return statement;
+				}
+
+			}, holder);
+			System.out.println("ID:" + holder.getKey().intValue());
+			return holder.getKey().intValue();
+		}catch(Exception ex) {
+			ex.printStackTrace();
+			
+		}
+		return 0;
+		
 	}
 
 	public int createFBG(StudentFBG fbg) {
@@ -106,19 +130,25 @@ public class studentdb {
 		return 0;
 	}
 
-	public int createCollegProfile(StudentProfile sp) {
-		String sql = "insert into clg_profiles(StudentNo, StudentID, CourseID, CurriculumID, StudentStatus, EnrollmentStatus) "
-				+ "values(?, ?,?,?,?,?)";
+	public int createCollegeProfile(StudentProfile sp) {
+		String sql = "insert into clg_profiles "
+				+ 		"values(?,?,?,?,?,?,?,?,?,?,?,?)";
 		final StudentProfile _sp = sp;
 		try {
 			return template.update(sql, new PreparedStatementSetter() {
 				public void setValues(PreparedStatement ps) throws SQLException {
-					ps.setString(1, _sp.getStudentNo());
-					ps.setString(2, _sp.getStudentID());
+					ps.setString(1, _sp.getStudentID());
+					ps.setString(2, _sp.getStudentNo());
 					ps.setString(3, _sp.getCourseID());
 					ps.setString(4, _sp.getCurriculumID());
 					ps.setString(5, _sp.getStudentID());
 					ps.setString(6, _sp.getEnrollmentStatus());
+					ps.setBoolean(7, _sp.isShiftee());
+					ps.setString(8	, _sp.getShiftCourse());
+					ps.setString(9, _sp.getSemEntry());
+					ps.setString(10, _sp.getYearEntry());
+					ps.setString(11, _sp.getGraduationYear());
+					ps.setString(12, _sp.getApplicationType());
 				}
 			});
 		} catch (Exception ex) {
@@ -127,10 +157,37 @@ public class studentdb {
 
 		return 0;
 	}
+	
+	public int updateCollegeProfile(StudentProfile sp) {
+		String sql = "update clg_profiles set StudentID = ?, CourseID = ? , CurriculumID = ?, StudentStatus = ?, EnrollmentStatus=?, "
+				+ "Shiftee = ?, ShiftCourse = ?, SemEntry = ? , YearEntry = ?, GraduationYear = ?, ApplicationType = ?"
+				+ " WHERE StudentNo=?";
+				
+		final StudentProfile _sp = sp;
+		return template.update(sql, new PreparedStatementSetter() {
+			public void setValues(PreparedStatement ps) throws SQLException {
+				ps.setString(1, _sp.getStudentID());
+				ps.setString(2, _sp.getCourseID());
+				ps.setString(3, _sp.getCurriculumID());
+				ps.setString(4, _sp.getStudentStatus());
+				ps.setString(5, _sp.getEnrollmentStatus());
+
+				ps.setBoolean(6, _sp.isShiftee());
+				ps.setString(7, _sp.getShiftCourse());
+				ps.setString(8, _sp.getSemEntry());
+				ps.setString(9, _sp.getYearEntry());
+				ps.setString(10, _sp.getGraduationYear());
+
+				ps.setString(11, _sp.getApplicationType());
+				ps.setString(12, _sp.getStudentNo());
+
+			}
+		});
+	}
 
 	public int createSHProfile(StudentProfile sp) {
-		String sql = "insert into shs_profiles(LRN, StudentNo, StrandCode, CurriculumID, StudentStatus, EnrollmentStatus, SemEntry, YearEntry) "
-				+ "values(?,?,?,?,?,?,?,?)";
+		String sql = "insert into shs_profiles "
+				+ "values(?,?,?,?,?,?,?,?,?,?,?,?)";
 		final StudentProfile _sp = sp;
 		try {
 			return template.update(sql, new PreparedStatementSetter() {
@@ -141,8 +198,12 @@ public class studentdb {
 					ps.setString(4, _sp.getCurriculumID());
 					ps.setString(5, _sp.getStudentStatus());
 					ps.setString(6, _sp.getEnrollmentStatus());
-					ps.setString(7, _sp.getSemEntry());
-					ps.setString(8, _sp.getYearEntry());
+					ps.setBoolean(7, _sp.isShiftee());
+					ps.setString(8, _sp.getShiftStrand());
+					ps.setString(9, _sp.getSemEntry());
+					ps.setString(10, _sp.getYearEntry());
+					ps.setString(11, _sp.getGraduationYear());
+					ps.setString(12, _sp.getApplicationType());
 				}
 			});
 		} catch (Exception ex) {
@@ -151,6 +212,34 @@ public class studentdb {
 
 		return 0;
 	}
+	
+	public int updateSHProfile(StudentProfile sp) {
+		String sql = "update shs_profiles set LRN = ?, StrandCode = ? , CurriculumID = ?, StudentStatus = ?, EnrollmentStatus=?, "
+				+ "Shiftee = ?, ShiftStrand = ?, SemEntry = ? , YearEntry = ?, GraduationYear = ?, ApplicationType = ?"
+				+ " WHERE StudentNo=?";
+				
+		final StudentProfile _sp = sp;
+		return template.update(sql, new PreparedStatementSetter() {
+			public void setValues(PreparedStatement ps) throws SQLException {
+				ps.setString(1, _sp.getLRN());
+				ps.setString(2, _sp.getStrandCode());
+				ps.setString(3, _sp.getCurriculumID());
+				ps.setString(4, _sp.getStudentStatus());
+				ps.setString(5, _sp.getEnrollmentStatus());
+
+				ps.setBoolean(6, _sp.isShiftee());
+				ps.setString(7, _sp.getShiftStrand());
+				ps.setString(8, _sp.getSemEntry());
+				ps.setString(9, _sp.getYearEntry());
+				ps.setString(10, _sp.getGraduationYear());
+
+				ps.setString(11, _sp.getApplicationType());
+				ps.setString(12, _sp.getStudentNo());
+			}
+		});
+	}
+	
+	
 
 	public int createCourse(Course c) {
 		String sql = "insert into clg_courses(CourseID, CourseDesc, DepartmentCode) " + "values(?,?,?)";
@@ -193,10 +282,79 @@ public class studentdb {
 	}
 
 	public int updateSPR(Student s) {
-		String sql = "update std_pinfo set FirstName= ? , MiddleName= ?, "
-				+ "LastName = ?, Gender = ?, BirthDate = ?, BirthPlace = ? where StudentID = ? ";
-		return template.update(sql, s.getFirstName(), s.getMiddleName(), s.getLastName(), s.getGender(),
-				s.getBirthDate(), s.getBirthPlace(), s.getStudentID());
+		String sql = "update std_pinfo set FirstName= ? , MiddleName= ?, LastName = ?, Gender = ?, "
+				+ 			"BirthDate = ?, BirthPlace = ?, EmailAddress = ?, TelephoneNo = ?, ContactNo = ?, "
+				+ 			"CityAddress = ?, Region = ?, ProvincialAddress = ?, Country = ?, Citizenship = ?, "
+				+ 			"Religion = ?, MaritalStatus = ?, APR = ?, Working = ?, WorkingAddress = ?    WHERE StudentNo = ? ";
+		
+		//return template.update(sql, s.getFirstName(), s.getMiddleName(), s.getLastName(), s.getGender(),
+		//		s.getBirthDate(), s.getBirthPlace(), s.getStudentID());
+		final Student _s = s;
+		
+		return template.update(sql, new PreparedStatementSetter() {
+			public void setValues(PreparedStatement ps) throws SQLException {
+				ps.setString(1, _s.getFirstName());
+				ps.setString(2, _s.getMiddleName());
+				ps.setString(3, _s.getLastName());
+				ps.setString(4, _s.getGender());
+				ps.setString(5, _s.getBirthDate());
+
+				ps.setString(6, _s.getBirthPlace());
+				ps.setString(7, _s.getEmailAddress());
+				ps.setString(8, _s.getTelephoneNo());
+				ps.setString(9, _s.getContactNo());
+				ps.setString(10, _s.getCityAddress());
+
+				ps.setString(11, _s.getRegion());
+				ps.setString(12, _s.getProvincialAddress());
+				ps.setString(13, _s.getCountry());
+				ps.setString(14, _s.getCitizenship());
+
+				ps.setString(15, _s.getReligion());
+				ps.setString(16, _s.getMaritalStatus());
+				
+				ps.setString(17, _s.getAPR());
+				ps.setBoolean(18, _s.getWorking());
+				ps.setString(19, _s.getWorkingAddress());
+				ps.setString(20, _s.getStudentNo());
+
+			
+			}
+		});
+	
+	}
+	
+	public int updateStudentFBG(StudentFBG fbg) {
+		String sql = "update std_fbg set F_Name= ? ,F_Address= ?, F_ContactNo=?, F_Occupation=?, F_Income=?, "
+				+ "M_Name= ? , M_Address= ?, M_ContactNo=?, M_Occupation=?, M_Income=?, "
+				+ "G_Name= ? , G_Address= ?, G_Relationship=?, G_ContactNo=?, "
+				+ "S_Name= ? , S_ContactNo=?  WHERE StudentNo=?";
+				
+		final StudentFBG _fbg = fbg;
+		return template.update(sql, new PreparedStatementSetter() {
+			public void setValues(PreparedStatement ps) throws SQLException {
+				ps.setString(1, _fbg.getF_Name());
+				ps.setString(2, _fbg.getF_Address());
+				ps.setString(3, _fbg.getF_ContactNo());
+				ps.setString(4, _fbg.getF_Occupation());
+				ps.setString(5, _fbg.getF_Income());
+
+				ps.setString(6, _fbg.getM_Name());
+				ps.setString(7, _fbg.getM_Address());
+				ps.setString(8, _fbg.getM_ContactNo());
+				ps.setString(9, _fbg.getM_Occupation());
+				ps.setString(10, _fbg.getM_Income());
+
+				ps.setString(11, _fbg.getG_Name());
+				ps.setString(12, _fbg.getG_Address());
+				ps.setString(13, _fbg.getG_Relationship());
+				ps.setString(14, _fbg.getG_ContactNo());
+
+				ps.setString(15, _fbg.getS_Name());
+				ps.setString(16, _fbg.getS_ContactNo());
+				ps.setString(17, _fbg.getStudentNo());
+			}
+		});
 	}
 
 	public int deleteSPR(String id) {
@@ -282,7 +440,7 @@ public class studentdb {
 				+ "LEFT JOIN shs_profiles ON std_pinfo.StudentNo = shs_profiles.StudentNo "
 				+ "LEFT JOIN bsc_profiles ON std_pinfo.StudentNo = bsc_profiles.StudentNo "
 				+ "WHERE (clg_profiles.StudentID LIKE '%" + param + "%' OR shs_profiles.LRN LIKE '%" + ID
-				+ "%' OR std_pinfo.FirstName LIKE '%" + param + "%' OR std_pinfo.LastName LIKE '%" + param + "%') ";
+				+ "%' OR std_pinfo.FirstName LIKE '%" + param + "%' OR std_pinfo.LastName LIKE '%" + param + "%') ORDER BY std_pinfo.LastName ";
 
 		return template.query(sql, new RowMapper<Student>() {
 			public Student mapRow(ResultSet rs, int row) throws SQLException {
@@ -711,7 +869,7 @@ public class studentdb {
 
 	// Get Latest Curriculum
 	public Curriculum getLatestCourseCurriculum(String CourseID) {
-		String sql = "SELECT * FROM curriculum WHERE CourseID = ? ORDER BY CurriculumID DESC LIMIT 1";
+		String sql = "SELECT * FROM clg_curriculum WHERE CourseID = ? ORDER BY CurriculumID DESC LIMIT 1";
 		try {
 			System.out.println("Successfully returned latest");
 			return template.queryForObject(sql, new Object[] { CourseID },

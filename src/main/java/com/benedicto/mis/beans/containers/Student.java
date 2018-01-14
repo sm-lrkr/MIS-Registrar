@@ -1,33 +1,40 @@
 package com.benedicto.mis.beans.containers;
 
+import org.hibernate.validator.constraints.*;
+
 public class Student {
 
 	private String studentNo;
 	private String studentID;
-
+	
 	private String firstName;
+	
 	private String middleName;
+	
 	private String lastName;
+	
+	
 	private String gender;
 	private String birthPlace;
 	private String birthDate;
 	
 	private String cityAddress;
 	private String provincialAddress;
-	private String working;
 	private String workingAddress;
-	private String regionNumber;
+	private String region;
 	private String country;
 
+	private boolean working;
 	
-	private String contactNumber;
-	private String telNumber;
+	
+	private String contactNo;
+	private String telephoneNo;
 	private String emailAddress;
 	
 	private String religion;
 	private String citizenship;
 	private String maritalStatus;
-	private String ACR;
+	private String APR;
 	
 	private String curriculumID;
 	private String courseCode;
@@ -114,14 +121,6 @@ public class Student {
 		this.provincialAddress = provincialAddress;
 	}
 
-	public String getWorking() {
-		return working;
-	}
-
-	public void setWorking(String working) {
-		this.working = working;
-	}
-
 	public String getWorkingAddress() {
 		return workingAddress;
 	}
@@ -130,12 +129,12 @@ public class Student {
 		this.workingAddress = workingAddress;
 	}
 
-	public String getRegionNumber() {
-		return regionNumber;
+	public String getRegion() {
+		return region;
 	}
 
-	public void setRegionNumber(String regionNumber) {
-		this.regionNumber = regionNumber;
+	public void setRegion(String region) {
+		this.region = region;
 	}
 
 	public String getCountry() {
@@ -146,20 +145,28 @@ public class Student {
 		this.country = country;
 	}
 
-	public String getContactNumber() {
-		return contactNumber;
+	public Boolean getWorking() {
+		return working;
 	}
 
-	public void setContactNumber(String contactNumber) {
-		this.contactNumber = contactNumber;
+	public void setWorking(Boolean working) {
+		this.working = working;
 	}
 
-	public String getTelNumber() {
-		return telNumber;
+	public String getContactNo() {
+		return contactNo;
 	}
 
-	public void setTelNumber(String telNumber) {
-		this.telNumber = telNumber;
+	public void setContactNo(String contactNo) {
+		this.contactNo = contactNo;
+	}
+
+	public String getTelephoneNo() {
+		return telephoneNo;
+	}
+
+	public void setTelephoneNo(String telephoneNo) {
+		this.telephoneNo = telephoneNo;
 	}
 
 	public String getEmailAddress() {
@@ -194,12 +201,12 @@ public class Student {
 		this.maritalStatus = maritalStatus;
 	}
 
-	public String getACR() {
-		return ACR;
+	public String getAPR() {
+		return APR;
 	}
 
-	public void setACR(String aCR) {
-		ACR = aCR;
+	public void setAPR(String aPR) {
+		APR = aPR;
 	}
 
 	public String getCurriculumID() {
@@ -225,10 +232,6 @@ public class Student {
 	public void setChecked(Boolean checked) {
 		this.checked = checked;
 	}
-	
-	
-	
-	
 
-	
+			
 }

@@ -51,9 +51,9 @@
 	
 		<jsp:include page="includes/main-left.jsp" />
 		<div>	
-			<h1 style="display: inline-block; margin-top: 0px;">Strands</h1>  
+			<h1 style="display: inline-block; margin-top: 0px;">Sections</h1>  
 			<div class="floatright">
-						<a href="sprForm" class="linkButton">New Strand</a>    
+						<a href="sprForm" class="linkButton">New Section</a>    
 			</div>
 			
 			<div style="padding-bottom: 5px;">

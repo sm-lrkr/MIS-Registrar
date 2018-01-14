@@ -1,8 +1,14 @@
 package com.benedicto.mis.beans.containers;
 
+import org.hibernate.validator.constraints.NotEmpty;
+
 public class StudentProfile {
 	private String studentNo;
+	
+	@NotEmpty(message = "Please enter StudentID.")
 	private String studentID;
+	
+	
 	private String LRN;
 	
 
@@ -18,8 +24,8 @@ public class StudentProfile {
 	private String shiftStrand;
 	private String semEntry;
 	private String yearEntry;
-	private String yearOfGraduation;
-	private String application;
+	private String graduationYear;
+	private String applicationType;
 	private String empty;
 	
 	
@@ -84,17 +90,19 @@ public class StudentProfile {
 	public void setYearEntry(String yearEntry) {
 		this.yearEntry = yearEntry;
 	}
-	public String getYearOfGraduation() {
-		return yearOfGraduation;
+	
+	
+	public String getGraduationYear() {
+		return graduationYear;
 	}
-	public void setYearOfGraduation(String yearOfGraduation) {
-		this.yearOfGraduation = yearOfGraduation;
+	public void setGraduationYear(String graduationYear) {
+		this.graduationYear = graduationYear;
 	}
-	public String getApplication() {
-		return application;
+	public String getApplicationType() {
+		return applicationType;
 	}
-	public void setApplication(String application) {
-		this.application = application;
+	public void setApplicationType(String applicationType) {
+		this.applicationType = applicationType;
 	}
 	public String getEmpty() {
 		return empty;

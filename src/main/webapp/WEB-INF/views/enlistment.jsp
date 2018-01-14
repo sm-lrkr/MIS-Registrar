@@ -58,11 +58,9 @@
 		<div>
 			<div style="margin-bottom: 20px;">
 				<h1 style="display: inline-block; margin-top: 0px;">${student.lastName}, ${student.firstName} ${student.middleName}</h1>
-				<h3 style="display: inline-block; margin-top: 0px;">${ID}</h3>
 				
 				<div class="floatright">
-					<a href="${pageContext.request.contextPath}/students/newspr" ><span class="linkButton" >View SPR</span></a>   
-					<a href="sprForm" ><span class="linkButton" >Reports</span></a>   
+					<a href="${pageContext.request.contextPath}/students/newspr" ><span class="linkButton" >History</span></a>   
 			 	</div>
 			</div>
 			<div id="offeredList" class="tableContainer">

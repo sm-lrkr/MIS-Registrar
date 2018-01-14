@@ -92,11 +92,14 @@ public class SubjectController {
 	public ModelAndView addNewSubject(@ModelAttribute("subject") Subject s) {
 		System.out.println("Add new course");
 		db.createSubject(s);
-		return new ModelAndView("redirect:/subjects");
+		
+		List<Subject> list = db.getSubjects("");
+		ModelAndView model = new ModelAndView();
+		model.setViewName("subjects");
+		model.addObject("subjects", list);
+		model.addObject("subject", new Subject());
+		return model;
 	}
-	
-	
-	
-	
+
 
 }

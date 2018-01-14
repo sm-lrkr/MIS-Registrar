@@ -7,7 +7,6 @@
 function departmentSelect(departmentSelect, courseSelect, ctx){
 	departmentSelect.on('change', function(){
 		var searchurl = ctx +'/ajax/departmentSelectChanged/?param=' + departmentSelect.val();
-		alert(searchurl);
 		$.ajax({
 			url: searchurl,
 			type: "GET" ,
@@ -42,7 +41,7 @@ function departmentSelect(departmentSelect, courseSelect, ctx){
 function courseSelect(search, courseSelect, studview, ctx){
 	courseSelect.on('input', function(){
 		var searchurl = ctx+ '/ajax/searchstudent/?param='+search.val()+'&courseID='+ courseSelect.val();
-		alert(searchurl);
+		
 		$.ajax({
 			
 			url: searchurl,
@@ -61,7 +60,7 @@ function courseSelect(search, courseSelect, studview, ctx){
 function searchStudents(search, searchBtn, courseSelect, studview, ctx){
 	searchBtn.click(function(){
 		var searchurl = encodeURI(ctx+'/ajax/searchstudent/?param='+search.val()+'&courseID='+ courseSelect.val());
-		alert(searchurl);
+		
 		$.ajax({
 			
 			url: searchurl,
