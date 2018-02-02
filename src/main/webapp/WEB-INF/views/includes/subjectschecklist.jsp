@@ -4,22 +4,26 @@
 
 <form:form id="subjectsForm"  action="" method="post" modelAttribute="subjectsForm">
 					
-						<table   id="subjectsList" class="listTable" >  
-							<tr><th>Code</th><th>Description</th><th>Units</th><th>Requisite</th></tr>  
-						   	<c:forEach var="subj" items="${subjectsForm.subjects}" varStatus="status">   
+						<table   id="subjectsList" class="display compact" >  
+							<thead>
+								<tr><th></th><th>Code</th><th>Description</th><th>Lab</th><th>Lec</th><th>Units</th><th>Requisite</th></tr>  
+						   	</thead>
+						
+							<tbody>
+								<c:forEach var="subj" items="${subjectsForm.subjects}" varStatus="status">   
+							     	<tr>
+										<td></td>
+									   	<td>${subj.subjectCode}</td>  
+									   	<td>${subj.subjectDesc}</td>  
+									   	<td>${subj.lecUnits}</td>
+										<td>${subj.labUnits}</td>
+									   	<td>${subj.lecUnits + subj.labUnits}</td>  
+									   	<td></td>  
+									</tr>
+								</c:forEach>
+							</tbody>
+							
 							  
-							   	<tr>
-								 
-								   	<td>
-								   		<form:input path="subjects[${status.index}].subjectCode" type="hidden" />
-								   		<form:input path="subjects[${status.index}].subjectDesc" type="hidden" />
-								   		<form:checkbox path="subjects[${status.index}].checked" />
-								   		<form:label path="subjects[${status.index}].subjectCode">${subj.subjectCode}</form:label></td>  
-								   	<td>${subj.subjectDesc}</td>  
-								   	<td>${subj.labUnits + subj.lecUnits}</td>  
-								   	<td></td>  
-								</tr>
-							</c:forEach>  
 				   		</table>  
 				   
 </form:form>

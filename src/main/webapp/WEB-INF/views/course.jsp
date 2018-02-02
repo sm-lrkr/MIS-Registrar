@@ -49,7 +49,6 @@
 
 	
 	<jsp:include page="includes/header.jsp" />
-	<P>  The time on the server is ${serverTime}. </P>
 	<div id="main">
 	
 		<jsp:include page="includes/main-left.jsp" />

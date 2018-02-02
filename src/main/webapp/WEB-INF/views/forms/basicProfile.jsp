@@ -98,6 +98,7 @@
 					</td>
 					<td>
 						<select>
+							<option value="NONE" label="" />
 							<option value="freshman" label="Freshman" />
 							<option value="transferee" label="Transferee" />
 						</select>

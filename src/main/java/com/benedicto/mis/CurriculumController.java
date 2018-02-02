@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.benedicto.mis.beans.*;
@@ -49,7 +50,7 @@ public class CurriculumController {
 		String [] sems = {"", "1st Sem","2nd Sem", "Summer"};
 		
 		SubjectsViewForm subjects = new SubjectsViewForm();
-		subjects.setSubjects(db.getSubjects(""));
+		subjects.setSubjects(db.getCollegeSubjects(""));
 		
 		Curriculum c = new Curriculum();
 		c.setCurriculumID("");
@@ -60,7 +61,7 @@ public class CurriculumController {
 		curriculumForm.setCurricSubjects(new ArrayList<CurriculumSubject>());
 		curriculumForm.setCurriculum(c);
 		
-		System.out.println("Size of curriculum subjects: "+ curriculumForm.getCurricSubjects().size());
+		System.out.println("CourseID: "+ courseID);
 		
 		ModelAndView model = new ModelAndView();
 		model.setViewName("curriculum");
@@ -129,7 +130,7 @@ public class CurriculumController {
 			
 		StringBuilder builder = new StringBuilder();
 		
-		Curriculum c = db.getCurriculumByID(curricID);
+		Curriculum c = db.getCollegeCurriculumByID(curricID);
 		
 		builder.append("<tr><th>Id</th><th>Last Name</th><th>First Name</th><th>Middle Name</th><th></th></tr> \n");
 		
@@ -145,7 +146,7 @@ public class CurriculumController {
 					builder.append("<tr><th colspan=\"6\" >" + ordinal(sem)+" Sem</th></tr>");
 					builder.append("<tr><th rowspan=\"2\">CODE</th><th rowspan=\"2\">DESCRIPTIVE TITLE</th><th colspan=\"3\"> UNITS</th><th rowspan=\"2\">PRE-REQUISITE(s)</th></tr>  ");
 					builder.append("<tr><th>LEC</th><th>LAB</th><th>TOTAL</th></tr>");
-					for(Subject s: subjects ) {
+					for(CurriculumSubject s: subjects ) {
 						builder.append("<tr>");
 						builder.append("<td>"+s.getSubjectCode()+"</td>");
 						builder.append("<td>"+s.getSubjectDesc()+"</td>");
@@ -186,6 +187,28 @@ public class CurriculumController {
 		return "Success";
 	}
 	
+	@RequestMapping(value = "/saveNewTest", method = RequestMethod.POST)
+	@ResponseBody
+	public String saveNewTest( @RequestBody ArrayList<CurriculumSubject> subjects,@RequestBody Curriculum curriculum) {
+		
+		System.out.println("The course ID is: " + curriculum.getCourseID());
+		System.out.println("The number of subjects is: " + subjects.size());
+		System.out.println("Desc: " + curriculum.getCurriculumDesc());
+		System.out.println("Year: " + curriculum.getYearImplemented());
+		
+		db.createCurriculum(curriculum);
+		String courseID = curriculum.getCourseID();
+		curriculum = db.getLatestCourseCurriculum(courseID);
+		
+		for(CurriculumSubject cs: subjects) {
+			db.saveCurriculumSubjects(curriculum.getCurriculumID(),cs.getSubjectCode(), cs.getYear(), cs.getSem());
+		}			
+		
+		return "Success";
+	}
+	
+	
+
 	public String ordinal(int num) {
 		switch(num) {
 			case 1:
@@ -209,7 +232,7 @@ public class CurriculumController {
 		}
 		
 		SubjectsViewForm subs = new SubjectsViewForm();
-		subs.setSubjects(db.getSubjects(param));
+		subs.setSubjects(db.getCollegeSubjects(param));
 		
 		return new ModelAndView("includes/subjectschecklist", "subjectsForm", subs);
 	}

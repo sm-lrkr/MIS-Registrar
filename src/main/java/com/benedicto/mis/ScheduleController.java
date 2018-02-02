@@ -173,7 +173,7 @@ public class ScheduleController {
 	@RequestMapping(value = "newSchedule", method = RequestMethod.GET)
 	public ModelAndView scheduleForm(@ModelAttribute("subject") Subject s) {
 		System.out.println("Add new schedule");
-		List<Subject> list = db.getSubjects("");
+		List<Subject> list = db.getCollegeSubjects("");
 
 		ModelAndView model = new ModelAndView();
 		model.setViewName("scheduleForm");
@@ -199,7 +199,7 @@ public class ScheduleController {
 			Schedule s = sf.getSchedule();
 			System.out.println("Subject Code: "+ s.getSubjectCode() );
 			
-			Subject su = db.getSubjectByCode(s.getSubjectCode());
+			Subject su = db.getCollegeSubjectByCode(s.getSubjectCode());
 
 			s.setLecUnits(su.getLecUnits());
 			s.setLabUnits(su.getLabUnits());

@@ -40,14 +40,23 @@ function departmentSelect(departmentSelect, courseSelect, ctx){
 
 function courseSelect(search, courseSelect, studview, ctx){
 	courseSelect.on('input', function(){
+		alert(courseSelect.val());
 		var searchurl = ctx+ '/ajax/searchstudent/?param='+search.val()+'&courseID='+ courseSelect.val();
-		
 		$.ajax({
 			
 			url: searchurl,
 			type: "GET" ,
+			dataType: "json",
 			success: function(result){
-				studview.html(result);
+				alert('success!');
+				var table = studview.DataTable();
+				table.clear();
+				$.each(result, function(index, student) {
+		            alert("ID: "+ student.studentID); 
+		             //table.row.add({"ID" : student.studentID, "Last Name" : student.lastName, "First Name" :student.firstName, "Middle Name" :student.middleName, "Edit" :'view'});
+		             table.row.add([student.studentNo, student.studentID, student.lastName, student.firstName, student.middleName, 'view']);				        
+				});    
+				table.draw();
 			},
 			error:function(e) {  
 			      alert('Error: ' + e);   

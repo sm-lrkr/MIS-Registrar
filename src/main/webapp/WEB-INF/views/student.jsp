@@ -91,7 +91,7 @@
 		</div>
 		<div>
 		
-			<form:form method="POST" action="${pageContext.request.contextPath}/students/spr/${saveType}?profileForm= ${profileForm}" modelAttribute="sprForm" id="editSPR" >
+			<form:form method="POST" action="${pageContext.request.contextPath}/students/spr/${saveType}?profile= ${profileForm}" modelAttribute="sprForm" id="editSPR" >
 				<h3>I. Personal Information</h3>
 				<jsp:include page="forms/studentPersonalData.jsp" />
 				<h3>II. Family Background </h3>
@@ -205,9 +205,9 @@
 									<form:label path="profile.enrollmentStatus">Enrollment Status</form:label>
 								</td>
 								<td>
-									<form:select path="profile.enrollmentStatus">
-										<option value="false" label="Not Enrolled" />
-										<option value="true" label="Enrolled" />
+									<form:select path="profile.enrollmentStatus" value="${profile.enrollmentStatus}">
+										<form:option value="false" label="Not Enrolled" />
+										<form:option value="true" label="Enrolled" />
 									</form:select>
 								</td>			
 							</tr>
@@ -217,10 +217,10 @@
 									<label>Shiftee?:</label>
 								</td>
 								<td>
-									<select>
-										<option value="false" label="No" />
-										<option value="true" label="Yes" />
-									</select>
+									<form:select path="profile.shiftee" value="${profile.shiftee}">
+										<form:option value="false" label="No" />
+										<form:option value="true" label="Yes" />
+									</form:select>
 								</td>
 								
 								
@@ -261,10 +261,10 @@
 									<label>Semester Entry:</label>
 								</td>
 								<td>
-									<form:select path="profile.semEntry">
-										<option value="1" label="1st Semester" />
-										<option value="2" label="2nd Semester" />
-										<option value="3" label="Summer" /><option value="true" label="Enrolled" />
+									<form:select path="profile.semEntry" value="${profile.semEntry}">
+										<form:option value="1" label="1st Semester" />
+										<form:option value="2" label="2nd Semester" />
+										<form:option value="3" label="Summer" /><option value="true" label="Enrolled" />
 									</form:select>
 								</td>
 							
@@ -272,69 +272,70 @@
 									<label>Year of Entry:</label>
 								</td>
 								<td>
-									<form:select path="profile.yearEntry">
-										<option value="2017" label="2017" />
-										<option value="2016" label="2016" />
-										<option value="2015" label="2015" />
-										<option value="2014" label="2014" />
-										<option value="2013" label="2013" />
-										<option value="2012" label="2012" />
-										<option value="2011" label="2011" />
-										<option value="2010" label="2010" />
-										<option value="2009" label="2009" />
-										<option value="2008" label="2008" />
-										<option value="2007" label="2007" />
-										<option value="2006" label="2006" />
-										<option value="2005" label="2005" />
-										<option value="2004" label="2004" />
-										<option value="2003" label="2003" />
-										<option value="2002" label="2002" />
-										<option value="2001" label="2001" />
-										<option value="2000" label="2000" />
+									<form:select path="profile.yearEntry" value="${profile.yearEntry}">
+										<form:option value="NONE" label="" />
+										<form:option value="2017" label="2017" />
+										<form:option value="2016" label="2016" />
+										<form:option value="2015" label="2015" />
+										<form:option value="2014" label="2014" />
+										<form:option value="2013" label="2013" />
+										<form:option value="2012" label="2012" />
+										<form:option value="2011" label="2011" />
+										<form:option value="2010" label="2010" />
+										<form:option value="2009" label="2009" />
+										<form:option value="2008" label="2008" />
+										<form:option value="2007" label="2007" />
+										<form:option value="2006" label="2006" />
+										<form:option value="2005" label="2005" />
+										<form:option value="2004" label="2004" />
+										<form:option value="2003" label="2003" />
+										<form:option value="2002" label="2002" />
+										<form:option value="2001" label="2001" />
+										<form:option value="2000" label="2000" />
 									</form:select>
 								
 								</td>
-								
-									
 							</tr>
 					
 							<tr>
 								
 								<td>
-									<form:label path="profile.graduationYear" value="Year of Graduation" />
+									<form:label path="profile.graduationYear">Year of Graduation: </form:label>
 								</td>
 								<td>
-									<form:select path="profile.graduationYear">
-										<option value="2018" label="2018" />
-										<option value="2017" label="2017" />
-										<option value="2016" label="2016" />
-										<option value="2015" label="2015" />
-										<option value="2014" label="2014" />
-										<option value="2013" label="2013" />
-										<option value="2012" label="2012" />
-										<option value="2011" label="2011" />
-										<option value="2010" label="2010" />
-										<option value="2009" label="2009" />
-										<option value="2008" label="2008" />
-										<option value="2007" label="2007" />
-										<option value="2006" label="2006" />
-										<option value="2005" label="2005" />
-										<option value="2004" label="2004" />
-										<option value="2003" label="2003" />
-										<option value="2002" label="2002" />
-										<option value="2001" label="2001" />
-										<option value="2000" label="2000" />
+									<form:select path="profile.graduationYear" value="${profile.graduationYear}">
+										<form:option value="NONE" label="" />
+										<form:option value="2018" label="2018" />
+										<form:option value="2017" label="2017" />
+										<form:option value="2016" label="2016" />
+										<form:option value="2015" label="2015" />
+										<form:option value="2014" label="2014" />
+										<form:option value="2013" label="2013" />
+										<form:option value="2012" label="2012" />
+										<form:option value="2011" label="2011" />
+										<form:option value="2010" label="2010" />
+										<form:option value="2009" label="2009" />
+										<form:option value="2008" label="2008" />
+										<form:option value="2007" label="2007" />
+										<form:option value="2006" label="2006" />
+										<form:option value="2005" label="2005" />
+										<form:option value="2004" label="2004" />
+										<form:option value="2003" label="2003" />
+										<form:option value="2002" label="2002" />
+										<form:option value="2001" label="2001" />
+										<form:option value="2000" label="2000" />
 									</form:select>
 								</td>			
 								
 									<td>
 						
-										<form:label path="profile.applicationType" value="Type of Application" />
+										<form:label path="profile.applicationType">Application Type: </form:label>
 									</td>
 									<td>
-										<form:select path="profile.applicationType">
-											<option value="freshman" label="Freshman" />
-											<option value="transferee" label="Transferee" />
+										<form:select path="profile.applicationType" value="${profile.applicationType}">
+											<form:option value="NONE" label="" />
+											<form:option value="freshman" label="Freshman" />
+											<form:option value="transferee" label="Transferee" />
 										</form:select>
 									</td>			
 							</tr>

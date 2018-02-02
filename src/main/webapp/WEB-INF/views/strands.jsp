@@ -6,7 +6,11 @@
     
 <spring:url value="/resources/main2.css" var="css" />
 <spring:url value="/resources/jquery-3.2.1.js" var="jscript" />
-
+<spring:url value="/resources/myscript.js" var="myscript" />
+<spring:url value="/resources/css/dataTable.min.css" var="dtcss" />
+<spring:url value="/resources/css/dataTableSelect.min.css" var="dtselectcss" />
+<spring:url value="/resources/javascript/dataTable.js" var="dtjs" />
+<spring:url value="/resources/javascript/dataTableSelect.min.js" var="dtselectjs" />
     
     
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
@@ -15,29 +19,30 @@
 	
 	<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 	<title>MIS Registrar</title>
+	<link href="${dtcss}" rel="stylesheet">
+	<link href="${dtselectcss}" rel="stylesheet">
 	<link href="${css}" rel="stylesheet">
+	
 	<script type="text/javascript" src="${jscript}" ></script>
+	<script type="text/javascript" src="${myscript}" ></script>
+	<script type="text/javascript" src="${dtjs}" ></script>
+	<script type="text/javascript" src="${dtselectjs}" ></script>
 	<script type = "text/javascript">
 		$(document).ready(function(){
-			$("#btnSearch").click(function(){
-				var searchurl = encodeURI('ajax/ajaxdemo/?param='+$("#search").val());
-					
-				$.ajax({
-					
-					url: searchurl,
-					type: "GET" ,
-					success: function(result){
-						$('#studview').html(result);
-					},
-					error:function(e) {  
-					      alert('Error: ' + e);   
-					}  
-					
-				});
-			});
-			$("#search").on('input', function(){
-				
-			});
+			var table = $('#strandsview').DataTable( {
+			 	"sDom" : 'rtf',
+		        "scrollY":        "300px",
+		        "scrollCollapse": false,
+		        "select": {
+		        	style : 'single'
+		        }
+		 	} );
+			
+			table.on( 'dblclick', 'tr', function () {
+				var strandCode = table.row( this ).data()[0];
+				window.location.href = "${pageContext.request.contextPath}/courses/strands/" + strandCode;
+			} );
+		
 		});
 	</script>
 	
@@ -56,15 +61,25 @@
 						<a href="sprForm" class="linkButton">New Strand</a>    
 			</div>
 			
-				<jsp:include page="includes/strandsview.jsp" />
-			
-			<div id="horizontalAlign">
-				<div class="divElements" >
-					<input type="text" id="search"/>
-					<input type="button" id="btnSearch" value="Search">
-				</div>
-						
+			<div style="width: 1000px; " >
+				<table id="strandsview"class="display compact listTable">  
+					<thead>
+						<tr><th>StrandCode</th><th>Track</th><th>Description</th><th>Major</th></tr>  
+				   	</thead>
+					
+					<tbody>
+						<c:forEach var="strand" items="${strands}">   
+						   	<tr>  
+							   	<td>${strand.strandCode}</td>  
+							   	<td>${strand.track}</td>  
+							   	<td>${strand.strandDesc}</td>  
+							   	<td>${strand.major}</td>  
+							</tr>  
+				   		</c:forEach>
+					</tbody>
+				</table>  
 			</div>
+			
 			
 		</div>
 	</div>

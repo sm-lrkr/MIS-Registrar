@@ -8,7 +8,6 @@ public class StudentProfile {
 	@NotEmpty(message = "Please enter StudentID.")
 	private String studentID;
 	
-	
 	private String LRN;
 	
 

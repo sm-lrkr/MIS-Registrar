@@ -5,6 +5,10 @@
 <spring:url value="/resources/main2.css" var="css" />
 <spring:url value="/resources/jquery-3.2.1.js" var="jscript" />
 <spring:url value="/resources/myscript.js" var="myscript" />
+<spring:url value="/resources/css/dataTable.min.css" var="dtcss" />
+<spring:url value="/resources/css/dataTableSelect.min.css" var="dtselectcss" />
+<spring:url value="/resources/javascript/dataTable.js" var="dtjs" />
+<spring:url value="/resources/javascript/dataTableSelect.min.js" var="dtselectjs" />
 
     
     
@@ -14,9 +18,15 @@
 	
 	<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 	<title>MIS Registrar</title>
+	<link href="${dtcss}" rel="stylesheet">
+	<link href="${dtselectcss}" rel="stylesheet">
 	<link href="${css}" rel="stylesheet">
+	<link href="/resources/css/dataTableS.checkboxes.min.css" rel="stylesheet">
+	
 	<script type="text/javascript" src="${jscript}" ></script>
 	<script type="text/javascript" src="${myscript}" ></script>
+	<script type="text/javascript" src="${dtjs}" ></script>
+	<script type="text/javascript" src="${dtselectjs}" ></script>
 	<script type = "text/javascript">
 		$(document).ready(function(){
 			var ctx = "${pageContext.request.contextPath}";
@@ -24,6 +34,31 @@
 			departmentSelect($('#deptSelect'), $('#courseSelect'), ctx);
 			courseSelect($('#search'), $('#courseSelect'), $('#studview'), ctx);
 			searchStudents($('#search'), $('#searchBtn'), $('#courseSelect'), $('#studview'), ctx);	
+			
+			
+			var table = $('#studview').DataTable( {
+			 	"sDom" : 'rtf',
+		        "scrollY":        "300px",
+		        "scrollCollapse": false,
+		        "select": {
+		        	style : 'multiple'
+		        },
+		        "columnDefs": [
+		        	{"title" : "StudentNo", "visible" : false, "targets": 0 },
+		        	{"title" : "LRN"},
+		        	{"title" : "Last Name"},
+		        	{"title" : "First Name"},
+		        	{"title" : "Middle Name"},
+		        ]
+		 	} );
+			
+			table.on( 'dblclick', 'tr', function () {
+				var stdNo = table.row( this ).data()[0];
+				window.location.href = ctx+"/students/student/" + stdNo;
+			} );
+			
+			
+			
 		});
 	</script>
 	
@@ -50,16 +85,10 @@
 			    	<a id="bsc" class="linkButton" href="${pageContext.request.contextPath}/students/bsc"> BASIC </a> 
 			    </div>
 			    
-				<div class="tableContainer">
+				<div style="width: 1000px; " >
 					<jsp:include page="includes/studentview.jsp"/>
 				</div>
 				
-				<div id="horizontalAlign">
-			   		<div class="divElements" >
-				   		<input type="text" id="search"/>
-					    <input type="button" id="searchBtn" value="Search">
-				   	</div>
-		   		
 		   
 			   		<div class="divElements" >
 				   		<select id="deptSelect" >
@@ -75,7 +104,6 @@
 				   			
 				   		</select>
 				   	</div>
-			</div>
 			</div>
 		</div>
 	<jsp:include page="includes/footer.jsp" />

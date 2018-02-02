@@ -7,7 +7,7 @@
 
 <div>
 
-<p>III. College Profile</p>
+<h3>College Profile</h3>
 		
 	<form:form method="POST" action="${pageContext.request.contextPath}/students/spr/newProfile/clg/save/${student.studentNo}" modelAttribute="profile" id="profileForm">
 		<div>
@@ -86,17 +86,17 @@
 				
 				<tr>
 					<td>
-						<label>Shiftee?:</label>
+						<form:label path="shiftee">Shiftee? </form:label>
 					</td>
 					<td>
-						<select>
-							<option value="false" label="No" />
-							<option value="true" label="Yes" />
-						</select>
+						<form:select path="shiftee" value="${profile.courseID}">
+							<form:option value="false" label="No" />
+							<form:option value="true" label="Yes" />
+						</form:select>
 					</td>
 					
 					<td>
-						<label>Shift Course:</label>
+						<form:label path="shiftCourse" >Shift Course: </form:label>
 					</td>
 					<td>
 						<form:select path="shiftCourse" value="${profile.courseID}">
@@ -110,7 +110,7 @@
 				
 				<tr>
 					<td>
-						<label>Semester Entry:</label>
+						<form:label path="semEntry">Semester Entry </form:label>
 					</td>
 					<td>
 						<form:select path="semEntry">
@@ -121,7 +121,7 @@
 					</td>
 				
 					<td>
-						<label>Year of Entry:</label>
+						<form:label path="yearEntry">Year of Entry</form:label>
 					</td>
 					<td>
 						<form:select path="yearEntry">
@@ -153,7 +153,7 @@
 				<tr>
 					
 					<td>
-						<form:label path="graduationYear" value="Year of Graduation" />
+						<form:label path="graduationYear">Year of Graduation</form:label>
 					</td>
 					<td>
 						<form:select path="graduationYear">
@@ -180,7 +180,7 @@
 					</td>		
 					
 					<td>
-						<form:label path="applicationType" value="Type of Application" />
+						<form:label path="applicationType">Type of Application</form:label>
 					</td>
 					<td>
 						<form:select path="applicationType">
@@ -194,5 +194,7 @@
 		</div>
 		<hr>
 	</form:form>
-	 <input type="button" value="Submit" id="submit" >
+	<div style="margin-top: 20px; float:right;">
+		<input type="button" class="linkButton"id="submit" value="Submit" >
+	</div>
 </div>

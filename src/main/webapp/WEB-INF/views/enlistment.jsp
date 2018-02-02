@@ -4,6 +4,13 @@
     
 <spring:url value="/resources/main2.css" var="css" />
 <spring:url value="/resources/jquery-3.2.1.js" var="jscript" />
+<spring:url value="/resources/myscript.js" var="myscript" />
+<spring:url value="/resources/css/dataTable.min.css" var="dtcss" />
+<spring:url value="/resources/css/dataTableSelect.min.css" var="dtselectcss" />
+<spring:url value="/resources/css/dataTables.checkboxes.min.css" var="dtcbcss" />
+<spring:url value="/resources/javascript/dataTable.js" var="dtjs" />
+<spring:url value="/resources/javascript/dataTableSelect.min.js" var="dtselectjs" />
+<spring:url value="/resources/javascript/dataTables.checkboxes.min.js" var="dtcbjs" />
 
     
     
@@ -13,9 +20,22 @@
 	
 	<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 	<title>MIS Registrar</title>
+	<link href="${dtcss}" rel="stylesheet">
+	<link href="${dtselectcss}" rel="stylesheet">
+	<link href="${dtcbcss}" rel="stylesheet">
 	<link href="${css}" rel="stylesheet">
+	
+	
 	<script type="text/javascript" src="${jscript}" ></script>
+	<script type="text/javascript" src="${myscript}" ></script>
+	<script type="text/javascript" src="${dtjs}" ></script>
+	<script type="text/javascript" src="${dtselectjs}" ></script>
+	<script type="text/javascript" src="${dtcbjs}" ></script>
+	
+	
 	<script type = "text/javascript">
+	
+	
 		$(document).ready(function(){
 			$("#btnSearch").click(function(){
 				var searchurl = encodeURI('ajax/ajaxdemo/?param='+$("#search").val());
@@ -44,6 +64,28 @@
 			$("#withdraw").click(function(){
 				$("#enlistedTable").submit();
 			});
+			
+			
+			var table1 = $('#enlisted').DataTable( {
+			 	"sDom" : 'rt',
+		        "scrollY":        "300px",
+		        "scrollCollapse": false,
+		        "select": {
+		        	style : 'multi'
+		        },
+		        "columnDefs": [
+		        	{	"targets": 0,  
+		        		"checkboxes": {
+		        			"selectRow": true	
+		        		}	
+		        	},
+		        	{	"targets": [0,2,3,5,6,7],  
+		        		"orderable" : false
+		        	}
+		        ],
+		        'order': [[1, 'asc']]
+		 	} );
+			
 		});
 	</script>
 	

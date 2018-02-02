@@ -2,10 +2,13 @@
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form" %>
     
 	
-		<div class="tableContainer">
-			<table class="listTable">  
-			<tr><th>Subject</th><th>Section</th><th>Units</th><th>Time</th><th>Days</th><th>Room</th></tr>
-			   	<c:forEach var="sched" items="${schedules}">   
+	<table id="schedsview" class="display compact">  
+		<thead>
+				<tr><th>Subject</th><th>Section</th><th>Units</th><th>Time</th><th>Days</th><th>Room</th></tr>
+		</thead>
+		
+		<tbody>
+				<c:forEach var="sched" items="${schedules}">   
 					<tr>  
 					  	<td> ${sched.subjectCode}</td>  
 					   	<td> ${sched.section}</td>  
@@ -24,9 +27,6 @@
 							<td> ${sched.labRoom}</td>  
 						</tr>    
 					</c:if>
-		   		</c:forEach>  
-	  		 </table>
-		</div>
-		  
-   <br/>  
-   
+		   		</c:forEach>
+		</tbody>
+	</table>

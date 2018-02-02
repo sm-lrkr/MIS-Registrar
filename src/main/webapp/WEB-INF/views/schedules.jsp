@@ -6,7 +6,11 @@
     
 <spring:url value="/resources/main2.css" var="css" />
 <spring:url value="/resources/jquery-3.2.1.js" var="jscript" />
-
+<spring:url value="/resources/myscript.js" var="myscript" />
+<spring:url value="/resources/css/dataTable.min.css" var="dtcss" />
+<spring:url value="/resources/css/dataTableSelect.min.css" var="dtselectcss" />
+<spring:url value="/resources/javascript/dataTable.js" var="dtjs" />
+<spring:url value="/resources/javascript/dataTableSelect.min.js" var="dtselectjs" />
     
     
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
@@ -15,10 +19,29 @@
 	
 	<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 	<title>MIS Registrar</title>
+	
+	<link href="${dtcss}" rel="stylesheet">
+	<link href="${dtselectcss}" rel="stylesheet">
 	<link href="${css}" rel="stylesheet">
+	
 	<script type="text/javascript" src="${jscript}" ></script>
+	<script type="text/javascript" src="${myscript}" ></script>
+	<script type="text/javascript" src="${dtjs}" ></script>
+	<script type="text/javascript" src="${dtselectjs}" ></script>
+
+
 	<script type = "text/javascript">
 		$(document).ready(function(){
+			
+			var table = $('#schedsview').DataTable( {
+			 	"sDom" : 'rtf',
+		        "scrollY":        "300px",
+		        "scrollCollapse": false,
+		        "select": {
+		        	style : 'multiple'
+		        }
+		 	} );
+			
 			$(".cbox").on('click', function(){
 				var searchurl = encodeURI('ajax/schedSearch/?param='+$("#search").val());
 				
@@ -52,41 +75,11 @@
 					
 				});
 			});
-			$("#btnSearch").on('click', function(){
-				var searchurl = encodeURI('${pageContext.request.contextPath}/ajax/schedSearch/?param='+$("#search").val());
-				
-				$.ajax({
-					url: searchurl,
-					data: $("#daysPanel").serialize(),
-					type: "POST" ,
-					success: function(result){
-						$('#schedsView').html(result);
-					},
-					error: function (jqXHR, exception) {
-				        var msg = '';
-				        if (jqXHR.status === 0) {
-				            msg = 'Not connect.\n Verify Network.';
-				        } else if (jqXHR.status == 404) {
-				            msg = 'Requested page not found. [404]';
-				        } else if (jqXHR.status == 500) {
-				            msg = 'Internal Server Error [500].';
-				        } else if (exception === 'parsererror') {
-				            msg = 'Requested JSON parse failed.';
-				        } else if (exception === 'timeout') {
-				            msg = 'Time out error.';
-				        } else if (exception === 'abort') {
-				            msg = 'Ajax request aborted.';
-				        } else {
-				            msg = 'Uncaught Error.\n' + jqXHR.responseText;
-				        }
-				       	alert(msg);
-				    }
-	  
-					
-				});
-				
-				
-			});
+			
+			
+			
+			
+			
 		});
 	</script>
 	
@@ -114,31 +107,12 @@
 			</div>
 		
 			
-			<div id="schedsView"><jsp:include page="includes/${schedsView}.jsp" /></div>
+			<div style="width: 1000px; " >
+				<jsp:include page="includes/${schedsView}.jsp" />
+			</div>
 		
 			
-			<div id="horizontalAlign">
-			 	<div class="divElements" >
-				   	<input type="text" id="search"/>
-					<input type="button" id="btnSearch" value="Search">
-				</div>
-	   		
-   
-			   	<div class="divElements" >
-				   	<select id="deptSelect" >
-			   			<option value="none" label="--Department--"/>
-				   	</select>
-				
-				   	<select id="courseSelect">
-				   		<option value="none" label="--- Course ---"/>
-				   	</select>
-				</div>
-				   	
-				<div class="divElements">
-			   		 <a href="sprForm" >Add New Schedule</a>
-			   	</div>    
-			</div>
-			    
+			
 			<div id="horizontalAlign">
 			   	<div class="divElements" >
 				   	<form:form id="daysPanel" action="" modelAttribute="daysCollector" >

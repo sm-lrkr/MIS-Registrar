@@ -11,25 +11,21 @@
 						<div>
 							<h3>${years[year.index]}</h3>
 							<c:forEach begin="1" end="3" varStatus="sem">
-								<table id="semsubjects" class="listTable">  
-									<tr><th colspan="7" >${sems[sem.index]}</th></tr>
-									<tr><th rowspan="2"></th><th rowspan="2">CODE</th><th rowspan="2">DESCRIPTIVE TITLE</th><th colspan="3"> UNITS</th><th rowspan="2">PRE-REQUISITE(s)</th></tr>  
-									<tr><th>LEC</th><th>LAB</th><th>TOTAL</th></tr>
+								<table id="semTable-${year.index}-${sem.index}" class="listTable display compact "  >  
+									<thead>
+										<tr><th colspan="7" >${sems[sem.index]}</th></tr>
+										<tr><th rowspan="2"></th><th rowspan="2">CODE</th><th rowspan="2">DESCRIPTIVE TITLE</th><th colspan="3"> UNITS</th><th rowspan="2">PRE-REQUISITE(s)</th></tr>  
+										<tr><th>LEC</th><th>LAB</th><th>TOTAL</th></tr>
+									</thead>
 									<c:forEach var="subj" items="${curriculumForm.curricSubjects}" varStatus="status">
 										 	<c:if test="${subj.year == year.index && subj.sem == sem.index}">
 							   					<tr>
-													<td>  
-														<form:input path="curricSubjects[${status.index}].subjectCode" type="hidden" />
-									   					<form:input path="curricSubjects[${status.index}].subjectDesc" type="hidden" />
-									   					<form:input path="curricSubjects[${status.index}].year"  type="hidden" />
-														<form:input path="curricSubjects[${status.index}].sem"  type="hidden" />
-														<form:checkbox path="curricSubjects[${status.index }].checked" />
-													</td>
+													<td></td>
 													<td>${subj.subjectCode}</td>
 													<td>${subj.subjectDesc}</td>
 													<td>${subj.lecUnits}</td>
 													<td>${subj.labUnits}</td>
-													<td></td>
+													<td>${subj.labUnits + subj.lecUnits}</td>
 													<td></td>		
 												</tr>
 							   				</c:if>

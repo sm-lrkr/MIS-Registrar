@@ -75,10 +75,14 @@
 			
 			<tr>
 				<td>
-				<form:label path="maritalStatus">Marital Status</form:label>
+					<form:label path="maritalStatus">Marital Status</form:label>
 				</td>
 				<td>
-				<form:input path="maritalStatus"/>
+					<form:select path = "maritalStatus">
+					        <form:option value = "NONE" label = ""/>
+					        <form:option value = "Single" label = "Single" />
+					        <form:option value = "Married" label = "Married" />
+				     </form:select>     	
 				</td>
 		
 				<td>

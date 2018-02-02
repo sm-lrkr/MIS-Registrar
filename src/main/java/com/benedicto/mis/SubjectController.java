@@ -41,7 +41,7 @@ public class SubjectController {
 	
 	@RequestMapping(value = "/", method = RequestMethod.GET)
 	public ModelAndView subjects() {
-		List<Subject> list = db.getSubjects("");
+		List<Subject> list = db.getCollegeSubjects("");
 		ModelAndView model = new ModelAndView();
 		model.setViewName("subjects");
 		model.addObject("subjects", list);
@@ -51,7 +51,7 @@ public class SubjectController {
 	
 	@RequestMapping(value = "/clg", method = RequestMethod.GET)
 	public ModelAndView clgSubjects() {
-		List<Subject> list = db.getSubjects("");
+		List<Subject> list = db.getCollegeSubjects("");
 		ModelAndView model = new ModelAndView();
 		model.setViewName("clgsubjects");
 		model.addObject("subjects", list);
@@ -59,9 +59,25 @@ public class SubjectController {
 		return model;
 	}
 	
+	@RequestMapping(value = "/clg/{subjectCode}", method = RequestMethod.GET)
+	public ModelAndView clgSubject(@PathVariable("subjectCode") String subjectCode) {
+		Subject subject = db.getCollegeSubjectByCode(subjectCode);
+		List<Schedule> schedules = db.getCollegeSchedules(subjectCode,"");
+		List<Curriculum> currics = db.getCollegeCurriculumsBySubject(subjectCode);
+		
+		ModelAndView model = new ModelAndView();
+		
+		model.setViewName("subject");
+		model.addObject("subjectType", "clg");
+		model.addObject("subject", subject);
+		model.addObject("schedules", schedules);
+		model.addObject("currics", currics);
+		return model;
+	}
+	
 	@RequestMapping(value = "/sh", method = RequestMethod.GET)
 	public ModelAndView shSubjects() {
-		List<SubjectSHS> list = db.getSHSubjects("");
+		List<Subject> list = db.getSHSubjects("");
 		ModelAndView model = new ModelAndView();
 		model.setViewName("shsubjects");
 		model.addObject("subjects", list);
@@ -69,9 +85,25 @@ public class SubjectController {
 		return model;
 	}
 	
+	@RequestMapping(value = "/sh/{subjectCode}", method = RequestMethod.GET)
+	public ModelAndView shSubject(@PathVariable("subjectCode") String subjectCode) {
+		Subject subject = db.getCollegeSubjectByCode(subjectCode);
+		List<Schedule> schedules = db.getSHSchedules(subjectCode,"");
+		List<Curriculum> currics = db.getSHCurriculumsBySubject(subjectCode);
+		
+		ModelAndView model = new ModelAndView();
+		
+		model.setViewName("subject");
+		model.addObject("subjectType", "sh");
+		model.addObject("subject", subject);
+		model.addObject("schedules", schedules);
+		model.addObject("currics", currics);
+		return model;
+	}
+	
 	@RequestMapping(value = "/bsc", method = RequestMethod.GET)
 	public ModelAndView bscSubjects() {
-		List<SubjectSHS> list = db.getBSCSubjects("");
+		List<Subject> list = db.getBSCSubjects("");
 		ModelAndView model = new ModelAndView();
 		model.setViewName("bscsubjects");
 		model.addObject("subjects", list);
@@ -80,26 +112,91 @@ public class SubjectController {
 	}
 
 	
-	@RequestMapping(value = "/subjectForm", method = RequestMethod.GET)
-	public ModelAndView subjectForm(@ModelAttribute("subject") Subject s) {
+	@RequestMapping(value = "/newSubject/clg", method = RequestMethod.GET)
+	public ModelAndView newCollegeSubject() {
 		System.out.println("Add new subject");
-	
-		return new ModelAndView("subjectForm", "subject", new Subject());
-	}
-	
-	
-	@RequestMapping(value = "/newSubject", method = RequestMethod.POST)
-	public ModelAndView addNewSubject(@ModelAttribute("subject") Subject s) {
-		System.out.println("Add new course");
-		db.createSubject(s);
-		
-		List<Subject> list = db.getSubjects("");
+		List<Subject> list = db.getCollegeSubjects("");
+		System.out.println("List size: "+ list.size());
 		ModelAndView model = new ModelAndView();
-		model.setViewName("subjects");
+		model.setViewName("subjectForm");
 		model.addObject("subjects", list);
 		model.addObject("subject", new Subject());
+		model.addObject("subjectType", "clg");
+		model.addObject("formType", "newSubject");
+		model.addObject("pageTitle", "New Subject");
+		
+		
+		
 		return model;
 	}
+	
+	@RequestMapping(value = "/newSubject/sh", method = RequestMethod.GET)
+	public ModelAndView newSHSubject() {
+		System.out.println("Add new subject");
+		List<Subject> list = db.getSHSubjects("");
+		System.out.println("List size: "+ list.size());
+		ModelAndView model = new ModelAndView();
+		model.setViewName("subjectForm");
+		model.addObject("subjects", list);
+		model.addObject("subject", new Subject());
+		model.addObject("subjectType", "sh");
+		model.addObject("formType", "newSubject");
+		model.addObject("pageTitle", "New Subject");
+		
+		
+		
+		return model;
+	}
+	
+	
+	@RequestMapping(value = "/newSubject/clg/save", method = RequestMethod.POST)
+	public ModelAndView addNewCollegeSubject(@ModelAttribute("subject") Subject s) {
+		System.out.println("Add new course");
+		db.createCollegeSubject(s);
+		return new ModelAndView("redirect:/subjects/clg");
+	}
+	
+	
 
+	@RequestMapping(value = "/newSubject/sh/save", method = RequestMethod.POST)
+	public ModelAndView addNewSHSubject(@ModelAttribute("subject") Subject s) {
+		System.out.println("Add new course");
+		db.createSHSubject(s);
+		
+		return new ModelAndView("redirect:/subjects/sh");
+	}
 
+	@RequestMapping(value = "/editSubject/clg/{subjectCode}", method = RequestMethod.GET)
+	public ModelAndView editCollegeSubject(@PathVariable("subjectCode") String subjectCode) {
+		System.out.println("Edit existing subject");
+		
+		Subject subject = db.getCollegeSubjectByCode(subjectCode);
+		List<Subject> list = db.getCollegeSubjects("");
+		System.out.println("List size: "+ list.size());
+		
+		final String _subjectCode = subjectCode;
+		list.remove(subject);
+		
+		
+		list.removeIf(s -> s.getSubjectCode() == _subjectCode );
+	
+		ModelAndView model = new ModelAndView();
+		model.setViewName("subjectForm");
+		model.addObject("subjects", list);
+		model.addObject("subject", subject);
+		model.addObject("subjectType", "clg");
+		model.addObject("formType", "editSubject");
+		model.addObject("pageTitle", subject.getSubjectCode()+" - " + subject.getSubjectDesc());
+		
+		
+		return model;
+	}
+	
+	@RequestMapping(value = "/editSubject/clg/save{subjectCode}", method = RequestMethod.POST)
+	public ModelAndView saveEditedCollegeSubject(@PathVariable("subjectCode") String subjectCode, @ModelAttribute("subject") Subject s) {
+		System.out.println("Save edited subject.");
+		db.updateCollegeSubject(s, subjectCode);
+		return new ModelAndView("redirect:/subjects/clg/"+ s.getSubjectCode());
+	}	
+	
 }

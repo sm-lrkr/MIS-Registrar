@@ -14,7 +14,7 @@
 		
 	</div>
 	
-	<div style="display:block; margin-top:20px; "><a href="${pageContext.request.contextPath}/" ><span class="linkButton" >Back to Main</span></a></div> 
+	<div style="display:block; margin-top:20px; margin-left: 40px;	 "><a href="${pageContext.request.contextPath}/" ><span class="linkButton" >Back to Main</span></a></div> 
 	
 	
 	

@@ -6,6 +6,11 @@
     
 <spring:url value="/resources/main2.css" var="css" />
 <spring:url value="/resources/jquery-3.2.1.js" var="jscript" />
+<spring:url value="/resources/myscript.js" var="myscript" />
+<spring:url value="/resources/css/dataTable.min.css" var="dtcss" />
+<spring:url value="/resources/css/dataTableSelect.min.css" var="dtselectcss" />
+<spring:url value="/resources/javascript/dataTable.js" var="dtjs" />
+<spring:url value="/resources/javascript/dataTableSelect.min.js" var="dtselectjs" />
 
     
     
@@ -15,8 +20,16 @@
 	
 	<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 	<title>MIS Registrar</title>
+	
+	<link href="${dtcss}" rel="stylesheet">
+	<link href="${dtselectcss}" rel="stylesheet">
 	<link href="${css}" rel="stylesheet">
+	
 	<script type="text/javascript" src="${jscript}" ></script>
+	<script type="text/javascript" src="${myscript}" ></script>
+	<script type="text/javascript" src="${dtjs}" ></script>
+	<script type="text/javascript" src="${dtselectjs}" ></script>
+	
 	<script type = "text/javascript">
 		$(document).ready(function(){
 			$("#btnSearch").click(function(){
@@ -35,9 +48,21 @@
 					
 				});
 			});
-			$("#search").on('input', function(){
-				
-			});
+			
+			var table = $('#coursesview').DataTable( {
+			 	"sDom" : 'rtf',
+		        "scrollY":        "300px",
+		        "scrollCollapse": false,
+		        "select": {
+		        	style : 'multiple'
+		        }
+		 	} );
+			
+			table.on( 'dblclick', 'tr', function () {
+				var courseID = table.row( this ).data()[0];
+				window.location.href = "${pageContext.request.contextPath}/courses/" + courseID;
+			} );
+
 		});
 	</script>
 	
@@ -56,15 +81,24 @@
 						<a href="sprForm" class="linkButton">New Course</a>    
 			</div>
 			
-				<jsp:include page="includes/coursesview.jsp" />
-			
-			<div id="horizontalAlign">
-				<div class="divElements" >
-					<input type="text" id="search"/>
-					<input type="button" id="btnSearch" value="Search">
-				</div>
-						
+			<div style="width: 1000px; " >
+				<table id="coursesview" class="display compact listTable" >  
+					<thead>
+						<tr><th>CourseId</th><th>Description</th><th>Department</th></tr>  
+				   	</thead>
+					
+					<tbody>
+						<c:forEach var="course" items="${list}">   
+						   	<tr>  
+							   	<td>${course.courseID}</td>  
+							   	<td>${course.courseDesc}</td>  
+							   	<td>${course.departmentCode}</td>  
+							</tr>  
+				   		</c:forEach> 
+					</tbody>
+			 </table>  
 			</div>
+		
 			
 		</div>
 	

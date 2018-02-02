@@ -5,7 +5,7 @@
 		   	<c:forEach var="schedule" items="${schedulesForm.schedules}">   
 			   	<tr>  
 				   	<td>${schedule.subjectCode}</td>  
-				   	
+				   	<td> ${schedule.section}</td>  
 				   	<td>${schedule.lecTimeStart}</td>  
 				   	<td>${schedule.lecTimeEnd}</td>
 				   	<td>${schedule.lecRoom}</td>

@@ -266,7 +266,7 @@ public class HomeController {
 	@RequestMapping(value = "/newSubject", method = RequestMethod.POST)
 	public ModelAndView addNewSubject(@ModelAttribute("subject") Subject s) {
 		System.out.println("Add new course");
-		db.createSubject(s);
+		db.createCollegeSubject(s);
 		return new ModelAndView("redirect:/subjects");
 	}
 	
@@ -280,7 +280,7 @@ public class HomeController {
 	@RequestMapping(value = "/addCurriculum/{courseID}")
 	public ModelAndView addCurriculum(@PathVariable("courseID") String courseID) {
 		logger.info("addCurriculum");
-		List<Subject> list = db.getSubjects("");
+		List<Subject> list = db.getCollegeSubjects("");
 		SubjectsViewForm subjects = new SubjectsViewForm();
 		subjects.setSubjects(list);
 

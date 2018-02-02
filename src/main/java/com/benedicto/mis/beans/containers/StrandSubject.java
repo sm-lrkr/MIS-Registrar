@@ -2,7 +2,7 @@ package com.benedicto.mis.beans.containers;
 
 public class StrandSubject  implements Comparable<StrandSubject>{
 	
-	private SubjectSHS subject;
+	private Subject subject;
 	private int year;
 	private int sem;
 	
@@ -32,10 +32,10 @@ public class StrandSubject  implements Comparable<StrandSubject>{
 		
 		return s.getYear() - this.getYear();
 	}
-	public SubjectSHS getSubject() {
+	public Subject getSubject() {
 		return subject;
 	}
-	public void setSubject(SubjectSHS subject) {
+	public void setSubject(Subject subject) {
 		this.subject = subject;
 	}
 }

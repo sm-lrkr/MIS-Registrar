@@ -81,13 +81,12 @@
 	
 	
 	
-	<div>
-		<div>
+	<div >
+		<div style="border-bottom: 1px solid grey;">
 			<h1 style="display: inline-block; margin-top: 0px;">${student.lastName}, ${student.firstName} ${student.middleName}</h1>
 			<div class="floatright">
-				<a href="newspr" ><span class="linkButton" >View</span></a>   
-				   <a href="sprForm" ><span class="linkButton" >Register</span></a>   
-			   </div>
+				<a href="${pageContext.request.contextPath}/students/registration/${student.studentNo}" ><span class="linkButton" >Back</span></a>   
+				</div>
 		</div>
 	
 		<div>

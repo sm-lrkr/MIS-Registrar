@@ -121,16 +121,24 @@ public class StudentController {
 
 
 	@RequestMapping(value = "/spr/saveEdited", method = RequestMethod.POST)
-	public ModelAndView save(@ModelAttribute("sprForm") SPRForm spr, BindingResult result, @RequestParam("profileForm") String profileForm) {
-		logger.info("The student ID is: {}.", spr.getStudent().getStudentNo());
-		
+	public ModelAndView save(@ModelAttribute("sprForm") SPRForm spr, BindingResult result, @RequestParam("profile") String profile) {
+		logger.info("The student No is: {}.", spr.getStudent().getStudentNo());
+		System.out.println("Profile Type: " + profile);
+		System.out.println("Student No from profile : " + spr.getProfile().getStudentNo());
 		db.updateSPR(spr.getStudent());
 		db.updateStudentFBG(spr.getFbg());
-		if(profileForm.equals("collegeProfile")) {
+		
+		
+		if(profile.trim().equals("collegeProfile")) {
 			db.updateCollegeProfile(spr.getProfile());
 		}
-		else if(profileForm.equals("shProfile")) {
+		else if(profile.trim().equalsIgnoreCase("shProfile")) {
+			System.out.println("shProfile");
 			db.updateSHProfile(spr.getProfile());
+		}
+		else {
+			System.out.println("Profile Type: " +profile+".");
+			
 		}
 		return new ModelAndView("redirect:/students/spr/info/"+ spr.getStudent().getStudentNo());
 	}
