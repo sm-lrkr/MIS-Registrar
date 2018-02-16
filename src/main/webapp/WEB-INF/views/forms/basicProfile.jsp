@@ -26,6 +26,10 @@
 						<form:select path="studentStatus">
 							<form:option value="regular" label="Regular" />
 							<form:option value="irregular" label="Irregular" />
+							<form:option value="withdrawn" label="Withdrawn" />
+							<form:option value="suspended" label="Suspended" />
+							<form:option value="dismissed" label="Dismissed" />
+						
 						</form:select>
 					</td>
 					

@@ -44,6 +44,11 @@
 				var subjectCode = table.row( this ).data()[0];
 				window.location.href = "${pageContext.request.contextPath}/subjects/clg/" + subjectCode;
 			} );
+			
+			$("#print").click(function(){
+				window.print();
+				
+			});
 		});
 	</script>
 	
@@ -54,13 +59,14 @@
 	
 	<jsp:include page="includes/header.jsp" />
 	<div id="main">
-	
+
 		<jsp:include page="includes/main-left.jsp" />
 		
 		<div>
 			<h1 style="display: inline-block; margin-top: 0px;">Subjects</h1>  
 			<div class="floatright">
 					<a href="${pageContext.request.contextPath}/subjects/newSubject/clg" ><span class="linkButton">Add New Subject</span></a>    
+					<button id="print" class="linkButton">Print</button>   
 			</div>
 			
 			<div style="padding-bottom: 5px;">

@@ -23,6 +23,11 @@ public class Schedule {
 	private int labUnits;
 	private int lecUnits;
 	
+	
+	private String personnelID;
+	private String personnelName;
+	
+	
 	private boolean checked;
 	
 	
@@ -137,9 +142,18 @@ public class Schedule {
 	public void setSemester(String semester) {
 		this.semester = semester;
 	}
-	
-	
-	
+	public String getPersonnelID() {
+		return personnelID;
+	}
+	public void setPersonnelID(String personnelID) {
+		this.personnelID = personnelID;
+	}
+	public String getPersonnelName() {
+		return personnelName;
+	}
+	public void setPersonnelName(String personnelName) {
+		this.personnelName = personnelName;
+	}
 	
 	
 }

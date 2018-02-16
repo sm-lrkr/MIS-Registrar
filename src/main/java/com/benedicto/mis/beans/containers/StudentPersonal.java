@@ -1,17 +1,16 @@
 package com.benedicto.mis.beans.containers;
 
-import org.hibernate.validator.constraints.*;
 
-public class Student {
+
+public class StudentPersonal {
 
 	private String studentNo;
-	private String studentID;
 	
+
 	private String firstName;
-	
 	private String middleName;
-	
 	private String lastName;
+	
 	
 	
 	private String gender;
@@ -41,44 +40,63 @@ public class Student {
 	
 	private Boolean checked;
 
+	
+	
+	/**
+	 * @return the firstName
+	 */
+	public String getFirstName() {
+		return firstName;
+	}
+
+	/**
+	 * @param firstName the firstName to set
+	 */
+	public void setFirstName(String firstName) {
+		this.firstName = firstName;
+	}
+
+	/**
+	 * @return the middleName
+	 */
+	public String getMiddleName() {
+		return middleName;
+	}
+
+	/**
+	 * @param middleName the middleName to set
+	 */
+	public void setMiddleName(String middleName) {
+		this.middleName = middleName;
+	}
+
+	/**
+	 * @return the lastName
+	 */
+	public String getLastName() {
+		return lastName;
+	}
+
+	/**
+	 * @param lastName the lastName to set
+	 */
+	public void setLastName(String lastName) {
+		this.lastName = lastName;
+	}
+
+	/**
+	 * @param working the working to set
+	 */
+	public void setWorking(boolean working) {
+		this.working = working;
+	}
+
 	public String getStudentNo() {
 		return studentNo;
 	}
 
 	public void setStudentNo(String studentNo) {
 		this.studentNo = studentNo;
-	}
-
-	public String getStudentID() {
-		return studentID;
-	}
-
-	public void setStudentID(String studentID) {
-		this.studentID = studentID;
-	}
-
-	public String getFirstName() {
-		return firstName;
-	}
-
-	public void setFirstName(String firstName) {
-		this.firstName = firstName;
-	}
-
-	public String getMiddleName() {
-		return middleName;
-	}
-
-	public void setMiddleName(String middleName) {
-		this.middleName = middleName;
-	}
-
-	public String getLastName() {
-		return lastName;
-	}
-
-	public void setLastName(String lastName) {
-		this.lastName = lastName;
 	}
 
 	public String getGender() {

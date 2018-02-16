@@ -72,7 +72,6 @@ select.disabledInput{
 }
 
 input.disabledInput{
-	width: 100%;
 	size: 0px;
 }
 
@@ -89,15 +88,30 @@ input.disabledInput{
 
 .listTable tr > th{
 	 border: 1px solid grey;
-	 height: 30px;
+	 height: 25px;
 	 text-align: center;
 }
 
 .listTable tr > td{
-	 border: 1px solid grey;
-	 height: 10px;
+	 height: 20px;
 	 padding-left: 10px;
 	 width: auto;
+}
+
+.printTable tr > td{
+	 border: 1px solid grey;
+
+}
+
+.dt-button.blue{
+	background-color: white;
+	padding: 10px 15px;
+	border: 1px solid black;
+	font-weight: bold;
+	margin: auto;
+	min-width: 80px;
+	text-align: center;
+	text-decoration: none;
 }
 
 .linkButton{

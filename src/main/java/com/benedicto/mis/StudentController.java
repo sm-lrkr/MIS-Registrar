@@ -1,6 +1,7 @@
 package com.benedicto.mis;
 
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
@@ -40,7 +41,7 @@ public class StudentController {
 		Locale locale = new Locale("en_US");
 		logger.info("Welcome home! The client locale is {}.", locale);
 
-		List<Student> list = db.getAllStudents("","");
+		List<StudentProfile> list = db.getAllStudents("","");
 		List<Department> departments = db.getDepartments("");
 		List<Course> courses = db.getCollegeCourses("");
 		
@@ -60,7 +61,7 @@ public class StudentController {
 		Locale locale = new Locale("en_US");
 		logger.info("Welcome home! The client locale is {}.", locale);
 
-		List<Student> list = db.getCollegeStudents("","");
+		List<StudentProfile> list = db.getCollegeStudents("","");
 		List<Department> departments = db.getDepartments("");
 		List<Course> courses = db.getCollegeCourses("");
 		
@@ -74,6 +75,35 @@ public class StudentController {
 		return model;
 	}
 	
+	@RequestMapping(value = "/clg/printByCourse", method = RequestMethod.GET)
+	public ModelAndView printCollegeStudents(@RequestParam("courseID") String courseID, @RequestParam("filter") String filter) {
+		Locale locale = new Locale("en_US");
+		logger.info("Welcome home! The client locale is {}.", locale);
+		System.out.println("The course is: " + courseID);
+		System.out.println("The course is: " + courseID);
+		
+		boolean byCourse = true;
+		Course course = new Course();
+		if(courseID.trim().equals("")) {
+			course.setCourseDesc("College Students");
+			byCourse = false;
+		}
+		else {
+			course = db.getCourseByID(courseID);
+		}
+		
+		List<StudentProfile> list = db.getCollegeStudents(filter,courseID);
+		
+		ModelAndView model = new ModelAndView();
+		
+		model.setViewName("studentsByCourse");
+		model.addObject("courseDesc", course.getCourseDesc());
+		model.addObject("students", list);
+		model.addObject("byCourse", byCourse);
+		
+		return model;
+	}
+	
 	
 
 	
@@ -82,18 +112,50 @@ public class StudentController {
 		Locale locale = new Locale("en_US");
 		logger.info("Welcome home! The client locale is {}.", locale);
 
-		List<Student> list = db.getSHStudents("","");
-		List<Department> departments = db.getDepartments("");
-		List<Course> courses = db.getCollegeCourses("");
-		
+		List<StudentProfile> list = db.getSHStudents("","");
+		List<Strand> strands= db.getSHStrands("");
 
+		
 		ModelAndView model = new ModelAndView();
 		model.setViewName("sh");
 		model.addObject("students", list);
-		model.addObject("departments", departments);
-		model.addObject("strands", courses);
+		model.addObject("strands", strands);
 		
 
+		return model;
+	}
+	
+	@RequestMapping(value = "/sh/printByStrand", method = RequestMethod.GET)
+	public ModelAndView printSHStudents(@RequestParam("strandCode") String strandCode, @RequestParam("filter") String filter) {
+		Locale locale = new Locale("en_US");
+		logger.info("Welcome home! The client locale is {}.", locale);
+		System.out.println("The course is: " + strandCode);
+		
+		Strand strand = new Strand();
+		boolean byStrand = true;
+		
+		if(strandCode.trim().equals("")) {
+			strand.setStrandDesc("Senior High School");
+			strand.setMajor("");
+			byStrand = false;
+		}
+		else {
+			strand = db.getSHStrandByCode(strandCode);
+		}
+		String title = strand.getStrandDesc();
+		if(!strand.getMajor().equals("")) {
+			title.concat("-"+strand.getMajor());
+		}
+		
+		List<StudentProfile> list = db.getSHStudents(filter, strandCode);
+		
+		ModelAndView model = new ModelAndView();
+		
+		model.setViewName("studentsByStrand");
+		model.addObject("strandDesc", title);
+		model.addObject("students", list);
+		model.addObject("byStrand", byStrand);
+		
 		return model;
 	}
 	
@@ -102,7 +164,7 @@ public class StudentController {
 		Locale locale = new Locale("en_US");
 		logger.info("Welcome home! The client locale is {}.", locale);
 		
-		List<Student> list = db.getBSCStudents("");
+		List<StudentProfile> list = db.getBSCStudents("");
 		
 		List<Department> departments = db.getDepartments("");
 		String [] gradeLevels = {"", "Grade 1","Grade 2", "Grade 3", "Grade 4", "Grade 5", "Grade 6", "Grade 7", "Grade 8", "Grade 9", "Grade 10"};
@@ -122,16 +184,17 @@ public class StudentController {
 
 	@RequestMapping(value = "/spr/saveEdited", method = RequestMethod.POST)
 	public ModelAndView save(@ModelAttribute("sprForm") SPRForm spr, BindingResult result, @RequestParam("profile") String profile) {
-		logger.info("The student No is: {}.", spr.getStudent().getStudentNo());
+		logger.info("The student No is: {}.", spr.getPersonal().getStudentNo());
 		System.out.println("Profile Type: " + profile);
 		System.out.println("Student No from profile : " + spr.getProfile().getStudentNo());
-		db.updateSPR(spr.getStudent());
+		db.updateSPR(spr.getPersonal());
 		db.updateStudentFBG(spr.getFbg());
 		
 		
 		if(profile.trim().equals("collegeProfile")) {
 			db.updateCollegeProfile(spr.getProfile());
 		}
+	
 		else if(profile.trim().equalsIgnoreCase("shProfile")) {
 			System.out.println("shProfile");
 			db.updateSHProfile(spr.getProfile());
@@ -140,14 +203,27 @@ public class StudentController {
 			System.out.println("Profile Type: " +profile+".");
 			
 		}
-		return new ModelAndView("redirect:/students/spr/info/"+ spr.getStudent().getStudentNo());
+		
+		if(spr.getProfile().getEnrollmentStatus().trim().equals("true")) {
+			System.out.println("Enrollment Status is true");
+			Enrollment e = db.getEnrollment(spr.getPersonal().getStudentNo(), "2017-2018", 1);
+			if(e.getEnrollmentNo().equals("")) {
+				System.out.println("Student not enrolled for the current sem. Adding new enrollment. ");
+				db.addNewStudentEnrollment(spr.getPersonal().getStudentNo(), "2017-2018", 1 );
+			}
+		}
+		else {
+			System.out.println("Student not enrolled.");
+		}
+		
+		return new ModelAndView("redirect:/students/spr/info/"+ spr.getPersonal().getStudentNo());
 	}
 
 	@RequestMapping(value = "/spr/saveNew", method = RequestMethod.POST)
 	public ModelAndView saveNew(@ModelAttribute("sprForm") @Valid SPRForm spr, BindingResult result) {
-		logger.info("The student Name is: {}.", spr.getStudent().getFirstName());
+		logger.info("The student Name is: {}.", spr.getPersonal().getFirstName());
 		System.out.println("asdfasf");
-		String studentNo = String.valueOf(db.createSPR(spr.getStudent()));
+		String studentNo = String.valueOf(db.createSPR(spr.getPersonal()));
 		spr.getFbg().setStudentNo(studentNo);
 		db.createFBG(spr.getFbg());
 		return new ModelAndView("redirect:/students/student/"+ studentNo);
@@ -160,7 +236,7 @@ public class StudentController {
 
 		ModelAndView model = new ModelAndView();
 		SPRForm spr = new SPRForm();
-		spr.setStudent(new Student());
+		spr.setPersonal(new StudentPersonal());
 		spr.setFbg(new StudentFBG());
 		
 		model.setViewName("newspr");
@@ -171,7 +247,7 @@ public class StudentController {
 	
 	@RequestMapping(value = "/student/{studentNo}")
 	public ModelAndView student(@PathVariable("studentNo") String studentNo) {
-		Student stud = db.getStudentByNo(studentNo);
+		StudentPersonal stud = db.getStudentByNo(studentNo);
 		StudentProfile profile = db.getCollegeProfileByNo(studentNo);
 		String profileType = "college";
 		
@@ -206,7 +282,7 @@ public class StudentController {
 	
 	@RequestMapping(value = "/registration/{studentNo}")
 	public ModelAndView registration(@PathVariable("studentNo") String studentNo) {
-		Student stud = db.getStudentByNo(studentNo);
+		StudentPersonal stud = db.getStudentByNo(studentNo);
 		
 		StudentProfile clgProfile = db.getCollegeProfileByNo(studentNo);
 		StudentProfile shsProfile = db.getSHProfileByNo(studentNo);
@@ -231,7 +307,7 @@ public class StudentController {
 	
 	@RequestMapping(value = "/spr/info/{studentNo}")
 	public ModelAndView sprInfo(@PathVariable("studentNo") String studentNo) {
-		Student stud = new Student();
+		StudentPersonal stud = new StudentPersonal();
 		StudentFBG fbg = new StudentFBG();
 		String profileForm="";
 		List<Course> courses = db.getCollegeCourses("");
@@ -267,10 +343,9 @@ public class StudentController {
 		}	
 
 		System.out.println("Student No.: "+ stud.getStudentNo());
-		System.out.println("Student ID : "+ stud.getStudentID());
 		
 		SPRForm sprForm = new SPRForm();
-		sprForm.setStudent(stud);
+		sprForm.setPersonal(stud);
 		sprForm.setFbg(fbg);
 		sprForm.setProfile(profile);
 		
@@ -290,7 +365,7 @@ public class StudentController {
 	
 	@RequestMapping(value = "/spr/newProfile/clg/{studentNo}")
 	public ModelAndView newCollegeProfile(@PathVariable("studentNo") String studentNo) {
-		Student stud = db.getStudentByNo(studentNo);
+		StudentPersonal stud = db.getStudentByNo(studentNo);
 		StudentProfile sp = new StudentProfile();
 		sp.setLRN("------------");
 		
@@ -298,7 +373,7 @@ public class StudentController {
 		List<Curriculum> clgcurrics = db.getCollegeCurriculums("");
 
 		System.out.println("Student No.: "+ stud.getStudentNo());
-		System.out.println("Student ID : "+ stud.getStudentID());
+		//System.out.println("Student ID : "+ stud.getStudentID());
 		
 		ModelAndView model = new ModelAndView();
 		model.setViewName("studentAB");
@@ -329,13 +404,13 @@ public class StudentController {
 
 	@RequestMapping(value = "/spr/newProfile/shs/{studentNo}")
 	public ModelAndView newSHSProfile(@PathVariable("studentNo") String studentNo) {
-		Student stud = db.getStudentByNo(studentNo);
+		StudentPersonal stud = db.getStudentByNo(studentNo);
 		
 		List<Strand> strands = db.getSHStrands("");
 		List<Curriculum> shscurrics = db.getSHCurriculums("");
 
 		System.out.println("Student No.: "+ stud.getStudentNo());
-		System.out.println("Student ID : "+ stud.getStudentID());
+		//System.out.println("Student ID : "+ stud.getStudentID());
 		
 		ModelAndView model = new ModelAndView();
 		model.setViewName("studentAB");
@@ -355,7 +430,7 @@ public class StudentController {
 	
 	@RequestMapping(value = "/spr/profile/clg/{studentNo}")
 	public ModelAndView collegeProfile(@PathVariable("studentNo") String studentNo) {
-		Student stud = db.getStudentByNo(studentNo);
+		StudentPersonal stud = db.getStudentByNo(studentNo);
 		StudentProfile clgProfile = db.getCollegeProfileByNo(studentNo);
 		
 		List<Course> courses = db.getCollegeCourses("");
@@ -363,7 +438,7 @@ public class StudentController {
 
 		System.out.println("StudentCAB curriculumID is: " + clgProfile.getCurriculumID());
 		System.out.println("Student No.: "+ stud.getStudentNo());
-		System.out.println("Student ID : "+ stud.getStudentID());
+		//System.out.println("Student ID : "+ stud.getStudentID());
 		
 		ModelAndView model = new ModelAndView();
 		model.setViewName("studentAB");
@@ -379,7 +454,7 @@ public class StudentController {
 	
 	@RequestMapping(value = "/spr/profile/shs/{studentNo}")
 	public ModelAndView shsProfile(@PathVariable("studentNo") String studentNo) {
-		Student stud = db.getStudentByNo(studentNo);
+		StudentPersonal stud = db.getStudentByNo(studentNo);
 		StudentProfile shsProfile = db.getSHProfileByNo(studentNo);
 		
 		List<Strand> strands = db.getSHStrands("");
@@ -387,7 +462,7 @@ public class StudentController {
 
 		System.out.println("StudentCAB curriculumID is: " + shsProfile.getCurriculumID());
 		System.out.println("Student No.: "+ stud.getStudentNo());
-		System.out.println("Student ID : "+ stud.getStudentID());
+		//System.out.println("Student ID : "+ stud.getStudentID());
 		
 		ModelAndView model = new ModelAndView();
 		model.setViewName("studentAB");
@@ -403,7 +478,7 @@ public class StudentController {
 	
 	@RequestMapping(value = "/spr/profile/bsc/{studentNo}")
 	public ModelAndView bscProfile(@PathVariable("studentNo") String studentNo) {
-		Student stud = db.getStudentByNo(studentNo);
+		StudentPersonal stud = db.getStudentByNo(studentNo);
 		StudentProfile bscProfile = db.getBSCProfileByNo(studentNo);
 		
 		List<Curriculum> bsccurrics = db.getSHCurriculums("");
@@ -421,7 +496,7 @@ public class StudentController {
 	
 	@RequestMapping(value = "/spr/profile/{studentNo}")
 	public ModelAndView sprForm(@PathVariable("studentNo") String studentNo) {
-		Student stud = new Student();
+		StudentPersonal stud = new StudentPersonal();
 		StudentProfile clgProfile = new StudentProfile();
 		StudentProfile shsProfile = new StudentProfile();
 		StudentProfile bscProfile = new StudentProfile();
@@ -446,7 +521,7 @@ public class StudentController {
 
 		System.out.println("StudentCAB curriculumID is: " + clgProfile.getCurriculumID());
 		System.out.println("Student No.: "+ stud.getStudentNo());
-		System.out.println("Student ID : "+ stud.getStudentID());
+		//System.out.println("Student ID : "+ stud.getStudentID());
 		
 		ModelAndView model = new ModelAndView();
 		model.setViewName("studentAB");
@@ -466,7 +541,7 @@ public class StudentController {
 	
 	@RequestMapping(value = "/student/sh/{LRN}")
 	public ModelAndView shSprForm(@PathVariable("LRN") String LRN) {
-		Student stud = new Student();
+		StudentPersonal stud = new StudentPersonal();
 		StudentProfile studCAB = new StudentProfile();
 		List<Course> courses = db.getCollegeCourses("");
 		List<Curriculum> currics = db.getCollegeCurriculums("");

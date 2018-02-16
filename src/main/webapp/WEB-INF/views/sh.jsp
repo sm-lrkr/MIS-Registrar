@@ -3,12 +3,22 @@
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
     
 <spring:url value="/resources/main2.css" var="css" />
-<spring:url value="/resources/jquery-3.2.1.js" var="jscript" />
-<spring:url value="/resources/myscript.js" var="myscript" />
 <spring:url value="/resources/css/dataTable.min.css" var="dtcss" />
 <spring:url value="/resources/css/dataTableSelect.min.css" var="dtselectcss" />
+<spring:url value="/resources/css/buttons.dataTables.min.css" var="dtbuttonscss" />
+
+<spring:url value="/resources/jquery-3.2.1.js" var="jscript" />
+<spring:url value="/resources/myscript.js" var="myscript" />
 <spring:url value="/resources/javascript/dataTable.js" var="dtjs" />
 <spring:url value="/resources/javascript/dataTableSelect.min.js" var="dtselectjs" />
+
+<spring:url value="/resources/javascript/dataTables.buttons.min.js" var="dtbuttonsjs" />
+<spring:url value="/resources/javascript/buttons.flash.min.js" var="flashButtons" />
+<spring:url value="/resources/javascript/jszip.min.js" var="jszip" />
+<spring:url value="/resources/javascript/pdfmake.min.js" var="pdfmake" />
+<spring:url value="/resources/javascript/vfs_fonts.js" var="vfs_fonts" />
+<spring:url value="/resources/javascript/buttons.html5.min.js" var="html5Buttons" />
+<spring:url value="/resources/javascript/buttons.print.min.js" var="printButton" />
 
     
     
@@ -18,22 +28,32 @@
 	
 	<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 	<title>MIS Registrar</title>
+	
+	
 	<link href="${dtcss}" rel="stylesheet">
 	<link href="${dtselectcss}" rel="stylesheet">
+	<link href="${dtbuttonscss}" rel="stylesheet">
 	<link href="${css}" rel="stylesheet">
 	<link href="/resources/css/dataTableS.checkboxes.min.css" rel="stylesheet">
-	
+
 	<script type="text/javascript" src="${jscript}" ></script>
 	<script type="text/javascript" src="${myscript}" ></script>
 	<script type="text/javascript" src="${dtjs}" ></script>
 	<script type="text/javascript" src="${dtselectjs}" ></script>
+
+	<script type="text/javascript" src="${dtbuttonsjs}" ></script>
+	<script type="text/javascript" src="${flashButtons}" ></script>
+	<script type="text/javascript" src="${jszip}" ></script>
+	<script type="text/javascript" src="${pdfmake}" ></script>
+	<script type="text/javascript" src="${vfs_fonts}" ></script>
+	<script type="text/javascript" src="${html5Buttons}" ></script>
+	<script type="text/javascript" src="${printButton}" ></script>
+	
 	<script type = "text/javascript">
+	
 		$(document).ready(function(){
 			var ctx = "${pageContext.request.contextPath}";
 			var url = encodeURI(ctx + '/ajax/departmentSelectChanged/?param=');
-			departmentSelect($('#deptSelect'), $('#courseSelect'), ctx);
-			courseSelect($('#search'), $('#courseSelect'), $('#studview'), ctx);
-			searchStudents($('#search'), $('#searchBtn'), $('#courseSelect'), $('#studview'), ctx);	
 			
 			
 			var table = $('#studview').DataTable( {
@@ -52,11 +72,18 @@
 		        ]
 		 	} );
 			
+			$("#print").click(function(){
+			     var strandCode = $("#strandSelect").val();
+                 var filter = table.search();
+                 window.open( encodeURI(ctx+"/students/sh/printByStrand/?strandCode="+strandCode+"&filter="+filter+""),'_blank');
+            });
+			
 			table.on( 'dblclick', 'tr', function () {
 				var stdNo = table.row( this ).data()[0];
 				window.location.href = ctx+"/students/student/" + stdNo;
 			} );
 			
+			strandSelect(table.search(), $('#strandSelect'), $('#studview'), ctx);
 			
 			
 		});
@@ -74,7 +101,7 @@
 					<h1 style="display: inline-block; margin-top: 0px;">Students - SH</h1>
 					<div class="floatright">
 						<a href="newspr" ><span class="linkButton" >Add New SPR</span></a>   
-				    	<a href="sprForm" ><span class="linkButton" >Reports</span></a>   
+				    	<button type="button" id="print" class="linkButton" >Print</button>    
 			    	</div>
 		  		</div>
 			
@@ -88,20 +115,20 @@
 				<div style="width: 1000px; " >
 					<jsp:include page="includes/studentview.jsp"/>
 				</div>
-				
-		   
 			   		<div class="divElements" >
-				   		<select id="deptSelect" >
+				   		<select id="trackSelect" >
 			   			<option value="" label="--Track--"/>
 			   				<option value="ACAD" label="Academic" />
 							<option value="TVL" label="Technical-Vocational Livelihood" />
 							<option value="SPORTS" label="Sports" />
 							<option value="AD" label="Arts and Design" />
 				   		</select>
-				
-				   		<select id="courseSelect">
+			
+				   		<select id="strandSelect">
 				   			<option value="" label="--- Strand ---"/>
-				   			
+				   			<c:forEach var="strand" items="${strands}">   
+								<option value="${strand.strandCode}" label="${strand.strandCode}" /> 
+							</c:forEach>  
 				   		</select>
 				   	</div>
 			</div>

@@ -99,7 +99,7 @@
 								<thead>
 										<tr><th>Section</th><th>Units</th><th>Time</th><th>Days</th><th>Room</th></tr>
 								</thead>
-								
+							
 								<tbody>
 										<c:forEach var="sched" items="${schedules}">   
 											<tr>  
@@ -112,7 +112,6 @@
 											<c:if test="${sched.labDays ne '' }">			   
 											   	<tr>  
 													<td> ${sched.subjectCode}-LAB</td>  
-													<td> ${sched.section}</td>  
 													<td> ${sched.labUnits}</td>  
 													<td> ${sched.labTimeStart}-${sched.labTimeEnd}</td>  
 													<td> ${sched.labDays}</td>  

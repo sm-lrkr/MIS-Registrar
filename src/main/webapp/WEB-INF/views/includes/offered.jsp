@@ -8,8 +8,10 @@
 		   	<c:forEach var="sched" items="${offered.schedules}" varStatus="status">   
 			   <tr>  
 				   	<td>  
-				   	<form:input path="schedules[${status.index}].scheduleID" type="hidden" />
-				   	<form:checkbox path="schedules[${status.index}].checked" />
+					   	<form:input path="schedules[${status.index}].scheduleID" type="hidden" />
+					   	<form:input path="schedules[${status.index}].subjectCode" type="hidden" />
+					   	<form:input path="schedules[${status.index}].personnelID" type="hidden" />
+					   	<form:checkbox path="schedules[${status.index}].checked" />
 				   	</td>
 				   	<td> ${sched.subjectCode}</td>  
 				   	<td> ${sched.section}</td>  

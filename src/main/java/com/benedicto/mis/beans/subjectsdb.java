@@ -25,9 +25,6 @@ public class subjectsdb {
 		this.template = template;
 	}
 	
-
-
-
 	public Section getSHSectionByID(String sectionID) {
 		String sql = "SELECT * from shs_sections WHERE SectionID=?";
 		return template.queryForObject(sql, new Object[] { sectionID },
@@ -45,7 +42,7 @@ public class subjectsdb {
 				s.setSectionName(rs.getString(3));
 				s.setRoom(rs.getString(4));
 				s.setSession(rs.getString(5));
-				s.setTeacher(rs.getString(6));
+				s.setPersonnelID(rs.getString(6));
 
 				return s;
 			}
@@ -69,7 +66,7 @@ public class subjectsdb {
 				s.setSectionName(rs.getString(2));
 				s.setRoom(rs.getString(3));
 				s.setSession(rs.getString(4));
-				s.setTeacher(rs.getString(5));
+				s.setPersonnelID(rs.getString(5));
 
 				return s;
 			}

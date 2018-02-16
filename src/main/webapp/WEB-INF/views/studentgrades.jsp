@@ -1,9 +1,15 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncoding="ISO-8859-1"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
+<%@ taglib uri="http://www.springframework.org/tags/form" prefix="form" %>
     
 <spring:url value="/resources/main2.css" var="css" />
 <spring:url value="/resources/jquery-3.2.1.js" var="jscript" />
+<spring:url value="/resources/myscript.js" var="myscript" />
+<spring:url value="/resources/css/dataTable.min.css" var="dtcss" />
+<spring:url value="/resources/css/dataTableSelect.min.css" var="dtselectcss" />
+<spring:url value="/resources/javascript/dataTable.js" var="dtjs" />
+<spring:url value="/resources/javascript/dataTableSelect.min.js" var="dtselectjs" />
 
     
     
@@ -13,56 +19,140 @@
 	
 	<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 	<title>MIS Registrar</title>
+	
+	
+	<link href="${dtcss}" rel="stylesheet">
+	<link href="${dtselectcss}" rel="stylesheet">
 	<link href="${css}" rel="stylesheet">
+	
 	<script type="text/javascript" src="${jscript}" ></script>
+	<script type="text/javascript" src="${myscript}" ></script>
+	<script type="text/javascript" src="${dtjs}" ></script>
+	<script type="text/javascript" src="${dtselectjs}" ></script>
+	
+		<script type = "text/javascript">
+		$(document).ready(function(){
+			
+			var activeTableID;
+		
+			$("table[id *= 'gradesview'] :input").prop("disabled", true);
+			$("table[id *= 'gradesview'] :input").prop("style", "width:40px;");
+			$("table[id *= 'gradesview'] :input").addClass("disabledInput");
+			$("button[id *= 'save']").hide();
+			$("button[id *= 'cancel']").hide();
+	
+			$("button[id *= 'cancel']").click(function(){
+				$("table[id *= '"+ activeTableID +"'] :input").prop("disabled", true);
+				$("table[id *= '"+ activeTableID +"'] :input").addClass("disabledInput");		
+			
+				$("button[id *= '"+ activeTableID +"save']").hide();
+				$("button[id *= '"+ activeTableID +"cancel']").hide();
+				$("button[id = '"+ activeTableID +"']").show();
+				activeTableID = "";
+			});
+	
+			$("button[id *= 'gradesview']").click(function(){
+				var id = $(this).attr('id'); 
+				activeTableID = id;
+				
+				
+				$("table[id *= '"+ id +"'] :input").prop("disabled", false);
+				$("table[id *= '"+ id +"'] :input").removeClass("disabledInput");		
+			
+				$("button[id *= '"+ id +"save']").show();
+				$("button[id *= '"+ id +"cancel']").show();
+				$(this).hide();
+			
+			});
+			
+		});
+		
+		</script>
 	
 </head>
 <body>
-
 	
 	<jsp:include page="includes/header.jsp" />
 	<div id="main">
 	
 		<jsp:include page="includes/student-left-menu.jsp" />
-		<c:set var="ap" value="" />
-		<c:set var="ave" value="${0}" />
-		<c:set var="count" value="${0}" />
-		
-		<table class="listTable">
-		<tr><th>Code</th><th>Description</th><th>Units</th><th>Prelim</th><th>Midterm</th><th>Final</th><th>Grade Equivalent</th><th>Date Modified</th></tr>
-		<c:forEach var="grade" items="${grades}" varStatus="status">
-				
-				<c:set var="count" value="${count + 1}" />
-				<c:set var="ss" value="${grade.schoolYear} ${grade.semester}" />
-				
-				<c:if test="${ ss ne ap }">
-					<c:if test="${ ave gt 0 }">
-						<tr><td>GPA: ${ave / count}  </td></tr>
-						<tr><th>Code</th><th>Description</th><th>Units</th><th>Prelim</th><th>Midterm</th><th>Final</th><th>Grade Equivalent</th><th>Date Modified</th></tr>	
-					</c:if>
+		<div>
+			<div style="margin-bottom: 20px;">
+				<h1 style="display: inline-block;">${student.lastName}, ${student.firstName} ${student.middleName}</h1>
+				<div class="floatright">
+					<button id="edit" class="linkButton" >Edit</button>   
+					<button id="save" class="linkButton"  >Save</button>   
+					<button id="cancel" class="linkButton"  >Cancel</button>   
 					
-					<c:set var="ap" value="${ss}" />
-					<c:set var="count" value="${0}" />
+					<a href="sprForm" id="print" ><span class="linkButton" >Print</span></a>   
+				 </div>
+			</div>
+
+			<form:form  action="${pageContext.request.contextPath}/grades/clg/save/?studentNo=${student.studentNo}" method="post" modelAttribute="allSemGrades" >
+				<c:forEach var="sg" items="${allSemGrades.semGrades}" varStatus="status">
+					<c:set var="ap" value="" />
 					<c:set var="ave" value="${0}" />
-	
-				</c:if>
-				
-				<c:set var="ave" value="${ave + grade.equivalentGrade}" />
-				<tr>
-					<td>${grade.subjectCode} </td>
-					<td>${grade.subjectDesc} </td>
-					<td>${grade.lecUnits + grade.labUnits} </td>
-					<td>${grade.prelimGrade} </td>
-					<td>${grade.midtermGrade} </td>
-					<td>${grade.finalGrade} </td>
-					<td>${grade.equivalentGrade} </td>
-					<td>${grade.dateModified} </td>
-				</tr>
-			</c:forEach>
-			<tr><td colspan="8">GPA: ${ave / count}  </td></tr>
-		</table>
+					<c:set var="count" value="${0}" />
+					<div style="width: 1000px; ">
+						<div style="margin-bottom: 5px;">
+							<h3 style="display: inline-block;" >SY: ${sg.enrollment.schoolYear} , Sem: ${sg.enrollment.semester}</h3>
+							<div style="float:right; ">
+								<button type="button" id="gradesview${status.index}"class="linkButton" >Edit</button>   
+								<button type="submit" id="gradesview${status.index}save"class="linkButton" >Save</button>   
+								<button type="reset" id="gradesview${status.index}cancel"class="linkButton" >Cancel</button>   
+							</div>
+						</div>
+							
+						<table id="gradesview${status.index}" class="display compact listTable">
+							<thead>
+								<tr><th>Code</th><th>Description</th><th>Units</th><th>Prelim</th><th>Midterm</th><th>Final</th><th>Grade Equivalent</th><th>Date Modified</th></tr>
+							</thead>
+								
+							<tbody>
+								<c:forEach var="grade" items="${sg.grades}" varStatus="status1">
+									<c:set var="count" value="${count + 1}" />
+									<c:if test="${ ave gt 0 }">
+										<tr><td>GPA: ${ave / count}  </td></tr>
+										<tr><th>Code</th><th>Description</th><th>Units</th><th>Prelim</th><th>Midterm</th><th>Final</th><th>Grade Equivalent</th><th>Date Modified</th></tr>	
+									</c:if>
+											
+									<c:set var="ap" value="${ss}" />
+									<c:set var="count" value="${0}" />
+									<c:set var="ave" value="${0}" />
+								
+											
+									<c:set var="ave" value="${ave + grade.equivalentGrade}" />
+									<tr>
+										<td>
+											${grade.subjectCode} 
+											<form:input type="hidden" path="semGrades[${status.index}].grades[${status1.index}].subjectCode" />	
+										</td>
+										<td>${grade.subjectDesc} </td>
+										<td>${grade.lecUnits + grade.labUnits} </td>
+												
+												
+										<td>
+											<form:input type="hidden" path="semGrades[${status.index}].grades[${status1.index}].enrollmentNo" />
+											<form:input path="semGrades[${status.index}].grades[${status1.index}].prelimGrade" />  
+									
+										</td>
+									
+										<td><form:input path="semGrades[${status.index}].grades[${status1.index}].midtermGrade" /></td>
+										<td><form:input path="semGrades[${status.index}].grades[${status1.index}].finalGrade" /></td>
+										<td><form:input path="semGrades[${status.index}].grades[${status1.index}].equivalentGrade" /></td>
+											
+										<td>${grade.dateModified} </td>
+									</tr>
+								</c:forEach>
+								<tr><td colspan="8">GPA: ${ave / count}  </td></tr>
+							</tbody>
+								
+						</table>	
+					</div>
+				</c:forEach>
+			</form:form>
+		</div>
 	</div>
-	
 	<jsp:include page="includes/footer.jsp" />
 
 

@@ -1,21 +1,19 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>   
-		<table id="sectionsview" class="display compact">  
+		<table id="sectionsview" class="display compact listTable">  
 			<thead>
-				<tr><th>Section</th><th>Strand</th><th>Room</th><th>Session</th><th>Teacher</th><th></th></tr>  
+				<tr><th>SectionID</th><th>Section</th><th>Strand</th><th>Room</th><th>Session</th><th>Adviser</th></tr>  
 		   	</thead>
-			
+	
 			<tbody>
 				<c:forEach var="section" items="${sections}">   
 				   	<tr>
-				   		
+				   
+					   	<td>${section.sectionID}</td>  
 					   	<td>${section.sectionName}</td>  
-					   	
 					   	<td>${section.strandCode}</td>  
 					   	<td>${section.room}</td>
 					   	<td>${section.session}</td>
-					   	<td>${section.teacher}</td>
-					   	
-					   	<td><a href=" ${pageContext.request.contextPath}/sections/sh/${section.sectionID}">View</a></td>  
+					   	<td>${section.personnelName}</td>
 					</tr>  
 			   	</c:forEach>  
 			</tbody>

@@ -40,21 +40,45 @@ function departmentSelect(departmentSelect, courseSelect, ctx){
 
 function courseSelect(search, courseSelect, studview, ctx){
 	courseSelect.on('input', function(){
-		alert(courseSelect.val());
-		var searchurl = ctx+ '/ajax/searchstudent/?param='+search.val()+'&courseID='+ courseSelect.val();
+		//alert(courseSelect.val());
+		var searchurl = encodeURI( ctx+ '/ajax/searchstudent/?param='+search+'&courseID='+ courseSelect.val());
 		$.ajax({
-			
 			url: searchurl,
 			type: "GET" ,
 			dataType: "json",
 			success: function(result){
-				alert('success!');
+				//alert('success!');
 				var table = studview.DataTable();
 				table.clear();
 				$.each(result, function(index, student) {
-		            alert("ID: "+ student.studentID); 
-		             //table.row.add({"ID" : student.studentID, "Last Name" : student.lastName, "First Name" :student.firstName, "Middle Name" :student.middleName, "Edit" :'view'});
-		             table.row.add([student.studentNo, student.studentID, student.lastName, student.firstName, student.middleName, 'view']);				        
+		            //alert("ID: "+ student.studentID); 
+		             table.row.add([student.studentNo, student.studentID, student.lastName, student.firstName, student.middleName, student.courseID]);				        
+				});    
+				table.draw();
+			},
+			error:function(e) {  
+			      alert('Error: ' + e);   
+			}  
+			
+		});
+	});
+}
+
+function strandSelect(search, strandSelect, studview, ctx){
+	strandSelect.on('input', function(){
+		//alert(strandSelect.val());
+		var searchurl = encodeURI( ctx+ '/ajax/searchSHstudents/?param='+search+'&strandCode='+ strandSelect.val());
+		$.ajax({
+			url: searchurl,
+			type: "GET" ,
+			dataType: "json",
+			success: function(result){
+				//alert('success!');
+				var table = studview.DataTable();
+				table.clear();
+				$.each(result, function(index, student) {
+		            //alert("ID: "+ student.studentID); 
+		             table.row.add([student.studentNo, student.studentID, student.lastName, student.firstName, student.middleName, student.strandCode]);				        
 				});    
 				table.draw();
 			},
@@ -80,7 +104,6 @@ function searchStudents(search, searchBtn, courseSelect, studview, ctx){
 			error:function(e) {  
 			      alert('Error: ' + e);   
 			}  
-			
 		});
 	});
 	

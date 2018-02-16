@@ -26,6 +26,8 @@ import org.springframework.web.servlet.ModelAndView;
 import com.benedicto.mis.beans.*;
 import com.benedicto.mis.beans.containers.*;
 import com.benedicto.mis.beans.formbackers.CurriculumForm;
+import com.benedicto.mis.beans.formbackers.SemGrades;
+import com.benedicto.mis.beans.formbackers.SemGradesForm;
 import com.benedicto.mis.beans.formbackers.SubjectsViewForm;
 
 /**
@@ -40,16 +42,99 @@ public class GradesController {
 	@Autowired
 	studentdb db;// will inject dao from xml file
 
-	@RequestMapping(value = "/grades/{studentID}", method = RequestMethod.GET)
-	public ModelAndView studentGrades(@PathVariable("studentID") String studentID) {
+	@RequestMapping(value = "/", method = RequestMethod.GET)
+	public ModelAndView studentGrades(@RequestParam("studentNo") String studentNo) {
 		logger.info("grades");
-		List<SubjectGrades> grades = db.getStudentGrades(studentID);
-		System.out.println("Student ID: " + studentID + " Size: " + grades.size());
+		StudentProfile profile = db.getCollegeProfileByNo(studentNo);
+		String profileType = "clg";
+		
+		if(profile.getStudentID().equals("")) {
+			profile = db.getSHProfileByNo(studentNo);
+			profileType = "shs";
+			if(profile.getLRN().equals("")) {
+				profile = db.getBSCProfileByNo(studentNo);
+				profileType = "bsc";
+			}
+		}
+		
+		return new ModelAndView("redirect:/grades/"+profileType+"/?studentNo="+ studentNo );
+	}
+	
+	
+	@RequestMapping(value = "/shs/", method = RequestMethod.GET)
+	public ModelAndView shStudentGrades(@RequestParam("studentNo") String studentNo) {
+		logger.info("grades");
+		
+		StudentPersonal student = db.getStudentByNo(studentNo);
+		SemGradesForm allSemGrades = new SemGradesForm();
+		List<SemGrades> list = new ArrayList<SemGrades>();
+		List<Enrollment> enrollments = db.getStudentEnrollments(studentNo);
+		
+		
+		for(Enrollment e: enrollments) {
+			SemGrades semGrades = new SemGrades();
+			semGrades.setEnrollment(e);
+			semGrades.setGrades(db.getStudentGrades(e.getEnrollmentNo()));
+			list.add(semGrades);
+		}
+		allSemGrades.setSemGrades(list);
+	
+		
 		ModelAndView model = new ModelAndView();
 		model.setViewName("studentgrades");
-		model.addObject("grades", grades);
-		model.addObject("studentID", studentID);
+		model.addObject("student", student);
+		model.addObject("allSemGrades", allSemGrades);
+		
 		return model;
+	}
+	
+	@RequestMapping(value = "/clg/", method = RequestMethod.GET)
+	public ModelAndView collegeStudentGrades(@RequestParam("studentNo") String studentNo) {
+		logger.info("grades");
+		
+		StudentPersonal student = db.getStudentByNo(studentNo);
+		SemGradesForm allSemGrades = new SemGradesForm();
+		List<SemGrades> list = new ArrayList<SemGrades>();
+		List<Enrollment> enrollments = db.getStudentEnrollments(studentNo);
+		
+		
+		for(Enrollment e: enrollments) {
+			SemGrades semGrades = new SemGrades();
+			semGrades.setEnrollment(e);
+			semGrades.setGrades(db.getStudentGrades(e.getEnrollmentNo()));
+			list.add(semGrades);
+		}
+		allSemGrades.setSemGrades(list);
+	
+		
+		ModelAndView model = new ModelAndView();
+		model.setViewName("studentgrades");
+		model.addObject("student", student);
+		model.addObject("allSemGrades", allSemGrades);
+		
+		return model;
+	}
+	
+	@RequestMapping(value = "/clg/save/", method = RequestMethod.POST)
+	public ModelAndView saveStudentGrades(@RequestParam("studentNo") String studentNo, @ModelAttribute("allSemGrades") SemGradesForm sgf) {
+		logger.info("Update Grades");
+		System.out.println("List size: " + sgf.getSemGrades().size());
+		
+		Locale locale = new Locale("en_US");
+		
+		Date date = new Date();
+		DateFormat dateFormat = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT, locale);
+		String formattedDate = dateFormat.format(date);
+		
+		for(SemGrades sg: sgf.getSemGrades()) {
+			for(SubjectGrades g: sg.getGrades()) {
+				System.out.println("Enrollment: "+ g.getEnrollmentNo());
+				g.setDateModified(formattedDate);
+				db.updateCollegeSubjectGrading(g);
+			}
+		}
+
+		return new ModelAndView("redirect:/grades/clg/?studentNo="+ studentNo );
 	}
 	
 

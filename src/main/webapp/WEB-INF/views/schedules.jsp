@@ -32,15 +32,29 @@
 
 	<script type = "text/javascript">
 		$(document).ready(function(){
-			
+			var ctx = "${pageContext.request.contextPath}";
 			var table = $('#schedsview').DataTable( {
 			 	"sDom" : 'rtf',
 		        "scrollY":        "300px",
 		        "scrollCollapse": false,
 		        "select": {
 		        	style : 'multiple'
-		        }
+		        },"columnDefs": [
+		        	{"targets": 0, "visible" : false }
+			    ]
 		 	} );
+			
+			table.on( 'dblclick', 'tr', function () {
+				var scheduleID = table.row( this ).data()[0];
+				var subjectCode = table.row( this ).data()[1]
+				window.location.href = ctx+"/schedules/clg/"+subjectCode+"/?id=" + scheduleID + "";
+			} );
+			
+			$("#print").click(function(){
+				window.print();
+				
+			});
+				
 			
 			$(".cbox").on('click', function(){
 				var searchurl = encodeURI('ajax/schedSearch/?param='+$("#search").val());
@@ -75,11 +89,6 @@
 					
 				});
 			});
-			
-			
-			
-			
-			
 		});
 	</script>
 	

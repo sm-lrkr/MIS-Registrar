@@ -59,16 +59,30 @@ public class AjaxController {
 //		return builder.toString();
 //	}
 	
-	@RequestMapping(value="searchstudent", method = RequestMethod.GET)
+	@RequestMapping(value="/searchstudent/", method = RequestMethod.GET)
 	@ResponseBody
-	public List<Student> searchstudent(@RequestParam("param") String param, @RequestParam("courseID") String courseID) {
+	public List<StudentProfile> searchstudent(@RequestParam("param") String param, @RequestParam("courseID") String courseID) {
 		System.out.println("search param: " + param);
 		System.out.println("course ID: " + courseID);
 		
-		List<Student> list = dao.getCollegeStudents(param,courseID);
+		List<StudentProfile> list = dao.getCollegeStudents(param,courseID);
+		System.out.println("list size: " + list.size());
+		
+		return list;
+	}
+	
+
+	@RequestMapping(value="/searchSHstudents/", method = RequestMethod.GET)
+	@ResponseBody
+	public List<StudentProfile> searchSHstudent(@RequestParam("param") String param, @RequestParam("strandCode") String strandCode) {
+		System.out.println("search param: " + param);
+		System.out.println("strandCode: " + strandCode);
+		
+		List<StudentProfile> list = dao.getSHStudents(param, strandCode);
 		System.out.println("list size: " + list.size());
 		return list;
 	}
+
 	
 
 	

@@ -16,6 +16,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -58,6 +59,26 @@ public class ScheduleController {
 		//model.addObject("subject", new Subject());
 		return model;
 	}
+	
+	@RequestMapping(value = "/clg/{subjectCode}/", method = RequestMethod.GET)
+	public ModelAndView clgSchedule(@PathVariable("subjectCode") String subjectCode, @RequestParam("id") String scheduleID) {
+		List<StudentProfile> students = db.getCollegeStudentsBySchedule(scheduleID);
+		Schedule schedule = db.getCollegeScheduleByID(scheduleID);
+		String _class="LEC";
+		
+		if(subjectCode.contains("LAB")) {
+			_class="LAB";
+		}
+		
+		ModelAndView model = new ModelAndView();
+		model.setViewName("schedule");
+		model.addObject("subjectCode", subjectCode);
+		model.addObject("schedule", schedule);
+		model.addObject("students", students);
+		model.addObject("classType", _class);
+		
+		return model;
+	}
 
 	@RequestMapping(value = "/sh", method = RequestMethod.GET)
 	public ModelAndView shSchedules() {
@@ -80,6 +101,7 @@ public class ScheduleController {
 	public ModelAndView enlistment(@PathVariable("studentNo") String studentNo) {
 		StudentProfile clgProfile = db.getCollegeProfileByNo(studentNo);
 		System.out.println("Student ID: " + clgProfile.getStudentID());
+		
 		if(!clgProfile.getStudentID().equals(""))
 			return new ModelAndView("redirect:/schedules/enlistment/college/" + studentNo);
 		if(!db.getSHProfileByNo(studentNo).getLRN().equals(""))
@@ -92,7 +114,7 @@ public class ScheduleController {
 		Locale locale = new Locale("en_US");
 		logger.info("Welcome home! The client locale is {}.", locale);
 
-		Student stud = db.getStudentByNo(studentNo);
+		StudentPersonal stud = db.getStudentByNo(studentNo);
 		StudentProfile studCAB = db.getCollegeProfileByNo(studentNo);
 		System.out.println("Curriculum ID : " + studCAB.getCurriculumID());
  
@@ -118,7 +140,7 @@ public class ScheduleController {
 		Locale locale = new Locale("en_US");
 		logger.info("Welcome home! The client locale is {}.", locale);
 
-		Student stud = db.getStudentByNo(studentNo);
+		StudentPersonal stud = db.getStudentByNo(studentNo);
 		StudentProfile studCAB = db.getCollegeProfileByNo(studentNo);
 		System.out.println("Curriculum ID : " + studCAB.getCurriculumID());
  
@@ -144,12 +166,18 @@ public class ScheduleController {
 	public ModelAndView enlistSchedules(@ModelAttribute("offered") SchedulesViewForm s,
 			@PathVariable("studentNo") String studentNo) {
 		Locale locale = new Locale("en_US");
+		Date date = new Date();
+		DateFormat dateFormat = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT, locale);
+		String formattedDate = dateFormat.format(date);
+		
 		logger.info("Welcome home! The client locale is {}.", locale);
-
+		Enrollment enrollment = db.getEnrollment(studentNo, "2017-2018", 1);
+		
 		for (Schedule S : s.getSchedules()) {
 			if (S.isChecked()) {
-				db.enlistCollegeStudentSchedules(studentNo, S.getScheduleID());
+				db.enlistCollegeStudentSchedules(enrollment, S.getScheduleID());
 				//db.enlistStudentSubjects(studentID, S.getLabScheduleID());
+				db.addSubjectGrading(S, enrollment.getEnrollmentNo(), formattedDate);
 			}
 		}
 
@@ -160,10 +188,13 @@ public class ScheduleController {
 	@RequestMapping(value = "/withdraw/college/{studentNo}", method = RequestMethod.POST)
 	public ModelAndView unenlistSchedules(@ModelAttribute("offered") SchedulesViewForm s,
 			@PathVariable("studentNo") String studentNo) {
-
+		
+		Enrollment enrollment = db.getEnrollment(studentNo, "2017-2018", 1);
+		
 		for (Schedule S : s.getSchedules()) {
 			if (S.isChecked()) {
-				db.withdrawStudentSubjects(studentNo, S.getScheduleID());
+				db.withdrawStudentSubjects(enrollment, S.getScheduleID());
+				
 			}
 		}
 		return new ModelAndView("redirect:/schedules/enlistment/college/" + studentNo);

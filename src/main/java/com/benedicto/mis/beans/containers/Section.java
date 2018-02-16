@@ -7,7 +7,8 @@ public class Section {
 	private String sectionName;
 	private String room;
 	private String session;
-	private String teacher;
+	private String personnelID;
+	private String personnelName;
 	
 	
 	
@@ -37,12 +38,17 @@ public class Section {
 	public void setSession(String session) {
 		this.session = session;
 	}
-	public String getTeacher() {
-		return teacher;
+
+	public String getPersonnelID() {
+		return personnelID;
 	}
-	public void setTeacher(String teacher) {
-		this.teacher = teacher;
+	public void setPersonnelID(String personnelID) {
+		this.personnelID = personnelID;
 	}
+
+
+
+
 	private String strandDesc;
 	private String track;
 	private String major;
@@ -70,6 +76,18 @@ public class Section {
 	}
 	public void setMajor(String major) {
 		this.major = major;
+	}
+	/**
+	 * @return the personnelName
+	 */
+	public String getPersonnelName() {
+		return personnelName;
+	}
+	/**
+	 * @param personnelName the personnelName to set
+	 */
+	public void setPersonnelName(String personnelName) {
+		this.personnelName = personnelName;
 	}
 	
 	

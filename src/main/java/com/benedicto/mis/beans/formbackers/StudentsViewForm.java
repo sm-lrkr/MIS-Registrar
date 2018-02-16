@@ -2,20 +2,26 @@ package com.benedicto.mis.beans.formbackers;
 
 import java.util.List;
 
-import com.benedicto.mis.beans.containers.Student;
+import com.benedicto.mis.beans.containers.StudentPersonal;
+import com.benedicto.mis.beans.containers.StudentProfile;
 
 public class StudentsViewForm {
-	private List<Student> students;
+	private List<StudentProfile> students;
 
-	public List<Student> getStudents() {
+	/**
+	 * @return the students
+	 */
+	public List<StudentProfile> getStudents() {
 		return students;
 	}
 
-	public void setStudents(List<Student> students) {
+	/**
+	 * @param students the students to set
+	 */
+	public void setStudents(List<StudentProfile> students) {
 		this.students = students;
 	}
-
-
-
+	
+	
 	
 }

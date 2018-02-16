@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -87,7 +88,7 @@ public class SubjectController {
 	
 	@RequestMapping(value = "/sh/{subjectCode}", method = RequestMethod.GET)
 	public ModelAndView shSubject(@PathVariable("subjectCode") String subjectCode) {
-		Subject subject = db.getCollegeSubjectByCode(subjectCode);
+		Subject subject = db.getSHSubjectByCode(subjectCode);
 		List<Schedule> schedules = db.getSHSchedules(subjectCode,"");
 		List<Curriculum> currics = db.getSHCurriculumsBySubject(subjectCode);
 		
@@ -174,12 +175,13 @@ public class SubjectController {
 		List<Subject> list = db.getCollegeSubjects("");
 		System.out.println("List size: "+ list.size());
 		
-		final String _subjectCode = subjectCode;
-		list.remove(subject);
+		Iterator<Subject> i = list.iterator();
+		while(i.hasNext()) {
+			if(i.next().getSubjectCode().equals(subjectCode)) {
+				i.remove();
+			}
+		}
 		
-		
-		list.removeIf(s -> s.getSubjectCode() == _subjectCode );
-	
 		ModelAndView model = new ModelAndView();
 		model.setViewName("subjectForm");
 		model.addObject("subjects", list);
@@ -192,7 +194,7 @@ public class SubjectController {
 		return model;
 	}
 	
-	@RequestMapping(value = "/editSubject/clg/save{subjectCode}", method = RequestMethod.POST)
+	@RequestMapping(value = "/editSubject/clg/save/{subjectCode}", method = RequestMethod.POST)
 	public ModelAndView saveEditedCollegeSubject(@PathVariable("subjectCode") String subjectCode, @ModelAttribute("subject") Subject s) {
 		System.out.println("Save edited subject.");
 		db.updateCollegeSubject(s, subjectCode);

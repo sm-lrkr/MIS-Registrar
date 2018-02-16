@@ -3,13 +3,22 @@
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
     
 <spring:url value="/resources/main2.css" var="css" />
-<spring:url value="/resources/jquery-3.2.1.js" var="jscript" />
-<spring:url value="/resources/myscript.js" var="myscript" />
 <spring:url value="/resources/css/dataTable.min.css" var="dtcss" />
 <spring:url value="/resources/css/dataTableSelect.min.css" var="dtselectcss" />
+<spring:url value="/resources/css/buttons.dataTables.min.css" var="dtbuttonscss" />
+
+<spring:url value="/resources/jquery-3.2.1.js" var="jscript" />
+<spring:url value="/resources/myscript.js" var="myscript" />
 <spring:url value="/resources/javascript/dataTable.js" var="dtjs" />
 <spring:url value="/resources/javascript/dataTableSelect.min.js" var="dtselectjs" />
 
+<spring:url value="/resources/javascript/dataTables.buttons.min.js" var="dtbuttonsjs" />
+<spring:url value="/resources/javascript/buttons.flash.min.js" var="flashButtons" />
+<spring:url value="/resources/javascript/jszip.min.js" var="jszip" />
+<spring:url value="/resources/javascript/pdfmake.min.js" var="pdfmake" />
+<spring:url value="/resources/javascript/vfs_fonts.js" var="vfs_fonts" />
+<spring:url value="/resources/javascript/buttons.html5.min.js" var="html5Buttons" />
+<spring:url value="/resources/javascript/buttons.print.min.js" var="printButton" />
     
     
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
@@ -18,8 +27,11 @@
 	
 	<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 	<title>MIS Registrar</title>
+	
+	
 	<link href="${dtcss}" rel="stylesheet">
 	<link href="${dtselectcss}" rel="stylesheet">
+	<link href="${dtbuttonscss}" rel="stylesheet">
 	<link href="${css}" rel="stylesheet">
 	<link href="/resources/css/dataTableS.checkboxes.min.css" rel="stylesheet">
 	
@@ -27,21 +39,27 @@
 	<script type="text/javascript" src="${myscript}" ></script>
 	<script type="text/javascript" src="${dtjs}" ></script>
 	<script type="text/javascript" src="${dtselectjs}" ></script>
-	<script type="text/javascript" src="/resources/javascript/dataTableS.checkboxes.min.js" ></script>
+
+	<script type="text/javascript" src="${dtbuttonsjs}" ></script>
+	<script type="text/javascript" src="${flashButtons}" ></script>
+	<script type="text/javascript" src="${jszip}" ></script>
+	<script type="text/javascript" src="${pdfmake}" ></script>
+	<script type="text/javascript" src="${vfs_fonts}" ></script>
+	<script type="text/javascript" src="${html5Buttons}" ></script>
+	<script type="text/javascript" src="${printButton}" ></script>
 	
 	
 	<script type = "text/javascript">
 		$(document).ready(function(){
 			var ctx = "${pageContext.request.contextPath}";
 			var url = encodeURI(ctx + '/ajax/departmentSelectChanged/?param=');
-			departmentSelect($('#deptSelect'), $('#courseSelect'), ctx);
-			courseSelect($('#search'), $('#courseSelect'), $('#studview'), ctx);
-			searchStudents($('#search'), $('#searchBtn'), $('#courseSelect'), $('#studview'), ctx);	
 			
+		
 			var table = $('#studview').DataTable( {
 			 	"sDom" : 'rtf',
-		        "scrollY":        "300px",
+		        "scrollY":        "350px",
 		        "scrollCollapse": false,
+		        "paging" : false,
 		        "select": {
 		        	style : 'multiple'
 		        },
@@ -51,9 +69,14 @@
 		        	{"title" : "Last Name"},
 		        	{"title" : "First Name"},
 		        	{"title" : "Middle Name"},
-		        	
 		        ]
 		 	} );
+			
+			$("#print").click(function(){
+				 var courseID = $("#courseSelect").val();
+                 var filter = table.search();
+                 window.open( encodeURI(ctx+"/students/clg/printByCourse/?courseID="+courseID+"&filter="+filter+""),'_blank');
+			});
 			
 			$('#studview tbody').on( 'dblclick', 'tr', function () {
 				//alert();
@@ -61,6 +84,10 @@
 			    var stdNo = table.row( this ).data()[0];
 			    window.location.href = ctx+"/students/student/" + stdNo;
 			} );
+			
+			departmentSelect($('#deptSelect'), $('#courseSelect'), ctx);
+			courseSelect(table.search(), $('#courseSelect'), $('#studview'), ctx);
+			searchStudents(table.search(), $('#searchBtn'), $('#courseSelect'), $('#studview'), ctx);	
 			
 		});
 	</script>
@@ -77,7 +104,7 @@
 					<h1 style="display: inline-block; margin-top: 0px;">Students - College</h1>
 					<div class="floatright">
 						<a href="newspr" ><span class="linkButton" >Add New SPR</span></a>   
-				    	<a href="sprForm" ><span class="linkButton" >Reports</span></a>   
+				    	<button type="button" id="print" class="linkButton" >Print</button>   
 			    	</div>
 		  		</div>
 			

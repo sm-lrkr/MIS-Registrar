@@ -1,15 +1,25 @@
 package com.benedicto.mis.beans.containers;
 
 public class Teacher {
-	private String teacherID;
+	
+	private String personnelID;
 	private String lastName;
 	private String firstName;
 	private String middleName;
-	public String getTeacherID() {
-		return teacherID;
+	
+	
+	
+	/**
+	 * @return the personnelID
+	 */
+	public String getPersonnelID() {
+		return personnelID;
 	}
-	public void setTeacherID(String teacherID) {
-		this.teacherID = teacherID;
+	/**
+	 * @param personnelID the personnelID to set
+	 */
+	public void setPersonnelID(String personnelID) {
+		this.personnelID = personnelID;
 	}
 	public String getLastName() {
 		return lastName;

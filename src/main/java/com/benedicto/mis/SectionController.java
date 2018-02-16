@@ -98,11 +98,13 @@ public class SectionController {
 		return model;
 	}
 	
-	@RequestMapping(value = "/sh/{sectionID}", method = RequestMethod.GET)
-	public ModelAndView shSections(@PathVariable("sectionID") String sectionID) {
+	@RequestMapping(value = "/sh/", method = RequestMethod.GET)
+	public ModelAndView shSections(@RequestParam("sectionID") String sectionID) {
 		
 		List<Schedule> schedules = db.getSHSchedulesBySection(sectionID);
-		List<Student> students = db.getSHStudentsBySection(sectionID, "", "2016-2017", 1);
+		List<StudentProfile> students = db.getSHStudentsBySection(sectionID, "", "2017-2018", 1);
+		List<Teacher> teachers = db.getPersonnels("");
+		
 		
 		SchedulesViewForm schedulesForm = new SchedulesViewForm();
 		StudentsViewForm studentsForm = new StudentsViewForm();
@@ -118,19 +120,69 @@ public class SectionController {
 		
 		ModelAndView model = new ModelAndView();
 		model.setViewName("section");
+		
+		model.addObject("section", s);
+		model.addObject("sectionType", "sh");
+		model.addObject("formType", "editSection");
 		model.addObject("schedulesForm", schedulesForm);
-		model.addObject("studentsForm", studentsForm);
+		model.addObject("enlisted", studentsForm);
+		model.addObject("teachers", teachers);
 		model.addObject("sectionName", s.getSectionName());
 		
 		return model;
 	}
 	
+	@RequestMapping(value = "/sh/enlistment/", method = RequestMethod.GET)
+	public ModelAndView sectionEnlistment(@RequestParam("sectionID") String sectionID) {
+		
+		Section s = db.getSHSectionByID(sectionID);
+		
+		List<StudentProfile> list = db.getSHStudentsBySection(sectionID, "", "2017-2018", 1);
+		List<StudentProfile> list1 = db.getUnenlistedSHStudentsByStrand( sectionID, s.getStrandCode(), "2017-2018", 1);
+		
+		
+		StudentsViewForm enlisted = new StudentsViewForm();
+		StudentsViewForm unEnlisted = new StudentsViewForm();
+		enlisted.setStudents(list);
+		unEnlisted.setStudents(list1);
+		
+		System.out.println("Students in section: " + list.size()+" Unenlisted:" + list1.size());
+		
+		
+		ModelAndView model = new ModelAndView();
+		model.setViewName("enlistToSHSection");
+		model.addObject("section", s);
+		model.addObject("sectionType", "sh");
+		model.addObject("formType", "editSection");
+		model.addObject("enlisted", enlisted);
+		model.addObject("unEnlisted", unEnlisted);
+		model.addObject("sectionName", s.getSectionName());
+		
+		return model;
+	}
+	
+	@RequestMapping(value = "/sh/enlist/", method = RequestMethod.POST)
+	public ModelAndView enlistToSection(@RequestParam("sectionID") String sectionID, @ModelAttribute("unEnlisted") StudentsViewForm unenlisted) {
+		for(StudentProfile sp: unenlisted.getStudents()) {
+			System.out.println("Student No to be enlisted to section: " + sp.getStudentNo());
+			if(sp.isChecked()) {
+				Enrollment e = db.getEnrollment(sp.getStudentNo(), "2017-2018", 1);
+				if(e.getEnrollmentNo().equals("")) {
+					System.out.println("Student not enrolled for the current sem. Adding new enrollment. ");
+					db.addNewStudentEnrollment(sp.getStudentNo(), "2017-2018", 1 );
+					e = db.getEnrollment(sp.getStudentNo(), "2017-2018", 1);
+				}
+				db.enlistSHToSection(e, sectionID);
+			}
+		}
+		return new ModelAndView("redirect:/sections/sh/enlistment/?sectionID="+ sectionID);
+	}
 	
 	@RequestMapping(value = "/bsc/{sectionID}", method = RequestMethod.GET)
 	public ModelAndView basicSections(@PathVariable("sectionID") String sectionID) {
 		
 		List<Schedule> schedules = db.getBSCSchedulesBySection(sectionID);
-		List<Student> students = db.getBSCStudentsBySection(sectionID, "", "2016-2017", 1);
+		List<StudentProfile> students = db.getBSCStudentsBySection(sectionID, "", "2016-2017", 1);
 		
 		SchedulesViewForm schedulesForm = new SchedulesViewForm();
 		StudentsViewForm studentsForm = new StudentsViewForm();
@@ -186,18 +238,21 @@ public class SectionController {
 	}
 	
 
-	
-
-
-	@RequestMapping(value = "/newCourse", method = RequestMethod.POST)
-	public ModelAndView addNewCourse(@ModelAttribute("course") Course c) {
-		System.out.println("Add new course");
-		db.createCourse(c);
-		return new ModelAndView("redirect:/courses");
+	@RequestMapping(value = "/newSection/sh", method = RequestMethod.GET)
+	public ModelAndView newSHSection() {
+		System.out.println("Add new subject");
+		List<Subject> list = db.getSHSubjects("");
+		System.out.println("List size: "+ list.size());
+		
+		ModelAndView model = new ModelAndView();
+		model.setViewName("sectionForm");
+		model.addObject("section", new Section());
+		model.addObject("sectionType", "sh");
+		model.addObject("formType", "newSection");
+		model.addObject("pageTitle", "New Section");
+		
+		return model;
 	}
-
 	
-	
-
 	
 }

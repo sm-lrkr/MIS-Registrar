@@ -100,9 +100,6 @@ public class CourseController {
 			subjects.put(i + "-3", db.getCurriculumSubjects(c.getCurriculumID(), i, 3));
 		}
 		
-		//CurriculumForm curricForm = new CurriculumForm();
-		//curricForm.setSubjects(subjects);
-		
 		ModelAndView model = new ModelAndView();
 		model.setViewName("course");
 		model.addObject("courseID", courseID);
@@ -112,8 +109,39 @@ public class CourseController {
 		
 		model.addObject("course", course);
 		model.addObject("curriculums", currics);
+
 		return model;
 	}
+	
+	@RequestMapping(value = "/printCurriculum/", method = RequestMethod.GET)
+	public ModelAndView curriculumPrint(@RequestParam("curricID") String curricID) {
+		Locale locale = new Locale("en_US");
+		Curriculum curric = db.getCollegeCurriculumByID(curricID);
+		logger.info("Welcome home! The client locale is {}.", locale);
+
+		Map<String, List<CurriculumSubject>> subjects = new HashMap<String, List<CurriculumSubject>>();
+		String [] years = {"", "1st Year","2nd Year", "3rd Year", "4th Year", "5th Year"};
+		String [] sems = {"", "1st Sem","2nd Sem", "Summer"};
+		
+		Course course = db.getCourseByID(curric.getCourseID());
+
+		for (int i = 1; i <= 5; ++i) {
+			subjects.put(i + "-1", db.getCurriculumSubjects(curric.getCurriculumID(), i, 1));
+			subjects.put(i + "-2", db.getCurriculumSubjects(curric.getCurriculumID(), i, 2));
+			subjects.put(i + "-3", db.getCurriculumSubjects(curric.getCurriculumID(), i, 3));
+		}
+		
+		ModelAndView model = new ModelAndView();
+		model.setViewName("printCurriculum");
+		model.addObject("courseID", course.getCourseID());
+		model.addObject("subjects", subjects);
+		model.addObject("years", years);
+		model.addObject("sems", sems);
+		model.addObject("course", course);
+		
+		return model;
+	}
+	
 	
 	
 	@RequestMapping(value = "/strands/{strandCode}", method = RequestMethod.GET)
@@ -145,7 +173,6 @@ public class CourseController {
 		model.addObject("curriculums", currics);
 		
 		return model;
-		
 	}
 	
 

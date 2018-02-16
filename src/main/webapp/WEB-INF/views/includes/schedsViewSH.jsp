@@ -10,7 +10,8 @@
 				   	<td>${schedule.lecTimeEnd}</td>
 				   	<td>${schedule.lecRoom}</td>
 				   	<td>${schedule.lecDays}</td>
-				   	
+				   	<td>${schedule.personnelName}</td>
+				   
 				   	<td><a href=" ${pageContext.request.contextPath}/sections/sh/${section.sectionID}">View</a></td>  
 				</tr>  
 		   	</c:forEach>  

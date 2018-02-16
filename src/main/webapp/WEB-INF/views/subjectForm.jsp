@@ -38,6 +38,7 @@
 			 	"sDom" : 'rtf',
 		        "scrollY":        "300px",
 		        "scrollCollapse": false,
+		        "paging" : false,
 		        "select": {
 		        	style : 'single'
 		        }

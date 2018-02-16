@@ -7,16 +7,16 @@
 		<div>
 		<hr>
 		<table style="border-collapse: separate; border-spacing: 15px;">
-			<tr><td><form:input path="student.checked" type="hidden" />	</td>
-				<td><form:input path="student.studentNo" type="hidden" /></td>
+			<tr><td><form:input path="personal.checked" type="hidden" />	</td>
+				<td><form:input path="personal.studentNo" type="hidden" /></td>
 				<td><form:input path="fbg.studentNo" type="hidden" /></td>
 				<td><form:input path="profile.studentNo" type="hidden" /></td>
 				
 			</tr>
 			<tr>
-				<td><form:label path="student.lastName" >*Last Name</form:label>
-				<td><form:input path="student.lastName"/></td>
-				<td><form:errors path="student.lastName"></form:errors> </td>
+				<td><form:label path="personal.lastName" >*Last Name</form:label>
+				<td><form:input path="personal.lastName"/></td>
+				<td><form:errors path="personal.lastName"></form:errors> </td>
 				<td></td>
 				<td></td>
 				<td></td>
@@ -24,13 +24,13 @@
 			</tr>
 				
 			<tr>
-				<td><form:label path="student.firstName">*First Name</form:label></td>
-				<td><form:input path="student.firstName"/></td>
+				<td><form:label path="personal.firstName">*First Name</form:label></td>
+				<td><form:input path="personal.firstName"/></td>
 				<td> <form:errors  class="formError" ></form:errors> </td>
 				<td></td>
-				<td><form:label path="student.gender">Gender </form:label></td>
+				<td><form:label path="personal.gender">Gender </form:label></td>
 				<td>
-					 <form:select path = "student.gender">
+					 <form:select path = "personal.gender">
 					        <form:option value = "NONE" label = ""/>
 					        <form:option value = "Male" label = "Male" />
 					        <form:option value = "Female" label = "Female" />
@@ -40,13 +40,13 @@
 			</tr>
 			
 			<tr>
-				<td><form:label path="student.middleName">Middle Name</form:label></td>
-				<td><form:input path="student.middleName"/></td>
+				<td><form:label path="personal.middleName">Middle Name</form:label></td>
+				<td><form:input path="personal.middleName"/></td>
 				<td></td>
 				<td></td>
-				<td><form:label path="student.maritalStatus">Marital Status</form:label></td>
+				<td><form:label path="personal.maritalStatus">Marital Status</form:label></td>
 				<td>
-					<form:select path = "student.maritalStatus">
+					<form:select path = "personal.maritalStatus">
 					        <form:option value = "NONE" label = ""/>
 					        <form:option value = "Single" label = "Single" />
 					        <form:option value = "Married" label = "Married" />
@@ -56,11 +56,11 @@
 			</tr>
 			
 			<tr>
-				<td><form:label path="student.birthPlace">Place of Birth</form:label></td>
-				<td colspan="3"><form:input path="student.birthPlace" size="65"/></td>
+				<td><form:label path="personal.birthPlace">Place of Birth</form:label></td>
+				<td colspan="3"><form:input path="personal.birthPlace" size="65"/></td>
 		
-				<td><form:label path="student.birthDate">Date of Birth</form:label></td>
-				<td><form:input path="student.birthDate"/></td>
+				<td><form:label path="personal.birthDate">Date of Birth</form:label></td>
+				<td><form:input path="personal.birthDate"/></td>
 			
 				
 			
@@ -68,14 +68,14 @@
 			
 			<tr>
 
-				<td ><form:label path="student.emailAddress">Email Address</form:label></td>
-				<td><form:input path="student.emailAddress" /></td>
+				<td ><form:label path="personal.emailAddress">Email Address</form:label></td>
+				<td><form:input path="personal.emailAddress" /></td>
 				
 				<td></td>
 				<td></td>
 				
-				<td ><form:label path="student.telephoneNo">Telephone Number</form:label></td>
-				<td><form:input path="student.telephoneNo" /></td>
+				<td ><form:label path="personal.telephoneNo">Telephone Number</form:label></td>
+				<td><form:input path="personal.telephoneNo" /></td>
 			</tr>
 			
 			<tr>
@@ -84,8 +84,8 @@
 				<td></td>
 				<td></td>
 				<td></td>
-				<td ><form:label path="student.contactNo">Contact Number</form:label></td>
-				<td><form:input path="student.contactNo" /></td>
+				<td ><form:label path="personal.contactNo">Contact Number</form:label></td>
+				<td><form:input path="personal.contactNo" /></td>
 				
 				
 			</tr>
@@ -93,12 +93,12 @@
 			<tr>
 				
 				<tr>
-				<td ><form:label path="student.cityAddress">City Address</form:label></td>
-				<td colspan="3"><form:input path="student.cityAddress" size="67" /></td>
+				<td ><form:label path="personal.cityAddress">City Address</form:label></td>
+				<td colspan="3"><form:input path="personal.cityAddress" size="67" /></td>
 				
-				<td><form:label path="student.region">Region</form:label></td>
+				<td><form:label path="personal.region">Region</form:label></td>
 				<td>
-					<form:select path = "student.region">
+					<form:select path = "personal.region">
 					        <form:option value = "NONE" label = ""/>
 					        <form:option value = "NCR" label = "NCR" />
 					        <form:option value = "CAR" label = "CAR" />
@@ -127,11 +127,11 @@
 			<tr>
 				
 				<tr>
-				<td><form:label path="student.provincialAddress">Provincial Address</form:label></td>
-				<td colspan="3"><form:input path="student.provincialAddress"  size="65" /></td>
+				<td><form:label path="personal.provincialAddress">Provincial Address</form:label></td>
+				<td colspan="3"><form:input path="personal.provincialAddress"  size="65" /></td>
 				
-				<td><form:label path="student.country">Country</form:label></td>
-				<td><form:input path="student.country"/></td>
+				<td><form:label path="personal.country">Country</form:label></td>
+				<td><form:input path="personal.country"/></td>
 			</tr>
 		
 			<tr>
@@ -139,14 +139,14 @@
 				<td></td>
 				<td></td>
 				<td></td>
-				<td><form:label path="student.citizenship">Citizenship</form:label></td>
-				<td><form:input path="student.citizenship"/></td>
+				<td><form:label path="personal.citizenship">Citizenship</form:label></td>
+				<td><form:input path="personal.citizenship"/></td>
 			</tr>
 			
 			<tr>
-				<td ><form:label path="student.working">Working</form:label></td>
+				<td ><form:label path="personal.working">Working</form:label></td>
 				<td>
-				 <form:select path = "student.working" value="${student.working} }" >
+				 <form:select path = "personal.working" value="${personal.working} }" >
 					        <form:option value = "0" label = "" />
 					        <form:option value = "1" label = "Yes" />
 					        <form:option value = "0" label = "No" />
@@ -154,17 +154,17 @@
 				</td>
 				<td></td>
 				<td></td>
-				<td><form:label path="student.religion">Religion</form:label></td>
-				<td><form:input path="student.religion"/></td>
+				<td><form:label path="personal.religion">Religion</form:label></td>
+				<td><form:input path="personal.religion"/></td>
 			</tr>
 				
 			<tr>
-				<td ><form:label path="student.workingAddress">Working Address</form:label></td>
-				<td><form:input path="student.workingAddress" /></td>
+				<td ><form:label path="personal.workingAddress">Working Address</form:label></td>
+				<td><form:input path="personal.workingAddress" /></td>
 				<td></td>
 				<td></td>
-				<td><form:label path="student.APR">APR</form:label></td>
-				<td><form:input path="student.APR"/></td>
+				<td><form:label path="personal.APR">APR</form:label></td>
+				<td><form:input path="personal.APR"/></td>
 			</tr>
 			 
 			 <tr>

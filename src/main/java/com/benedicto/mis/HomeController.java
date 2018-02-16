@@ -54,7 +54,7 @@ public class HomeController {
 
 		Date date = new Date();
 		DateFormat dateFormat = DateFormat.getDateTimeInstance(DateFormat.LONG, DateFormat.LONG, locale);
-		List<Student> list = db.getAllStudents("","");
+		List<StudentProfile> list = db.getAllStudents("","");
 		List<Department> departments = db.getDepartments("");
 		List<Course> courses = db.getCollegeCourses("");
 	
@@ -143,21 +143,21 @@ public class HomeController {
 //		return model;
 //	}
 
-	@RequestMapping(value = "/enlistSchedules/{studentID}", method = RequestMethod.POST)
-	public ModelAndView enlistSchedules(@ModelAttribute("offered") SchedulesViewForm s,
-			@PathVariable("studentID") String studentID) {
-		Locale locale = new Locale("en_US");
-		logger.info("Welcome home! The client locale is {}.", locale);
-
-		for (Schedule S : s.getSchedules()) {
-			if (S.isChecked()) {
-				db.enlistCollegeStudentSchedules(studentID, S.getScheduleID());
-				//db.enlistStudentSubjects(studentID, S.getLabScheduleID());
-			}
-		}
-
-		return new ModelAndView("redirect:/enlistment/" + studentID);
-	}
+//	@RequestMapping(value = "/enlistSchedules/{studentID}", method = RequestMethod.POST)
+//	public ModelAndView enlistSchedules(@ModelAttribute("offered") SchedulesViewForm s,
+//			@PathVariable("studentID") String studentID) {
+//		Locale locale = new Locale("en_US");
+//		logger.info("Welcome home! The client locale is {}.", locale);
+//
+//		for (Schedule S : s.getSchedules()) {
+//			if (S.isChecked()) {
+//				db.enlistCollegeStudentSchedules(studentID, S.getScheduleID());
+//				//db.enlistStudentSubjects(studentID, S.getLabScheduleID());
+//			}
+//		}
+//
+//		return new ModelAndView("redirect:/enlistment/" + studentID);
+//	}
 	
 	@RequestMapping(value = "/unenlistSchedules/{studentID}", method = RequestMethod.POST)
 	public ModelAndView unenlistSchedules(@ModelAttribute("offered") SchedulesViewForm s,
@@ -200,46 +200,46 @@ public class HomeController {
 		model.addObject("curriculums", currics);
 		return model;
 	}
+//
+//	@RequestMapping(value = "/grades/{studentID}", method = RequestMethod.GET)
+//	public ModelAndView studentGrades(@PathVariable("studentID") String studentID) {
+//		Locale locale = new Locale("en_US");
+//
+//		List<SubjectGrades> grades = db.getStudentGrades(studentID);
+//		System.out.println("Student ID: " + studentID + " Size: " + grades.size());
+//		ModelAndView model = new ModelAndView();
+//		model.setViewName("studentgrades");
+//		model.addObject("grades", grades);
+//		model.addObject("studentID", studentID);
+//		return model;
+//	}
 
-	@RequestMapping(value = "/grades/{studentID}", method = RequestMethod.GET)
-	public ModelAndView studentGrades(@PathVariable("studentID") String studentID) {
-		Locale locale = new Locale("en_US");
 
-		List<SubjectGrades> grades = db.getStudentGrades(studentID);
-		System.out.println("Student ID: " + studentID + " Size: " + grades.size());
-		ModelAndView model = new ModelAndView();
-		model.setViewName("studentgrades");
-		model.addObject("grades", grades);
-		model.addObject("studentID", studentID);
-		return model;
-	}
-
-
-	@RequestMapping(value = "/saveEdited", method = RequestMethod.POST)
-	@ResponseBody
-	public String save(@ModelAttribute("student") Student s, @ModelAttribute("studentCAB") StudentProfile sc,
-			BindingResult result) {
-		logger.info("The student ID is: {}.", s.getStudentID());
-		db.updateSPR(s);
-	
-		return "success";
-	}
-
-	@RequestMapping(value = "/saveNew", method = RequestMethod.POST)
-	@ResponseBody
-	public String saveNew(@ModelAttribute("student") Student s, @ModelAttribute("studentCAB") StudentProfile sc,
-			BindingResult result) {
-		logger.info("The student ID is: {}.", s.getStudentID());
-		System.out.println("The course ID is: " + sc.getCourseID());
-		System.out.println("The curriculum ID is: " + sc.getCurriculumID());
-		System.out.println("The enrollment status is: " + sc.getEnrollmentStatus());
-		System.out.println("The student status is: " + sc.getStudentStatus());
-
-		sc.setStudentID(s.getStudentID());
-		db.createCollegeProfile(sc);
-		db.createSPR(s);
-		return "Success";
-	}
+//	@RequestMapping(value = "/saveEdited", method = RequestMethod.POST)
+//	@ResponseBody
+//	public String save(@ModelAttribute("student") StudentPersonal s, @ModelAttribute("studentCAB") StudentProfile sc,
+//			BindingResult result) {
+//		logger.info("The student ID is: {}.", s.getStudentID());
+//		db.updateSPR(s);
+//	
+//		return "success";
+//	}
+//
+//	@RequestMapping(value = "/saveNew", method = RequestMethod.POST)
+//	@ResponseBody
+//	public String saveNew(@ModelAttribute("student") StudentPersonal s, @ModelAttribute("studentCAB") StudentProfile sc,
+//			BindingResult result) {
+//		logger.info("The student ID is: {}.", s.getStudentID());
+//		System.out.println("The course ID is: " + sc.getCourseID());
+//		System.out.println("The curriculum ID is: " + sc.getCurriculumID());
+//		System.out.println("The enrollment status is: " + sc.getEnrollmentStatus());
+//		System.out.println("The student status is: " + sc.getStudentStatus());
+//
+//		sc.setStudentID(s.getStudentID());
+//		db.createCollegeProfile(sc);
+//		db.createSPR(s);
+//		return "Success";
+//	}
 
 	@RequestMapping(value = "/newCourse", method = RequestMethod.POST)
 	public ModelAndView addNewCourse(@ModelAttribute("course") Course c) {
@@ -300,7 +300,7 @@ public class HomeController {
 
 		ModelAndView model = new ModelAndView();
 		model.setViewName("newspr");
-		model.addObject("student", new Student());
+		model.addObject("student", new StudentPersonal());
 		model.addObject("studentCAB", new StudentProfile());
 		model.addObject("courses", courses);
 		model.addObject("curriculums", currics);
