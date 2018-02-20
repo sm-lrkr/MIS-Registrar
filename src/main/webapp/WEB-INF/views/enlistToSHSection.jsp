@@ -73,13 +73,14 @@
 						<thead>
 							<tr><th></th><th>LRN</th><th>Last Name</th><th>First Name</th><th>Middle Name</th></tr>  
 					   	</thead>
-					 
+					
 					   	<tbody>
 						   	<c:forEach var="student" items="${unEnlisted.students}" varStatus="status" >   
 							   	<tr>  
 							   		<td>  
 									   	<form:input path="students[${status.index}].empty" type="hidden" />
 										<form:input path="students[${status.index}].studentNo" type="hidden" />
+										<form:input path="students[${status.index}].strandCode" type="hidden" />
 										<form:checkbox path="students[${status.index}].checked"  />
 									</td>
 							   		<td>${student.studentID}</td>  
@@ -100,7 +101,7 @@
    			</div>
    	
 			<div id="enlistedList" class="tableContainer">
-				<form:form id="enlisted" action="" method="post" modelAttribute="enlisted">
+				<form:form id="enlisted" action="${pageContext.request.contextPath}/sections/sh/withdraw/?sectionID=${section.sectionID}" method="post" modelAttribute="enlisted">
 					<table id="students" class="display compact listTable">  
 						<thead>
 							<tr><th></th><th>LRN</th><th>Last Name</th><th>First Name</th><th>Middle Name</th></tr>  

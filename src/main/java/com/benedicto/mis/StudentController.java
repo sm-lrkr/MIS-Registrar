@@ -23,6 +23,7 @@ import org.springframework.web.servlet.ModelAndView;
 import com.benedicto.mis.beans.*;
 import com.benedicto.mis.beans.containers.*;
 import com.benedicto.mis.beans.formbackers.SPRForm;
+import com.benedicto.mis.beans.formbackers.SchedulesViewForm;
 
 /**
  * Handles requests for the application home page.
@@ -56,6 +57,22 @@ public class StudentController {
 		return model;
 	}
 	
+	@RequestMapping(value = "/printAll", method = RequestMethod.GET)
+	public ModelAndView printAllStudents(@RequestParam("filter") String filter) {
+		Locale locale = new Locale("en_US");
+		logger.info("Welcome home! The client locale is {}.", locale);
+		
+		List<StudentProfile> list = db.getAllStudents("","");
+		
+		ModelAndView model = new ModelAndView();
+		
+		model.setViewName("studentsAll");
+		model.addObject("students", list);
+		
+		return model;
+	}
+
+
 	@RequestMapping(value = "/clg", method = RequestMethod.GET)
 	public ModelAndView clgStudents() {
 		Locale locale = new Locale("en_US");
@@ -206,7 +223,7 @@ public class StudentController {
 		
 		if(spr.getProfile().getEnrollmentStatus().trim().equals("true")) {
 			System.out.println("Enrollment Status is true");
-			Enrollment e = db.getEnrollment(spr.getPersonal().getStudentNo(), "2017-2018", 1);
+			Enrollment e = db.getCollegeEnrollmentBySY(spr.getPersonal().getStudentNo(), "2017-2018", 1);
 			if(e.getEnrollmentNo().equals("")) {
 				System.out.println("Student not enrolled for the current sem. Adding new enrollment. ");
 				db.addNewStudentEnrollment(spr.getPersonal().getStudentNo(), "2017-2018", 1 );
@@ -251,6 +268,11 @@ public class StudentController {
 		StudentProfile profile = db.getCollegeProfileByNo(studentNo);
 		String profileType = "college";
 		
+		Enrollment e = db.getCollegeEnrollmentBySY(studentNo, "2017-2018", 1);
+		SchedulesViewForm enlisted = new SchedulesViewForm();
+		enlisted.setSchedules(db.getCollegeEnlistedSubjects(studentNo, e.getEnrollmentNo()));
+		
+		
 		String [] sems = {"", "1st Sem","2nd Sem", "Summer"};
 		
 		if(profile.getStudentID().equals("")) {
@@ -264,16 +286,13 @@ public class StudentController {
 		
 		
 		
-		
 		ModelAndView model = new ModelAndView();
 		model.setViewName("studentHome");
 		model.addObject("student", stud);
 		model.addObject("profile", profile);
 		model.addObject("profileType", profileType);
 		model.addObject("sems", sems);
-		
-		
-		
+		model.addObject("enlisted", enlisted);
 		
 		
 		return model;

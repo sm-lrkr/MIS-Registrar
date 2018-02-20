@@ -68,13 +68,12 @@ public class GradesController {
 		StudentPersonal student = db.getStudentByNo(studentNo);
 		SemGradesForm allSemGrades = new SemGradesForm();
 		List<SemGrades> list = new ArrayList<SemGrades>();
-		List<Enrollment> enrollments = db.getStudentEnrollments(studentNo);
-		
+		List<Enrollment> enrollments = db.getSHEnrollmentsByStudentNo(studentNo);
 		
 		for(Enrollment e: enrollments) {
 			SemGrades semGrades = new SemGrades();
 			semGrades.setEnrollment(e);
-			semGrades.setGrades(db.getStudentGrades(e.getEnrollmentNo()));
+			semGrades.setGrades(db.getSHGrades(e.getEnrollmentNo()));
 			list.add(semGrades);
 		}
 		allSemGrades.setSemGrades(list);
@@ -95,13 +94,19 @@ public class GradesController {
 		StudentPersonal student = db.getStudentByNo(studentNo);
 		SemGradesForm allSemGrades = new SemGradesForm();
 		List<SemGrades> list = new ArrayList<SemGrades>();
-		List<Enrollment> enrollments = db.getStudentEnrollments(studentNo);
+		List<Enrollment> enrollments = db.getCollegeEnrollmentsByStudentNo(studentNo);
 		
-		
+		System.out.println("Enrollments count: " + enrollments.size());
 		for(Enrollment e: enrollments) {
+			float average = 0;
 			SemGrades semGrades = new SemGrades();
 			semGrades.setEnrollment(e);
-			semGrades.setGrades(db.getStudentGrades(e.getEnrollmentNo()));
+			semGrades.setGrades(db.getCollegeGrades(e.getEnrollmentNo()));
+			for(SubjectGrades sg: semGrades.getGrades()) {
+				average += sg.getEquivalentGrade();
+			}
+			average /= semGrades.getGrades().size();
+			semGrades.setAverage(average);
 			list.add(semGrades);
 		}
 		allSemGrades.setSemGrades(list);

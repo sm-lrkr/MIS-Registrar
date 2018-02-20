@@ -60,7 +60,7 @@
 		
 			
 			 var table = $('#studview').DataTable( {
-				 	"dom" : 'rtBf',
+				 	"dom" : 'rtf',
 			        "scrollY":        "350px",
 			        "paging" : false,
 			        "scrollCollapse": false,
@@ -71,32 +71,11 @@
 			        	{"title" : "First Name"},
 			        	{"title" : "Middle Name"},
 			       
-			        ], "buttons": [
-			            {
-			                extend: 'collection',
-			                text: 'Export',
-			                autoClose: true,
-			                buttons: [
-			                    'copy',
-			                    'excel',
-			                    'csv',
-			                    'pdf'
-			                   
-			                ]
-			            },'print',{
-			            	extend: 'print',
-			            	text: 'PRINT',
-			            	exportOptions: {
-			                     columns: ':visible'
-			                 },
-			            	autoPrint:true,
-			            	className: 'blue'
-			            }
 			        ]
 			 } );
 			 
-			 
-			 
+		
+			
 	
 			table.on( 'dblclick', 'tr', function () {
 				var stdNo = table.row( this ).data()[0];
@@ -104,8 +83,8 @@
 			} );
 				
 			$("#print").click(function(){
-				window.print();
-				
+				var filter = table.search();
+                window.open( encodeURI(ctx+"/students/printAll/?filter="+filter+""),'_blank');
 			});
 		
 		});

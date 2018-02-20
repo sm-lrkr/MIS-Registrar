@@ -135,7 +135,7 @@
 				</table>
 				<br><br>
 			</form:form>
-			
+		
 			<div style="float: right;">
 					<select id="db_Option" >
 						<c:choose>
@@ -149,7 +149,6 @@
 								<option value="sh" label="Senior High" selected="selected"/> 
 							</c:when>
 						</c:choose>
-						
 					</select>
 					<input id="submit" type="button" class="linkButton" value="Save" >	
 			</div>

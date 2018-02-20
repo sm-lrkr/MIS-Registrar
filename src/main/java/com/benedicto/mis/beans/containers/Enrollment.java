@@ -4,7 +4,10 @@ public class Enrollment {
 	private String enrollmentNo;
 	private String studentNo;
 	private String schoolYear;
-	private String semester;
+	private int semester;
+	private String sectionID;
+	private String strandCode;
+	private int modifiedCount;
 	
 	public String getEnrollmentNo() {
 		return enrollmentNo;
@@ -24,12 +27,59 @@ public class Enrollment {
 	public void setSchoolYear(String schoolYear) {
 		this.schoolYear = schoolYear;
 	}
-	public String getSemester() {
+	
+	/**
+	 * @return the semester
+	 */
+	public int getSemester() {
 		return semester;
 	}
-	public void setSemester(String semester) {
+	/**
+	 * @param semester the semester to set
+	 */
+	public void setSemester(int semester) {
 		this.semester = semester;
 	}
+	/**
+	 * @return the sectionID
+	 */
+	public String getSectionID() {
+		return sectionID;
+	}
+	/**
+	 * @param sectionID the sectionID to set
+	 */
+	public void setSectionID(String sectionID) {
+		this.sectionID = sectionID;
+	}
+	/**
+	 * @return the strandCode
+	 */
+	public String getStrandCode() {
+		return strandCode;
+	}
+	/**
+	 * @param strandCode the strandCode to set
+	 */
+	public void setStrandCode(String strandCode) {
+		this.strandCode = strandCode;
+	}
+	/**
+	 * @return the modifiedCount
+	 */
+	/**
+	 * @return the modifiedCount
+	 */
+	public int getModifiedCount() {
+		return modifiedCount;
+	}
+	/**
+	 * @param modifiedCount the modifiedCount to set
+	 */
+	public void setModifiedCount(int modifiedCount) {
+		this.modifiedCount = modifiedCount;
+	}
+	
 	
 	
 	

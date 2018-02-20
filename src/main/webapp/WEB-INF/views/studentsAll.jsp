@@ -63,6 +63,7 @@
 			departmentSelect($('#deptSelect'), $('#courseSelect'), ctx);
 			courseSelect($('#search'), $('#courseSelect'), $('#studview'), ctx);
 			searchStudents($('#search'), $('#searchBtn'), $('#courseSelect'), $('#studview'), ctx);	
+		
 			
 			 var table = $('#studview').DataTable( {
 				 	"dom" : 'rt',
@@ -90,7 +91,7 @@
 			            	action: function ( e, dt, node, config ) {
 			            		$(".content").printThis({
 			      				  importCSS: true,
-			      				  importStyle: true,
+			      				  importStyle: true
 			      				});
 			            	},
 			            	className: 'blue'
@@ -121,17 +122,14 @@
 			   
 			    ]
 			}).container().appendTo($('#buttons'));
-				
-			$(".content").printThis({
-				  importCSS: true,
-				  importStyle: true
-				  
-			});
+			
+			
+		
 		});
 	</script>
 
 	
-	
+
 	<style>
 		@media print
 		{    
@@ -146,8 +144,9 @@
 	<div style="display: flex; flex-direction: right;">
 		<div style="width: 8.5in; text-align:center" >
 			<div style=" display: inline-block;" >
+			
 				<div style="text-align:center;" class="content">
-					<h1 style="display: inline-block;">${courseDesc}</h1>
+					<h1 style="display: inline-block;"  >Students List</h1>
 				</div>
 				
 				<div style="width: 7.5in;" class="content" >
@@ -159,12 +158,9 @@
 								<th>Last Name</th>
 								<th>First Name</th>
 								<th>Middle Name</th>
-								<c:if test = "${byCourse ne true}">
-									<th>Course</th>
-								</c:if>
 							</tr>  
 						</thead>
-									
+								
 						<tbody>
 							<c:forEach var="stud" items="${students}" varStatus="status">   
 							   	<tr>  
@@ -173,10 +169,7 @@
 								   	<td>${stud.lastName}</td>  
 								   	<td>${stud.firstName}</td>  
 								   	<td>${stud.middleName}</td>  
-								   	<c:if test = "${byCourse ne true}">
-										<td>${stud.courseID}</td>
-									</c:if>
-							   	</tr>  
+								</tr>  
 							</c:forEach>
 						</tbody>  
 					</table>  

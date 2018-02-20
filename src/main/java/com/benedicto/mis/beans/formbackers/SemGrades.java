@@ -6,8 +6,9 @@ import com.benedicto.mis.beans.containers.Enrollment;
 import com.benedicto.mis.beans.containers.SubjectGrades;
 
 public class SemGrades {
-	public Enrollment enrollment;
-	public List<SubjectGrades> grades;
+	private Enrollment enrollment;
+	private List<SubjectGrades> grades;
+	private float average;
 	
 	
 	/**
@@ -34,6 +35,17 @@ public class SemGrades {
 	public void setGrades(List<SubjectGrades> grades) {
 		this.grades = grades;
 	}
-	
-	
+	/**
+	 * @return the average
+	 */
+	public float getAverage() {
+		return average;
+	}
+	/**
+	 * @param average the average to set
+	 */
+	public void setAverage(float average) {
+		this.average = average;
+	}
+
 }

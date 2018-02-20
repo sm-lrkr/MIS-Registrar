@@ -120,11 +120,11 @@
 						<td><form:label path="session" >Session</form:label></td>
 						<td><form:input id="session"   path="session" /></td>
 					</tr>
-					
+				
 					
 					<tr>
-						<td><form:label path="teacher" >Adviser</form:label></td>
-						<td><form:input id="teacher"   path="teacher" /></td>
+						<td><form:label path="personnelID" >Adviser</form:label></td>
+						<td><form:input id="personnelID"   path="personnelID" /></td>
 					</tr>
 				</table>
 				<br><br>

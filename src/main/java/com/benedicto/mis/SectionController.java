@@ -163,17 +163,54 @@ public class SectionController {
 	
 	@RequestMapping(value = "/sh/enlist/", method = RequestMethod.POST)
 	public ModelAndView enlistToSection(@RequestParam("sectionID") String sectionID, @ModelAttribute("unEnlisted") StudentsViewForm unenlisted) {
+
+		SchedulesViewForm schedules = new SchedulesViewForm();
+		SchedulesViewForm enlisted = new SchedulesViewForm();
+		
+		schedules.setSchedules(db.getSHSchedulesBySection(sectionID));
+		
 		for(StudentProfile sp: unenlisted.getStudents()) {
 			System.out.println("Student No to be enlisted to section: " + sp.getStudentNo());
 			if(sp.isChecked()) {
-				Enrollment e = db.getEnrollment(sp.getStudentNo(), "2017-2018", 1);
+				Enrollment e = db.getSHEnrollmentBySY(sp.getStudentNo(), "2017-2018", 1);
 				if(e.getEnrollmentNo().equals("")) {
+					e.setStudentNo(sp.getStudentNo());
+					e.setSchoolYear("2017-2018");
+					e.setSemester(1);
+					e.setStrandCode(sp.getStrandCode());
+					e.setSectionID(sectionID);
 					System.out.println("Student not enrolled for the current sem. Adding new enrollment. ");
-					db.addNewStudentEnrollment(sp.getStudentNo(), "2017-2018", 1 );
-					e = db.getEnrollment(sp.getStudentNo(), "2017-2018", 1);
+					db.addNewSHEnrollment(e);
+					e = db.getSHEnrollmentBySY(sp.getStudentNo(), "2017-2018", 1);
 				}
 				db.enlistSHToSection(e, sectionID);
+				for(Schedule s: schedules.getSchedules()) {
+					db.enlistSHStudentSchedules(e, s.getScheduleID());
+					db.addSHSubjectGrading(s, e.getEnrollmentNo());
+				}
+				
 			}
+		}
+		return new ModelAndView("redirect:/sections/sh/enlistment/?sectionID="+ sectionID);
+	}
+	
+	@RequestMapping(value = "/sh/withdraw/", method = RequestMethod.POST)
+	public ModelAndView unenlistFromSection(@ModelAttribute("enlisted") StudentsViewForm enlisted,
+			@RequestParam("sectionID") String sectionID) {
+		
+		for(StudentProfile sp: enlisted.getStudents()) {
+			Enrollment e = db.getSHEnrollmentBySY(sp.getStudentNo(), "2017-2018", 1);
+			SchedulesViewForm _enlisted = new SchedulesViewForm();
+			_enlisted.setSchedules(db.getSHEnlistedSubjects(sp.getStudentNo(), e.getEnrollmentNo()));
+			
+			if(sp.isChecked()) {
+				db.withdrawSHFromSection(e, sectionID);
+				for(Schedule s: _enlisted.getSchedules()) {
+					db.withdrawSHSubjects(e, s.getScheduleID());
+					db.removeSHSubjectsGrading(e, s.getSubjectCode());
+				}
+			}
+			
 		}
 		return new ModelAndView("redirect:/sections/sh/enlistment/?sectionID="+ sectionID);
 	}

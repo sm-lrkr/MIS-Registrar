@@ -1,12 +1,12 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>   
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form" %>
-    
+   
 	
 	<table id="schedsview" class="display compact listTable">  
 		<thead>
-				<tr><th>ScheduleID</th><th>Subject</th><th>Section</th><th>Units</th><th>Time</th><th>Days</th><th>Room</th></tr>
+				<tr><th>ScheduleID</th><th>Subject</th><th>Section</th><th>Units</th><th>Time</th><th>Days</th><th>Room</th><th>Teacher</th></tr>
 		</thead>
-		
+	
 		<tbody>
 				<c:forEach var="sched" items="${schedules}">   
 					<tr>  
@@ -17,6 +17,7 @@
 					   	<td> ${sched.lecTimeStart}-${sched.lecTimeEnd}</td>  
 					   	<td> ${sched.lecDays}</td>  
 					   	<td> ${sched.lecRoom}</td>  
+					   	<td> ${sched.personnelName}</td>  
 				   	</tr>
 					<c:if test="${sched.labDays ne '' }">			   
 					   	<tr>  
@@ -27,8 +28,10 @@
 							<td> ${sched.labTimeStart}-${sched.labTimeEnd}</td>  
 							<td> ${sched.labDays}</td>  
 							<td> ${sched.labRoom}</td>  
+							<td> ${sched.personnelName}</td>  
 						</tr>    
 					</c:if>
+				
 		   		</c:forEach>
 		</tbody>
 	</table>

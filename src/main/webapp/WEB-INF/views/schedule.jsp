@@ -88,7 +88,8 @@
 			});
 			
 			
-			
+			$("#scheduleForm :input").prop("disabled", true);
+			$("#scheduleForm :input").addClass("disabledInput");
 			
 			
 		});
@@ -109,41 +110,76 @@
 			<div class="floatright">
 						<a href="newSchedule" class="linkButton">New Schedule</a>    
 			</div>
-			
-			<div style="margin-bottom: 100px;">
-				<table class="formTable" style="margin-top: 30px;">
-					<tr>
-						<td>Section</td>
-						<td>${schedule.section}</td>
-					</tr>
-						
-					
-					<c:if test = "${classType == 'LEC'}">
+			<div style="margin-bottom: 50px;">
+				<form:form id="scheduleForm" action="" modelAttribute="schedule">
+					<table class="formTable" style="margin-top: 30px;">
 						<tr>
-							<td>Units</td>
-							<td>${schedule.lecUnits}</td>
+							<td><form:label path="section" >Section</form:label></td>
+							<td><form:input path="section" /></td>
 						</tr>
 						
-						<tr>
-							<td>Time</td>
-							<td>${schedule.lecTimeStart} - ${schedule.lecTimeEnd} </td>
-						</tr>		
 						
-						<tr>
-							<td>Days</td>
-							<td>${schedule.lecDays}</td>
-						</tr>		
-						
-						<tr>
-							<td>Room</td>
-							<td>${schedule.lecRoom}</td>
-						</tr>				         
-					</c:if>
+						<c:if test = "${classType == 'LEC'}">
+							<tr>
+								<td><form:label path="lecUnits" >Units</form:label></td>
+								<td><form:input path="lecUnits"/></td>
+							</tr>
+							
+							<tr>
+								<td><form:label path="lecTimeStart">Time Start</form:label></td>
+								<td><form:input path="lecTimeStart" /></td>
+							</tr>		
+							<tr>
+								<td><form:label path="lecTimeEnd">Time End</form:label></td>
+								<td><form:input path="lecTimeEnd" /></td>
+							</tr>	
+							
+							<tr>
+								<td><form:label path="lecDays"> Days </form:label></td>
+								<td><form:input path="lecDays" /></td>
+							</tr>		
+							
+							<tr>
+								<td><form:label path="lecRoom"> Room </form:label></td>
+								<td><form:input path="lecRoom"/></td>
+							</tr>				         
+						</c:if>
 			
-				</table>
+						<c:if test = "${classType == 'LAB'}">
+							<tr>
+								<td><form:label path="labUnits" >Units</form:label></td>
+								<td><form:input path="labUnits"/></td>
+							</tr>
+							
+							<tr>
+								<td><form:label path="labTimeStart">Time Start</form:label></td>
+								<td><form:input path="labTimeStart" /></td>
+							</tr>		
+							<tr>
+								<td><form:label path="labTimeEnd">Time End</form:label></td>
+								<td><form:input path="labTimeEnd" /></td>
+							</tr>	
+							
+							<tr>
+								<td><form:label path="labDays"> Days </form:label></td>
+								<td><form:input path="labDays" /></td>
+							</tr>		
+						
+							<tr>
+								<td><form:label path="labRoom"> Room </form:label></td>
+								<td><form:input path="labRoom"/></td>
+							</tr>				         
+						</c:if>
+						<tr>
+							<td><form:label path="personnelName"> Instructor </form:label></td>
+							<td><form:input path="personnelName"/></td>
+						</tr>		
+						
+					</table>
+				</form:form>
 			</div>
 		
-			
+	
 			<div style="width: 1000px; " >
 					<jsp:include page="includes/studentview.jsp"/>
 			</div>

@@ -48,13 +48,14 @@
 					
 				});
 			});
-			
+	
 			var table = $('#coursesview').DataTable( {
 			 	"sDom" : 'rtf',
-		        "scrollY":        "300px",
+		        "scrollY":        "350px",
 		        "scrollCollapse": false,
+		        "paging": false,
 		        "select": {
-		        	style : 'multiple'
+		        	style : 'single'
 		        }
 		 	} );
 			

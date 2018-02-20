@@ -53,10 +53,10 @@
 		$(document).ready(function(){
 			var ctx = "${pageContext.request.contextPath}";
 			var url = encodeURI(ctx + '/ajax/departmentSelectChanged/?param=');
-			
-		
+
+
 			var table = $('#studview').DataTable( {
-			 	"sDom" : 'rtf',
+			 	"sDom" : 'rt<"courses">f',
 		        "scrollY":        "350px",
 		        "scrollCollapse": false,
 		        "paging" : false,
@@ -88,7 +88,7 @@
 			departmentSelect($('#deptSelect'), $('#courseSelect'), ctx);
 			courseSelect(table.search(), $('#courseSelect'), $('#studview'), ctx);
 			searchStudents(table.search(), $('#searchBtn'), $('#courseSelect'), $('#studview'), ctx);	
-			
+		
 		});
 	</script>
 	
@@ -107,37 +107,28 @@
 				    	<button type="button" id="print" class="linkButton" >Print</button>   
 			    	</div>
 		  		</div>
-			
+
 				<div style="padding-bottom: 5px;">
 					<a id="all" class="linkButton" href="${pageContext.request.contextPath}/students/"> ALL </a> 
 			    	<a id="clg" class="linkButton" href="${pageContext.request.contextPath}/students/clg" > COLLEGE </a> 
 			    	<a id="shs" class="linkButton" href="${pageContext.request.contextPath}/students/sh"> SENIOR H </a> 
 			    	<a id="bsc" class="linkButton" href="${pageContext.request.contextPath}/students/bsc"> BASIC </a> 
 			    </div>
-			
+		
 				<div style="width: 1000px; " >
 					<jsp:include page="includes/studentview.jsp"/>
-				</div>
-
-				<div id="courses" style="margin-top: 15px;">
-				   		<select id="deptSelect" >
-			   			<option value="" label="--Department--"/>
-			   				<c:forEach var="dep" items="${departments}">   
-								<option value="${dep.departmentCode}" label="${dep.departmentName}" /> 
-							</c:forEach>  
-							<option value="SHS" label="Senior High School" /> 
-							<option value="BSC" label="Basic Education" /> 
-				   		</select>
-				
+			
+					<div id="courses"  class="courses" style="margin-top:-30px;">
 				   		<select id="courseSelect">
 				   			<option value="" label="--- Course ---"/>
 				   			<c:forEach var="crs" items="${courses}">   
 								<option value="${crs.courseID}" label="${crs.courseDesc}" /> 
 							</c:forEach>  
 				   		</select>
+					</div>
 				</div>
+
 				
-			
 			</div>
 		</div>
 	<jsp:include page="includes/footer.jsp" />

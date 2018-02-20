@@ -54,12 +54,13 @@
 		$(document).ready(function(){
 			var ctx = "${pageContext.request.contextPath}";
 			var url = encodeURI(ctx + '/ajax/departmentSelectChanged/?param=');
-			
+		
 			
 			var table = $('#studview').DataTable( {
 			 	"sDom" : 'rtf',
-		        "scrollY":        "300px",
+		        "scrollY":        "350px",
 		        "scrollCollapse": false,
+		        "paging" : false,
 		        "select": {
 		        	style : 'multiple'
 		        },
@@ -115,15 +116,7 @@
 				<div style="width: 1000px; " >
 					<jsp:include page="includes/studentview.jsp"/>
 				</div>
-			   		<div class="divElements" >
-				   		<select id="trackSelect" >
-			   			<option value="" label="--Track--"/>
-			   				<option value="ACAD" label="Academic" />
-							<option value="TVL" label="Technical-Vocational Livelihood" />
-							<option value="SPORTS" label="Sports" />
-							<option value="AD" label="Arts and Design" />
-				   		</select>
-			
+			   		<div style="margin-top:-30px;">
 				   		<select id="strandSelect">
 				   			<option value="" label="--- Strand ---"/>
 				   			<c:forEach var="strand" items="${strands}">   

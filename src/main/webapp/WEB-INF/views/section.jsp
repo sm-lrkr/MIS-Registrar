@@ -45,10 +45,10 @@
 		        },
 		        'order': [[1, 'asc']]
 		 	} );
-
+		
 			var table2 = $('#students').DataTable( {
-			 	"sDom" : 'rtf',
-		        "scrollY":        "100px",
+			 	"sDom" : 'rt',
+		        "scrollY":        "200px",
 		        "scrollCollapse": false,
 		        "paging": false,
 		        "select": {
@@ -60,6 +60,9 @@
 		        'order': [[1, 'asc']]
 		 	} );
 			
+			$("#sectionForm :input").prop("disabled", true);
+			$("#sectionForm :input").addClass("disabledInput");
+		
 			
 		});
 	</script>
@@ -82,7 +85,7 @@
 
 			<div style="display: flex; flex-direction: horizontal; margin-top:30px;">
 				<div>
-					<form:form id="sectionForm" action="${pageContext.request.contextPath}/sections/${formType}/${sectionType}/save" modelAttribute="section" >
+					<form:form id="sectionForm" action="" modelAttribute="section" >
 						<table class="formTable" style="margin-top: 0px;">
 						
 							<tr>
@@ -155,7 +158,7 @@
 				</div>
 		
 		
-				<form:form id="secStudents" action="" method="post" modelAttribute="enlisted">
+				<form:form id="secStudents" action="${pageContext.request.contextPath}/sections/${formType}/${sectionType}/save" method="post" modelAttribute="enlisted">
 					<table id="students" class="display compact listTable">  
 						<thead>
 							<tr><th>StudentNo</th><th>LRN</th><th>Last Name</th><th>First Name</th><th>Middle Name</th></tr>  

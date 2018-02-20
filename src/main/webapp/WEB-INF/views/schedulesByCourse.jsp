@@ -63,26 +63,16 @@
 			departmentSelect($('#deptSelect'), $('#courseSelect'), ctx);
 			courseSelect($('#search'), $('#courseSelect'), $('#studview'), ctx);
 			searchStudents($('#search'), $('#searchBtn'), $('#courseSelect'), $('#studview'), ctx);	
-			
-			 var table = $('#studview').DataTable( {
+		
+			 var table = $('#schedsview').DataTable( {
 				 	"dom" : 'rt',
-			        "columnDefs": [
-			        	{"title" : "StudentNo", "visible" : false, "targets": 0 },
-			        	{"title" : "ID/LRN"},
-			        	{"title" : "Last Name"},
-			        	{"title" : "First Name"},
-			        	{"title" : "Middle Name"},
-			       
-			        ]
+				 	 "columnDefs": [
+				        	{"targets": 7, "visible" : false},
+				        	{"targets": [0,1,2,3,4,5,6], "searchable": false}
+				     ]
 			 } );
-			 
-			
+
 	
-			table.on( 'dblclick', 'tr', function () {
-				var stdNo = table.row( this ).data()[0];
-				window.location.href = ctx+"/students/student/" + stdNo;
-			} );
-			
 			var buttons = new $.fn.dataTable.Buttons(table, {
 			     buttons: [
 			    		{
@@ -118,14 +108,28 @@
 		                ],
 		                className: 'blue'
 					}
-			   
+			 
 			    ]
 			}).container().appendTo($('#buttons'));
 				
-			$(".content").printThis({
-				  importCSS: true,
-				  importStyle: true
-				  
+			$("#db_Option1").on('input', function(){
+				var courseID = $("#db_Option").val();
+				var year = $("#db_Option1").val();
+				if(courseID != ""){
+					window.location.href = encodeURI("${pageContext.request.contextPath}/schedules/clg/printByCourse/?courseID=" + courseID+"&year="+ year);
+				}
+			});
+			
+			$("#db_Option2").on('input', function(){
+				var year = this.value;
+				table.search( year ).draw();
+				$("#yearLevel").html("");
+				if(year != ""){
+					var special = ['', '1st Year', '2nd Year', '3rd Year', '4th Year', '5th Year'];
+					$("#yearLevel").html(special[parseInt(year)]);
+				}
+				
+				
 			});
 		});
 	</script>
@@ -140,6 +144,13 @@
 		        display: none !important;
 		    }
 		}
+
+		@page {
+		  margin-top: 0.5in;
+		  margin-bottom: 0.5in;
+		  margin-left: 0.5in;
+		  margin-right: 0.5in;
+		}
 	</style>
 </head>
 <body>
@@ -148,45 +159,81 @@
 			<div style=" display: inline-block;" >
 				<div style="text-align:center;" class="content">
 					<h1 style="display: inline-block;">${courseDesc}</h1>
+					<h3 id="yearLevel"></h3>
 				</div>
-				
-				<div style="width: 7.5in;" class="content" >
-					<table id="studview" class="compact listTable" >  
-						<thead >
-							<tr>
-								<th >StudentNo</th>
-								<th>Id/LRN</th>
-								<th>Last Name</th>
-								<th>First Name</th>
-								<th>Middle Name</th>
-								<c:if test = "${byCourse ne true}">
-									<th>Course</th>
-								</c:if>
-							</tr>  
+			
+				<div style="width: 7.5in; margin-top:30px;" class="content" >
+		
+					<table id="schedsview" class="compact listTable">  
+						<thead>
+								<tr><th>Subject</th><th>Section</th><th>Units</th><th>Time</th><th>Days</th><th>Room</th><th>Teacher</th><th>Year</th></tr>
 						</thead>
-									
 						<tbody>
-							<c:forEach var="stud" items="${students}" varStatus="status">   
-							   	<tr>  
-								   	<td>${stud.studentNo}</td>  
-								   	<td>${stud.studentID}</td>  
-								   	<td>${stud.lastName}</td>  
-								   	<td>${stud.firstName}</td>  
-								   	<td>${stud.middleName}</td>  
-								   	<c:if test = "${byCourse ne true}">
-										<td>${stud.courseID}</td>
+								<c:forEach var="sched" items="${schedules}">   
+									<tr>  
+									  	<td> ${sched.subjectCode}</td>  
+									   	<td> ${sched.section}</td>  
+									   	<td> ${sched.lecUnits}</td>  
+									   	<td> ${sched.lecTimeStart}-${sched.lecTimeEnd}</td>  
+									   	<td> ${sched.lecDays}</td>  
+									   	<td> ${sched.lecRoom}</td>  
+									   	<td> ${sched.personnelName}</td>  
+								   		<td> ${sched.personnelID}</td>  
+								   	</tr>
+									<c:if test="${sched.labDays ne '' }">			   
+									   	<tr>  
+											<td> ${sched.subjectCode}-LAB</td>  
+											<td> ${sched.section}</td>  
+											<td> ${sched.labUnits}</td>  
+											<td> ${sched.labTimeStart}-${sched.labTimeEnd}</td>  
+											<td> ${sched.labDays}</td>  
+											<td> ${sched.labRoom}</td>  
+											<td> ${sched.personnelName}</td>
+											<td> ${sched.personnelID}</td>  
+										</tr>    
 									</c:if>
-							   	</tr>  
-							</c:forEach>
-						</tbody>  
-					</table>  
+								
+						   		</c:forEach>
+						</tbody>
+					</table>
 				</div>
 			</div>
 		</div>
+	
 		<div  class="no-print" style="display: inline-block;	margin-top:100px;">
 			<div id="buttons">
+
+			</div>
+			
+			<div style="margin-top:100px;">
+				<select id="db_Option" >
+					<option value="printByCourse" label="By Course"/> 
+					<option value="printByTeacher" label="By Teacher"/> 
+				</select>
+			</div>
+			
+			<div style="margin-top:20px;">
+				<select id="db_Option1" >
+					<option value="" label="---Courses---"/> 
+					<c:forEach var="course" items="${courses}">   
+						<option value="${course.courseID}" label="${course.courseDesc}"/>   
+				   	</c:forEach>
+				</select>
+			</div>
+	
+			<div style="margin-top:20px;">
+				<select id="db_Option2" >
+					<option value="" label="---Year---"/> 
+					<option value="1" label="1st Year"/> 
+					<option value="2" label="2nd Year"/> 
+					<option value="3" label="3rd Year"/> 
+					<option value="4" label="4th Year"/> 
+					<option value="5" label="5th Year"/> 
+				</select>
 			</div>
 		</div>
+		
+		
 	</div>
 
 </body>

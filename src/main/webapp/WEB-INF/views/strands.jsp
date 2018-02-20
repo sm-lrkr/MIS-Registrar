@@ -31,7 +31,7 @@
 		$(document).ready(function(){
 			var table = $('#strandsview').DataTable( {
 			 	"sDom" : 'rtf',
-		        "scrollY":        "300px",
+		        "scrollY":        "350px",
 		        "scrollCollapse": false,
 		        "select": {
 		        	style : 'single'

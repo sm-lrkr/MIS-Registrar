@@ -6,6 +6,8 @@
 <spring:url value="/resources/css/dataTable.min.css" var="dtcss" />
 <spring:url value="/resources/css/dataTableSelect.min.css" var="dtselectcss" />
 <spring:url value="/resources/css/buttons.dataTables.min.css" var="dtbuttonscss" />
+<spring:url value="/resources/javascript/printThis.js" var="printThis" />
+
 
 <spring:url value="/resources/jquery-3.2.1.js" var="jscript" />
 <spring:url value="/resources/myscript.js" var="myscript" />
@@ -21,6 +23,7 @@
 <spring:url value="/resources/javascript/buttons.print.min.js" var="printButton" />
 
 
+
     
    
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
@@ -34,14 +37,13 @@
 	<link href="${dtselectcss}" rel="stylesheet">
 	<link href="${dtbuttonscss}" rel="stylesheet">
 	<link href="${css}" rel="stylesheet">
-	<link href="/resources/css/dataTableS.checkboxes.min.css" rel="stylesheet">
-	
-	
 	
 	<script type="text/javascript" src="${jscript}" ></script>
 	<script type="text/javascript" src="${myscript}" ></script>
 	<script type="text/javascript" src="${dtjs}" ></script>
 	<script type="text/javascript" src="${dtselectjs}" ></script>
+	<script type="text/javascript" src="${printThis}" ></script>
+	
 
 	<script type="text/javascript" src="${dtbuttonsjs}" ></script>
 	<script type="text/javascript" src="${flashButtons}" ></script>
@@ -74,7 +76,10 @@
 			 } );
 			 
 			 $("#print").click(function(){
-				window.print();
+				 $(".content").printThis({
+     				  importCSS: true,
+     				  importStyle: true,
+     			 });
 			 });
 			 
 	
@@ -109,8 +114,11 @@
 			    ]
 			}).container().appendTo($('#buttons'));
 				
-				
-			window.print();
+			
+			$(".content").printThis({
+				  importCSS: true,
+				  importStyle: true,
+			});
 		});
 	</script>
 
@@ -130,11 +138,11 @@
 	<div style="display: flex; flex-direction: right;">
 		<div style="width: 8.5in; text-align:center" >
 			<div style=" display: inline-block;">
-				<div style="text-align:center;">
+				<div style="text-align:center;" class="content" >
 					<h1 style="display: inline-block;">${strandDesc}</h1>
 				</div>
-				
-				<div style="width: 7.5in; " >
+			
+				<div style="width: 7.5in; " class="content">
 					<table id="studview" class="display compact nowrap listTable" >  
 						<thead >
 							<tr>

@@ -49,22 +49,34 @@
 				$("button[id *= '"+ activeTableID +"cancel']").hide();
 				$("button[id = '"+ activeTableID +"']").show();
 				activeTableID = "";
+			
+				$("table[id ^= 'gradesview'] :input").each(function(){
+					if($(this).val() == '0.0'){
+						$(this).hide();
+					}
+				});
 			});
 	
 			$("button[id *= 'gradesview']").click(function(){
 				var id = $(this).attr('id'); 
 				activeTableID = id;
-				
-				
+		
+		
+				$("table[id *= '"+ id +"'] :input").show();
 				$("table[id *= '"+ id +"'] :input").prop("disabled", false);
 				$("table[id *= '"+ id +"'] :input").removeClass("disabledInput");		
-			
+		
 				$("button[id *= '"+ id +"save']").show();
 				$("button[id *= '"+ id +"cancel']").show();
 				$(this).hide();
-			
+
 			});
-			
+
+			$("table[id ^= 'gradesview'] :input").each(function(){
+				if($(this).val() == '0.0'){
+					$(this).hide();
+				}
+			});
 		});
 		
 		</script>
@@ -91,8 +103,6 @@
 			<form:form  action="${pageContext.request.contextPath}/grades/clg/save/?studentNo=${student.studentNo}" method="post" modelAttribute="allSemGrades" >
 				<c:forEach var="sg" items="${allSemGrades.semGrades}" varStatus="status">
 					<c:set var="ap" value="" />
-					<c:set var="ave" value="${0}" />
-					<c:set var="count" value="${0}" />
 					<div style="width: 1000px; ">
 						<div style="margin-bottom: 5px;">
 							<h3 style="display: inline-block;" >SY: ${sg.enrollment.schoolYear} , Sem: ${sg.enrollment.semester}</h3>
@@ -110,18 +120,6 @@
 								
 							<tbody>
 								<c:forEach var="grade" items="${sg.grades}" varStatus="status1">
-									<c:set var="count" value="${count + 1}" />
-									<c:if test="${ ave gt 0 }">
-										<tr><td>GPA: ${ave / count}  </td></tr>
-										<tr><th>Code</th><th>Description</th><th>Units</th><th>Prelim</th><th>Midterm</th><th>Final</th><th>Grade Equivalent</th><th>Date Modified</th></tr>	
-									</c:if>
-											
-									<c:set var="ap" value="${ss}" />
-									<c:set var="count" value="${0}" />
-									<c:set var="ave" value="${0}" />
-								
-											
-									<c:set var="ave" value="${ave + grade.equivalentGrade}" />
 									<tr>
 										<td>
 											${grade.subjectCode} 
@@ -133,18 +131,18 @@
 												
 										<td>
 											<form:input type="hidden" path="semGrades[${status.index}].grades[${status1.index}].enrollmentNo" />
-											<form:input path="semGrades[${status.index}].grades[${status1.index}].prelimGrade" />  
-									
+											<form:input id="input" path="semGrades[${status.index}].grades[${status1.index}].prelimGrade" />  
+							
 										</td>
 									
-										<td><form:input path="semGrades[${status.index}].grades[${status1.index}].midtermGrade" /></td>
-										<td><form:input path="semGrades[${status.index}].grades[${status1.index}].finalGrade" /></td>
-										<td><form:input path="semGrades[${status.index}].grades[${status1.index}].equivalentGrade" /></td>
-											
+										<td><form:input id="input" path="semGrades[${status.index}].grades[${status1.index}].midtermGrade" /></td>
+										<td><form:input id="input" path="semGrades[${status.index}].grades[${status1.index}].finalGrade" /></td>
+										<td><form:input id="input" path="semGrades[${status.index}].grades[${status1.index}].equivalentGrade" /></td>
+										
 										<td>${grade.dateModified} </td>
 									</tr>
 								</c:forEach>
-								<tr><td colspan="8">GPA: ${ave / count}  </td></tr>
+								<tr style="border-top: 1px solid grey;" ><td colspan="8">GPA: ${sg.average}  </td></tr>
 							</tbody>
 								
 						</table>	

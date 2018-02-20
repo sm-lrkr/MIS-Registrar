@@ -35,24 +35,24 @@
 			var ctx = "${pageContext.request.contextPath}";
 			var table = $('#schedsview').DataTable( {
 			 	"sDom" : 'rtf',
-		        "scrollY":        "300px",
+		        "scrollY":        "350px",
 		        "scrollCollapse": false,
+		        "paging" : false,
 		        "select": {
 		        	style : 'multiple'
 		        },"columnDefs": [
 		        	{"targets": 0, "visible" : false }
 			    ]
 		 	} );
-			
+
 			table.on( 'dblclick', 'tr', function () {
 				var scheduleID = table.row( this ).data()[0];
 				var subjectCode = table.row( this ).data()[1]
 				window.location.href = ctx+"/schedules/clg/"+subjectCode+"/?id=" + scheduleID + "";
 			} );
-			
+	
 			$("#print").click(function(){
-				window.print();
-				
+				  window.open( encodeURI(ctx+"/schedules/clg/printByCourse/?courseID=none&year=0"),'_blank');
 			});
 				
 			
@@ -105,7 +105,7 @@
 		<div>
 			<h1 style="display: inline-block; margin-top: 0px;">Schedules</h1>  
 			<div class="floatright">
-						<a href="newSchedule" class="linkButton">New Schedule</a>    
+				<button id="print" class="linkButton">Print</button>   
 			</div>
 			
 			<div style="padding-bottom: 5px;">
