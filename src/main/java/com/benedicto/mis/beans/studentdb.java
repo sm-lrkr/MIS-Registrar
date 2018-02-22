@@ -861,10 +861,10 @@ public class studentdb {
 //				+ "INNER JOIN grades AS g ON e.clg_enlistmentsID = g.clg_enlistmentsID " + "WHERE e.StudentID = '"
 //				+ StudentID + "'  ORDER BY sc.SchoolYear, sc.Semester ";
 //				
-		String sql = "SELECT shs_grades.*, shs_subjects.* "
+		String sql = "SELECT shs_grades.*, shs_subjects.SubjectDesc, CAST(shs_grades.DateModified as CHAR) "
 				+ "FROM shs_grades INNER JOIN shs_subjects ON shs_grades.SubjectCode = shs_subjects.SubjectCode "
 				+ "WHERE shs_grades.EnrollmentNo = '"+ enrollmentNo +"'  ";
-		
+
 		try {
 			return template.query(sql, new RowMapper<SubjectGrades>() {
 				public SubjectGrades mapRow(ResultSet rs, int row) throws SQLException {
@@ -875,8 +875,8 @@ public class studentdb {
 					s.setMidtermGrade(rs.getFloat(4));
 					s.setFinalGrade(rs.getFloat(5));
 					s.setEquivalentGrade(rs.getFloat(6));
-					s.setDateModified(rs.getString(7));
-					s.setSubjectDesc(rs.getString(10));
+					s.setDateModified(rs.getString(10));
+					s.setSubjectDesc(rs.getString(9));
 					
 					return s;
 				}
@@ -1396,6 +1396,44 @@ public class studentdb {
 		return null;
 	}
 	
+	public List<Schedule> getCollegeSchedulesByTeacher(String personnelID, String schoolYear, int semester) {
+		String sql = "SELECT personnels.PersonnelID, clg_schedules.*  "
+				+ "FROM clg_schedules INNER JOIN personnels ON clg_schedules.PersonnelID = personnels.PersonnelID "
+				+ "WHERE personnels.PersonnelID = '"+ personnelID +"' AND clg_schedules.SchoolYear= '"+ schoolYear+"' AND clg_schedules.Semester='"+semester+"' ";
+		try {
+			return template.query(sql, new RowMapper<Schedule>() {
+				public Schedule mapRow(ResultSet rs, int row) throws SQLException {
+					Schedule s = new Schedule();
+					s.setScheduleID(rs.getString(2));
+					s.setSubjectCode(rs.getString(3));
+					s.setSection(rs.getString(4));
+
+					s.setLecRoom(rs.getString(5));
+					s.setLecDays(rs.getString(6));
+					s.setLecTimeStart(rs.getString(7));
+					s.setLecTimeEnd(rs.getString(8));
+					s.setLecUnits(rs.getInt(9));
+
+					s.setLabRoom(rs.getString(10));
+					s.setLabDays(rs.getString(11));
+					s.setLabTimeStart(rs.getString(12));
+					s.setLabTimeEnd(rs.getString(13));
+					s.setLabUnits(rs.getInt(14));
+
+					s.setSchoolYear(rs.getString(15));
+					s.setSemester(rs.getString(16));
+				
+					return s;
+				}
+			});
+
+		} catch (Exception ex) {
+			System.out.println("Error in getSchedylesByStudentCurriculum");
+			ex.printStackTrace();
+		}
+		return null;
+	}
+	
 
 	// get enlisted Subjects
 	public List<Schedule> getCollegeEnlistedSubjects(String StudentNo, String enrollmentNo) {
@@ -1518,6 +1556,23 @@ public class studentdb {
 		});
 	}
 	
+	public int updateSHSubjectGrading(SubjectGrades sg) {
+		String sql = "update shs_grades set Prelim = ?, Midterm = ? , Final = ?, GradeEquivalent = ?, DateModified= NULL "
+				+ " WHERE EnrollmentNo=? AND SubjectCode=? ";
+		final SubjectGrades _sg = sg;
+		return template.update(sql, new PreparedStatementSetter() {
+			public void setValues(PreparedStatement ps) throws SQLException {
+				ps.setFloat(1, _sg.getPrelimGrade());
+				ps.setFloat(2, _sg.getMidtermGrade());
+				ps.setFloat(3, _sg.getFinalGrade());
+				ps.setFloat(4, _sg.getEquivalentGrade());
+				//ps.setString(5, null);
+				ps.setString(5, _sg.getEnrollmentNo());
+				ps.setString(6, _sg.getSubjectCode());
+			}
+		});
+	}
+
 	public int removeCollegeSubjectsGrading(Enrollment e, String subjectCode) {
 		String sql = "DELETE FROM clg_grades WHERE EnrollmentNo = ? AND SubjectCode = ?";
 		return template.update(sql, e.getEnrollmentNo(), subjectCode);
@@ -1717,4 +1772,44 @@ public class studentdb {
 		});
 	}
 	
+	public Teacher getPersonnelByID(String personnelID) {
+		String sql = "select * from personnels where PersonnelID=?";
+		
+		try {
+			return template.queryForObject(sql, new Object[] { personnelID }, new BeanPropertyRowMapper<Teacher>(Teacher.class));
+		}catch(Exception ex) {
+			Teacher t = new Teacher();
+			t.setPersonnelID("");
+			t.setFirstName("");
+			t.setLastName("");
+			t.setMiddleName("");
+			return t;
+		}
+	}
+
+	public List<SchoolYear> getSchoolYears() {
+		String sql = "SELECT * FROM sys ORDER BY year_start, semester DESC ";
+		return template.query(sql, new RowMapper<SchoolYear>() {
+			public SchoolYear mapRow(ResultSet rs, int row) throws SQLException {
+				SchoolYear sy = new SchoolYear();
+				sy.setId(rs.getInt(1));
+				sy.setYear_start(rs.getString(2));
+				sy.setYear_end(rs.getString(3));
+				sy.setSemester(rs.getInt(4));
+				
+				return sy;
+			}
+		});
+	}
+	
+	public SchoolYear getActiveSchoolYear() {
+		String sql = "select * from sys where switch=?";
+		try {
+			return template.queryForObject(sql, new Object[] { "active" }, new BeanPropertyRowMapper<SchoolYear>(SchoolYear.class));
+		}catch(Exception ex) {
+			SchoolYear sy = new SchoolYear();
+			sy.setId(0);
+			return sy;
+		}
+	}
 }

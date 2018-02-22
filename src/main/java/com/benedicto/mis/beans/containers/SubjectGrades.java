@@ -5,6 +5,7 @@ public class SubjectGrades extends Subject {
 	private float midtermGrade;
 	private float finalGrade;
 	private float equivalentGrade;
+	private float backupGrade;
 	private String dateModified;
 	private String studentNo;
 	private String enrollmentNo;
@@ -91,6 +92,18 @@ public class SubjectGrades extends Subject {
 	 */
 	public void setEnrollmentNo(String enrollmentNo) {
 		this.enrollmentNo = enrollmentNo;
+	}
+	/**
+	 * @return the backupGrade
+	 */
+	public float getBackupGrade() {
+		return backupGrade;
+	}
+	/**
+	 * @param backupGrade the backupGrade to set
+	 */
+	public void setBackupGrade(float backupGrade) {
+		this.backupGrade = backupGrade;
 	}
 	
 	

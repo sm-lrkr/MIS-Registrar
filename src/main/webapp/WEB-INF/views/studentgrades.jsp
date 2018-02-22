@@ -100,7 +100,7 @@
 				 </div>
 			</div>
 
-			<form:form  action="${pageContext.request.contextPath}/grades/clg/save/?studentNo=${student.studentNo}" method="post" modelAttribute="allSemGrades" >
+			<form:form  action="${pageContext.request.contextPath}/grades/${dept}/save/?studentNo=${student.studentNo}" method="post" modelAttribute="allSemGrades" >
 				<c:forEach var="sg" items="${allSemGrades.semGrades}" varStatus="status">
 					<c:set var="ap" value="" />
 					<div style="width: 1000px; ">

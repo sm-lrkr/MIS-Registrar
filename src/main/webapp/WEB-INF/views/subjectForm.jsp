@@ -143,8 +143,8 @@
 								<option value="clg" label="College" selected="selected" /> 
 								<option value="sh" label="Senior High" /> 
 							</c:when>
-							
-							<c:when test = "${subjectType == 'sh'}">
+						
+							<c:when test = "${subjectType == 'shs'}">
 								<option value="clg" label="College"  /> 
 								<option value="sh" label="Senior High" selected="selected"/> 
 							</c:when>

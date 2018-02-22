@@ -71,9 +71,17 @@ public class GradesController {
 		List<Enrollment> enrollments = db.getSHEnrollmentsByStudentNo(studentNo);
 		
 		for(Enrollment e: enrollments) {
+			float average = 0;
 			SemGrades semGrades = new SemGrades();
 			semGrades.setEnrollment(e);
 			semGrades.setGrades(db.getSHGrades(e.getEnrollmentNo()));
+			for(SubjectGrades sg: semGrades.getGrades()) {
+				sg.setBackupGrade(sg.getFinalGrade());
+				average += sg.getFinalGrade();
+			}
+			average /= semGrades.getGrades().size();
+			semGrades.setAverage(average);
+
 			list.add(semGrades);
 		}
 		allSemGrades.setSemGrades(list);
@@ -82,6 +90,7 @@ public class GradesController {
 		ModelAndView model = new ModelAndView();
 		model.setViewName("studentgrades");
 		model.addObject("student", student);
+		model.addObject("dept", "shs");
 		model.addObject("allSemGrades", allSemGrades);
 		
 		return model;
@@ -103,7 +112,8 @@ public class GradesController {
 			semGrades.setEnrollment(e);
 			semGrades.setGrades(db.getCollegeGrades(e.getEnrollmentNo()));
 			for(SubjectGrades sg: semGrades.getGrades()) {
-				average += sg.getEquivalentGrade();
+				sg.setBackupGrade(sg.getFinalGrade());
+				average += sg.getFinalGrade();
 			}
 			average /= semGrades.getGrades().size();
 			semGrades.setAverage(average);
@@ -115,6 +125,7 @@ public class GradesController {
 		ModelAndView model = new ModelAndView();
 		model.setViewName("studentgrades");
 		model.addObject("student", student);
+		model.addObject("dept", "clg");
 		model.addObject("allSemGrades", allSemGrades);
 		
 		return model;
@@ -140,6 +151,27 @@ public class GradesController {
 		}
 
 		return new ModelAndView("redirect:/grades/clg/?studentNo="+ studentNo );
+	}
+	
+	@RequestMapping(value = "/shs/save/", method = RequestMethod.POST)
+	public ModelAndView saveSHGrades(@RequestParam("studentNo") String studentNo, @ModelAttribute("allSemGrades") SemGradesForm sgf) {
+		logger.info("Update Grades");
+		System.out.println("List size: " + sgf.getSemGrades().size());
+		
+		Locale locale = new Locale("en_US");
+		
+		Date date = new Date();
+		DateFormat dateFormat = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT, locale);
+		String formattedDate = dateFormat.format(date);
+		
+		for(SemGrades sg: sgf.getSemGrades()) {
+			for(SubjectGrades g: sg.getGrades()) {
+				db.updateSHSubjectGrading(g);
+			
+			}
+		}
+
+		return new ModelAndView("redirect:/grades/shs/?studentNo="+ studentNo );
 	}
 	
 

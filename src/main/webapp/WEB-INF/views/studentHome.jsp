@@ -113,9 +113,9 @@
 									<td><form:label path="studentStatus" >Status</form:label></td>
 									<td><form:input path="studentStatus" /></td>
 								</tr>
-								
+							
 								<tr>
-									<td><form:label path="enrollmentStatus" >Status</form:label></td>
+									<td><form:label path="enrollmentStatus" >Enrollment Status</form:label></td>
 									<td>
 										 <form:select path="enrollmentStatus" id="db_Personnel" value="${profile.enrollmentStatus}" style="width:170px;" >
 											<form:option value="" label=""/>

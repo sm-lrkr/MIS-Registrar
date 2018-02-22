@@ -95,7 +95,7 @@ public class SubjectController {
 		ModelAndView model = new ModelAndView();
 		
 		model.setViewName("subject");
-		model.addObject("subjectType", "sh");
+		model.addObject("subjectType", "shs");
 		model.addObject("subject", subject);
 		model.addObject("schedules", schedules);
 		model.addObject("currics", currics);
@@ -198,6 +198,38 @@ public class SubjectController {
 	public ModelAndView saveEditedCollegeSubject(@PathVariable("subjectCode") String subjectCode, @ModelAttribute("subject") Subject s) {
 		System.out.println("Save edited subject.");
 		db.updateCollegeSubject(s, subjectCode);
+		return new ModelAndView("redirect:/subjects/clg/"+ s.getSubjectCode());
+	}	
+	
+	@RequestMapping(value = "/editSubject/shs/{subjectCode}", method = RequestMethod.GET)
+	public ModelAndView editSHSubject(@PathVariable("subjectCode") String subjectCode) {
+		System.out.println("Edit existing subject");
+		List<Subject> list = db.getSHSubjects("");
+		Subject subject = db.getSHSubjectByCode(subjectCode);
+		System.out.println("List size: "+ list.size());
+		
+		Iterator<Subject> i = list.iterator();
+		while(i.hasNext()) {
+			if(i.next().getSubjectCode().equals(subjectCode)) {
+				i.remove();
+			}
+		}
+		
+		ModelAndView model = new ModelAndView();
+		model.setViewName("subjectForm");
+		model.addObject("subjects", list);
+		model.addObject("subject", subject);
+		model.addObject("subjectType", "shs");
+		model.addObject("formType", "editSubject");
+		model.addObject("pageTitle", subject.getSubjectCode()+" - " + subject.getSubjectDesc());
+		
+		return model;
+	}
+	
+	@RequestMapping(value = "/editSubject/shs/save/{subjectCode}", method = RequestMethod.POST)
+	public ModelAndView saveEditedSHSubject(@PathVariable("subjectCode") String subjectCode, @ModelAttribute("subject") Subject s) {
+		System.out.println("Save edited subject. --SH");
+		db.updateSHSubject(s, subjectCode);
 		return new ModelAndView("redirect:/subjects/clg/"+ s.getSubjectCode());
 	}	
 	

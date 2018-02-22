@@ -63,20 +63,17 @@
 			departmentSelect($('#deptSelect'), $('#courseSelect'), ctx);
 			courseSelect($('#search'), $('#courseSelect'), $('#studview'), ctx);
 			searchStudents($('#search'), $('#searchBtn'), $('#courseSelect'), $('#studview'), ctx);	
-		
-	
+
 			 var table = $('#schedsview').DataTable( {
 				 	"dom" : 'rt',
-				 	"select": {
-			        	style : 'multiple'
-			        },
 				 	 "columnDefs": [
-				        	{"targets": 7 , "visible" : false},
-				        	{"targets": [0,1,2,3,4,5,6], "searchable": false}
+				        	{"targets": 6, "visible" : false},
+				        	{"targets": [0,1,2,3,4,5], "searchable": false}
 				     ]
 			 } );
 
-
+			table.search( $("#db_Option2").val() ).draw();
+			 
 			var buttons = new $.fn.dataTable.Buttons(table, {
 			     buttons: [
 			    		{
@@ -89,67 +86,59 @@
 			            	},
 			            	className: 'blue'
 			            },
-				    	 {
-				    	 	extend: 'collection',
-			                text: 'Export',
-			                autoClose: true,
-			                buttons: [
-			                    'copy',
-			                    {  
-			                    	extend: 'excel', 
-			                    	exportOptions: {
-					                	columns: ':visible'
-					                }
-			                    },
-			                    {  
-			                    	extend: 'csv', 
-			                    	exportOptions: {
-					                	columns: ':visible'
-					                }
-			                    },
-			                    'pdf'
-			              
-			                ],
-			                className: 'blue'
-						},
-						{
-			            	text: 'REMOVE SELECTED',
-			            	action: function ( e, dt, node, config ) {
-			            		table.rows( '.selected' ).remove().draw();
-			            	},
-			            	className: 'blue'
-			            }
-			
+			    	 {
+			    	 	extend: 'collection',
+		                text: 'Export',
+		                autoClose: true,
+		                buttons: [
+		                    'copy',
+		                    {  
+		                    	extend: 'excel', 
+		                    	exportOptions: {
+				                	columns: ':visible'
+				                }
+		                    },
+		                    {  
+		                    	extend: 'csv', 
+		                    	exportOptions: {
+				                	columns: ':visible'
+				                }
+		                    },
+		                    'pdf'
+		              
+		                ],
+		                className: 'blue'
+					}
+	
 			    ]
 			}).container().appendTo($('#buttons'));
-			$("#db_Option1").val($("#courseID").val());
-		
+			$("#db_Option1").val($("#teacherID").val());
+			$("#sy").html($("#db_Option2").val());
+
 			$("#db_Option").on('input', function(){
 				var printBy = $("#db_Option").val();
-				window.location.href=  encodeURI("${pageContext.request.contextPath}/schedules/clg/"+ printBy +"/?teacherID=none");
-			});
-			
-			$("#db_Option1").on('input', function(){
-				var courseID = $("#db_Option1").val();
-				var year = $("#db_Option2").val();
-				if(courseID != ""){
-					window.location.href = encodeURI("${pageContext.request.contextPath}/schedules/clg/printByCourse/?courseID=" + courseID+"&year="+ year);
+				if(printBy != ""){
+					window.location.href=  encodeURI("${pageContext.request.contextPath}/schedules/clg/"+ printBy +"/?courseID=none&year=0");
 				}
 			});
-			
-			$("#db_Option2, #db_Option3").on('input', function(){
-				var filter = this.value;
-				var year = $("#db_Option2").val();
-				var sy = $("#db_Option3").val();
-				
-				table.search( year+"-"+sy ).draw();
-				$("#ysubheader").html("");
-				
-				if(filter != ""){
-					$("#subheader").html(year+" "+sy);
+	
+			$("#db_Option1").on('input', function(){
+				var teacherID = $("#db_Option1").val();
+				if(teacherID != ""){
+					window.location.href = encodeURI("${pageContext.request.contextPath}/schedules/clg/printByTeacher/?teacherID=" + teacherID);
 				}
 			});
 		
+			$("#db_Option2").on('input', function(){
+				var year = this.value;
+				table.search( year ).draw();
+				$("#sy").html("");
+				if(year != ""){
+					$("#sy").html(this.value);
+				}
+		
+				
+			});
 		});
 	</script>
 
@@ -176,30 +165,29 @@
 	<div style="display: flex; flex-direction: right;">
 		<div style="width: 8.5in; text-align:center" >
 			<div style=" display: inline-block;" >
-				<div style="text-align:center;" class="content">
-					<h1 style="display: inline-block;">${courseDesc}</h1>
-					<h3 id="subheader" style="margin-top:-10px;"></h3>
+				<div class="content" style="text-align: center;">
+					<p style="font-size: 18px; font-weight: bold;">${teacher.firstName} ${teacher.lastName}</p>
+					<p  style="font-size: 14px; font-weight: bold; margin-top: -10px;" id="sy"></p>
 				</div>
-	
-				<div style="width: 7.5in; margin-top:30px;" class="content" >
 		
+				<div style="width: 7.5in; margin-top:30px;" class="content" >
+	
 					<table id="schedsview" class="compact listTable">  
 						<thead>
-								<tr><th>Subject</th><th>Section</th><th>Units</th><th>Time</th><th>Days</th><th>Room</th><th>Teacher</th><th>Year-SYS</th></tr>
+								<tr><th>Subject</th><th>Section</th><th>Units</th><th>Time</th><th>Days</th><th>Room</th><th>SY</th></tr>
 						</thead>
 						<tbody>
 								<c:forEach var="sched" items="${schedules}">   
-									<tr>  
+									<tr> 
 									  	<td> ${sched.subjectCode}</td>  
 									   	<td> ${sched.section}</td>  
 									   	<td> ${sched.lecUnits}</td>  
 									   	<td> ${sched.lecTimeStart}-${sched.lecTimeEnd}</td>  
 									   	<td> ${sched.lecDays}</td>  
 									   	<td> ${sched.lecRoom}</td>  
-									   	<td> ${sched.personnelName}</td>  
-								   		<td> ${years[sched.personnelID]}-${sched.schoolYear} ${sems[sched.semester]}</td>  
-					
-								   	</tr>
+									   	<td> ${sched.schoolYear} ${sems[sched.semester]}</td>
+									   	  
+									</tr>
 									<c:if test="${sched.labDays ne '' }">			   
 									   	<tr>  
 											<td> ${sched.subjectCode}-LAB</td>  
@@ -208,12 +196,10 @@
 											<td> ${sched.labTimeStart}-${sched.labTimeEnd}</td>  
 											<td> ${sched.labDays}</td>  
 											<td> ${sched.labRoom}</td>  
-											<td> ${sched.personnelName}</td>
-											<td> ${years[sched.personnelID]}-${sched.schoolYear} ${sems[sched.semester]}</td>  
-										
-										</tr>    
+											<td> ${sched.schoolYear} ${sems[sched.semester]}</td>
+									   	</tr>    
 									</c:if>
-					
+								
 						   		</c:forEach>
 						</tbody>
 					</table>
@@ -228,43 +214,32 @@
 			
 			<div style="margin-top:100px;">
 				<select id="db_Option" >
+					<option value="" label="By Teacher"/> 
 					<option value="printByCourse" label="By Course"/> 
-					<option value="printByTeacher" label="By Teacher"/> 
+					
 				</select>
 			</div>
-			
+	
 			<div style="margin-top:20px;">
 				<select id="db_Option1" >
-					<option value="" label="---Courses---"/> 
-					<c:forEach var="course" items="${courses}">   
-						<option value="${course.courseID}" label="${course.courseDesc}"/>   
+					<option value="" label="---Teachers---"/> 
+					<c:forEach var="teacher" items="${teachers}">   
+						<option value="${teacher.personnelID}" label="${teacher.firstName} - ${teacher.lastName}"/>   
 				   	</c:forEach>
 				</select>
-				<input type="hidden" id="courseID" value="${course.courseID}"/> 
+				<input type="hidden" id="teacherID" value="${teacher.personnelID}"/> 
 			</div>
-	
+
 			<div style="margin-top:20px;">
 				<select id="db_Option2" >
-					<option value="" label="---Year---"/> 
-					<option value="1st-Year" label="1st Year"/> 
-					<option value="2nd-Year" label="2nd Year"/> 
-					<option value="3rd-Year" label="3rd Year"/> 
-					<option value="4th-Year" label="4th Year"/> 
-					<option value="5th-Year" label="5th Year"/> 
-				</select>
-			</div>
-	
-			<div style="margin-top:20px;">
-				<select id="db_Option3" >
 					<c:forEach var="schoolYear" items="${schoolYears}">   
 						<option value="${schoolYear.year_start}-${schoolYear.year_end} ${sems[schoolYear.semester]}" label="${schoolYear.year_start}-${schoolYear.year_end} ${sems[schoolYear.semester]} "/>   
 				   	</c:forEach>
-				   	<option value="TestTestTest" label="Test"/>
+				   	<option value="TestTestTest" label="Test" />
 				</select>
+			
 			</div>
 		</div>
-		
-		
 	</div>
 
 </body>

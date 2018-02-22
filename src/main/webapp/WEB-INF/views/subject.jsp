@@ -1,7 +1,9 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncoding="ISO-8859-1"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
-    
+<%@ taglib uri="http://www.springframework.org/tags/form" prefix="form" %>
+
+
 <spring:url value="/resources/main2.css" var="css" />
 <spring:url value="/resources/jquery-3.2.1.js" var="jscript" />
 <spring:url value="/resources/myscript.js" var="myscript" />
@@ -33,23 +35,26 @@
 			var currics = $('#curricsView').DataTable( {
 			 	"sDom" : 'rt',
 		        "scrollY": "200px",
-		        "scrollCollapse": true,
+		        "scrollCollapse": false,
+		        "paging": false,
+		        "select": {
+		        	style : 'single'
+		        }
+		 	} );
+	
+			var scheds = $('#schedsview').DataTable( {
+			 	"sDom" : 'rt',
+		        "scrollY": "250px",
+		        "scrollCollapse": false,
 		        "paging": false,
 		        "select": {
 		        	style : 'single'
 		        }
 		 	} );
 			
-			var scheds = $('#schedsview').DataTable( {
-			 	"sDom" : 'rt',
-		        "scrollY": "200px",
-		        "scrollCollapse": true,
-		        "paging": false,
-		        "select": {
-		        	style : 'single'
-		        }
-		 	} );
-		
+			$("#subjectForm :input").prop("disabled", true);
+			$("#subjectForm :input").addClass("disabledInput");
+	
 		});
 	</script>
 	
@@ -69,29 +74,56 @@
 					<a href="${pageContext.request.contextPath}/subjects/editSubject/clg/${subject.subjectCode}" ><span class="linkButton">Edit</span></a>    
 			</div>
 			
-			<div style="margin-bottom: 100px;">
-				<table class="formTable" style="margin-top: 30px;">
-					
-					<c:if test = "${subjectType == 'clg'}">
-						<tr>
-							<td>Lec Units</td>
-							<td>${subject.lecUnits}</td>
-						</tr>
+			<div style="display: flex; flex-direction: horizontal; margin-top:30px;">
+				<div>
+					<form:form id="subjectForm" action="" modelAttribute="subject" >
+						<table class="formTable" style="margin-top: 30px;">
+							<c:if test = "${subjectType == 'clg'}">
+								<tr>
+									<td><form:label path="lecUnits">Lec Units</form:label></td>
+									<td><form:input path="lecUnits" /></td>
+								</tr>
+								
+								<tr>
+									<td><form:label path="labUnits">Lab Units</form:label></td>
+									<td><form:input path="labUnits" /></td>
+								</tr>		         
+							</c:if>
 							
-						<tr>
-							<td>Lab Units</td>
-							<td>${subject.labUnits}</td>
-						</tr>		         
-					</c:if>
+							<tr>
+								<td><form:label path="preRequisites">Pre Requisites</form:label></td>
+								<td><form:input path="preRequisites" /></td>
+								
+							
+							</tr>
+						</table>
+					</form:form>
 					
-					<tr>
-							<td>Pre Requisites</td>
-							<td>${subject.preRequisites}</td>
-				</tr>
-				</table>
+					<div class="floatright" style="margin-bottom: 20px;" >
+						<a href="${pageContext.request.contextPath}/subjects/editSubject/${subjectType}/${subject.subjectCode}" ><span class="linkButton">Edit</span></a>   
+					</div>
+				</div>
+				
+				<div style="width: 650px; margin-left: 60px;">
+					 <table id="curricsView" class="display compact listTable">  
+								<thead>
+									<tr><th>Course</th><th>Description</th></tr>  
+							   	</thead>
+								
+								<tbody>
+									<c:forEach var="curric" items="${currics}">   
+									   	<tr>  
+										   	<td>${curric.courseID}</td>  
+										   	<td>${curric.curriculumDesc}</td>  
+										</tr>  
+							   		</c:forEach> 
+								</tbody>		
+					</table> 
+				</div>
+			
 			</div>
-		
-			<div style="width: 600px; margin-bottom:100px;" >
+
+			<div style="width:1000px; margin-top:30px; ">
 				 <table id="schedsview"class="display compact listTable">  
 				 	
 				 	<c:choose>
@@ -111,7 +143,7 @@
 										   	</tr>
 											<c:if test="${sched.labDays ne '' }">			   
 											   	<tr>  
-													<td> ${sched.subjectCode}-LAB</td>  
+													<td> ${sched.section}-LAB</td>  
 													<td> ${sched.labUnits}</td>  
 													<td> ${sched.labTimeStart}-${sched.labTimeEnd}</td>  
 													<td> ${sched.labDays}</td>  
@@ -122,7 +154,7 @@
 								</tbody>
 							</c:when>
 							
-							<c:when test = "${subjectType == 'sh'}">
+							<c:when test = "${subjectType == 'shs'}">
 								<thead>
 										<tr><th>Subject</th><th>Section</th><th>Time</th><th>Days</th><th>Room</th></tr>
 								</thead>
@@ -145,42 +177,7 @@
 			</div>
 			
 			<div style="width: 400px;" >
-				 <table id="curricsView" class="display compact listTable">  
-				 	
-				 	<c:choose>
-							<c:when test = "${subjectType == 'clg'}">
-								<thead>
-									<tr><th>Course</th><th>Description</th></tr>  
-							   	</thead>
-								
-								<tbody>
-									<c:forEach var="curric" items="${currics}">   
-									   	<tr>  
-										   	<td>${curric.courseID}</td>  
-										   	<td>${curric.curriculumDesc}</td>  
-										</tr>  
-							   		</c:forEach> 
-								</tbody>
-							</c:when>
-							
-							<c:when test = "${subjectType == 'sh'}">
-								<thead>
-									<tr><th>StrandCode</th><th>Track</th><th>Description</th><th>Major</th></tr>  
-							   	</thead>
-								
-								<tbody>
-									<c:forEach var="strand" items="${strands}">   
-									   	<tr>  
-										   	<td>${strand.strandCode}</td>  
-										   	<td>${strand.track}</td>  
-										   	<td>${strand.strandDesc}</td>  
-										   	<td>${strand.major}</td>  
-										</tr>  
-							   		</c:forEach>
-								</tbody>
-							</c:when>
-					</c:choose>
-					</table> 
+				
 			</div>
 			
 			

@@ -69,17 +69,50 @@ public class ScheduleController {
 		List<Course> courses = db.getCollegeCourses("");
 		System.out.println(courseID+" schedules: "+ schedules.getSchedules().size());
 		Course course = db.getCourseByID(courseID);
+		List<SchoolYear> schoolYears = db.getSchoolYears();
+		String [] years = {"", "1st-Year","2nd-Year", "3rd-Year", "4th-Year", "5th-Year"};
+		String [] sems = {"", "1st Sem","2nd Sem", "Summer"};
+	
 		
 		ModelAndView model = new ModelAndView();
 		model.setViewName("schedulesByCourse");
 		model.addObject("schedules", schedules.getSchedules());
 		model.addObject("schedsView", "schedsViewCLG");
 		model.addObject("courses", courses);
+		model.addObject("course", course);
 		model.addObject("courseDesc", course.getCourseDesc());
+		model.addObject("schoolYears", schoolYears);
+		model.addObject("sems", sems);
+		model.addObject("years", years);
 		
+	
+		return model;
+	}
+	
+	@RequestMapping(value = "/clg/printByTeacher", method = RequestMethod.GET)
+	public ModelAndView printCollegeByTeacher(@RequestParam("teacherID") String teacherID) {
+
+		SchedulesViewForm schedules = new SchedulesViewForm();
+		schedules.setSchedules(db.getCollegeSchedulesByTeacher(teacherID, "2017-2018", 1));
+		System.out.println(teacherID +" schedules: "+ schedules.getSchedules().size());
+		List<Teacher> teachers = db.getPersonnels("");
+		Teacher teacher = db.getPersonnelByID(teacherID);
+		List<SchoolYear> schoolYears = db.getSchoolYears();
+		String [] sems = {"", "1st Sem","2nd Sem", "Summer"};
+		
+		
+		ModelAndView model = new ModelAndView();
+		model.setViewName("schedulesByTeacher");
+		model.addObject("schedules", schedules.getSchedules());
+		model.addObject("schedsView", "schedsViewCLG");
+		model.addObject("teacher", teacher);
+		model.addObject("teachers", teachers);
+		model.addObject("schoolYears", schoolYears);
+		model.addObject("sems", sems);
 		
 		return model;
 	}
+	
 	
 	@RequestMapping(value = "/clg/{subjectCode}/", method = RequestMethod.GET)
 	public ModelAndView clgSchedule(@PathVariable("subjectCode") String subjectCode, @RequestParam("id") String scheduleID) {
