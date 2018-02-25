@@ -196,7 +196,9 @@ public class ScheduleController {
 		Locale locale = new Locale("en_US");
 		logger.info("Welcome home! The client locale is {}.", locale);
 		
-		Enrollment e = db.getSHEnrollmentBySY(studentNo, "2017-2018", 1);
+		SchoolYear sy = db.getActiveSchoolYear();
+		Enrollment e = db.getCollegeEnrollmentBySY(studentNo, sy.getYear_start()+"-"+sy.getYear_end(), sy.getSemester());
+		
 		StudentPersonal stud = db.getStudentByNo(studentNo);
 		StudentProfile profile = db.getCollegeProfileByNo(studentNo);
 
@@ -228,7 +230,9 @@ public class ScheduleController {
 		String formattedDate = dateFormat.format(date);
 		
 		logger.info("Welcome home! The client locale is {}.", locale);
-		Enrollment enrollment = db.getCollegeEnrollmentBySY(studentNo, "2017-2018", 1);
+		SchoolYear sy = db.getActiveSchoolYear();
+		Enrollment enrollment = db.getCollegeEnrollmentBySY(studentNo, sy.getYear_start()+"-"+sy.getYear_end(), sy.getSemester());
+		
 		
 		for (Schedule S : s.getSchedules()) {
 			if (S.isChecked()) {

@@ -79,7 +79,7 @@
 			<h1 style="display: inline-block; margin-top: 0px;">${sectionName}</h1>  
 			<div class="floatright">
 					<a href="newspr" ><span class="linkButton" >Add New SPR</span></a>   
-					<button type="button" id="print" class="linkButton" >Print</button>   
+					<button type="button" id="print" class="linkButton" >Export</button>   
 			</div>
 		
 
@@ -154,7 +154,7 @@
 	
 			<div style="width:1000px; margin-top:30px; ">
 				<div  style="margin-bottom: 20px;" >
-					<a href="${pageContext.request.contextPath}/sections/sh/enlistment/?sectionID=${section.sectionID}" class="linkButton"> Add Students</a>    
+					<a href="${pageContext.request.contextPath}/sections/sh/enlistment/?sectionID=${section.sectionID}" class="linkButton"> Enlistment</a>    
 				</div>
 		
 		

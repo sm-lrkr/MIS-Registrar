@@ -61,13 +61,16 @@ public class StudentController {
 	public ModelAndView printAllStudents(@RequestParam("filter") String filter) {
 		Locale locale = new Locale("en_US");
 		logger.info("Welcome home! The client locale is {}.", locale);
-		
 		List<StudentProfile> list = db.getAllStudents("","");
 		
-		ModelAndView model = new ModelAndView();
+		SchoolYear sy = db.getActiveSchoolYear();
+		String [] sems = {"", "1st Semester","2nd Semester", "Summer"};
 		
+		ModelAndView model = new ModelAndView();
 		model.setViewName("studentsAll");
 		model.addObject("students", list);
+		model.addObject("schoolYear", sy.getYear_start()+"-"+sy.getYear_end()+" "+ sems[sy.getSemester()]);
+		
 		
 		return model;
 	}
@@ -99,6 +102,11 @@ public class StudentController {
 		System.out.println("The course is: " + courseID);
 		System.out.println("The course is: " + courseID);
 		
+		List <Course> courses = db.getCollegeCourses("");
+		SchoolYear sy = db.getActiveSchoolYear();
+		String [] sems = {"", "1st Semester","2nd Semester", "Summer"};
+		
+		
 		boolean byCourse = true;
 		Course course = new Course();
 		if(courseID.trim().equals("")) {
@@ -117,6 +125,9 @@ public class StudentController {
 		model.addObject("courseDesc", course.getCourseDesc());
 		model.addObject("students", list);
 		model.addObject("byCourse", byCourse);
+		model.addObject("courses", courses);
+		model.addObject("schoolYear", sy.getYear_start()+"-"+sy.getYear_end()+" "+ sems[sy.getSemester()]);
+		
 		
 		return model;
 	}
@@ -221,9 +232,12 @@ public class StudentController {
 			
 		}
 		
-		if(spr.getProfile().getEnrollmentStatus().trim().equals("true")) {
+		if(spr.getProfile().isChecked()) {
 			System.out.println("Enrollment Status is true");
-			Enrollment e = db.getCollegeEnrollmentBySY(spr.getPersonal().getStudentNo(), "2017-2018", 1);
+			
+			SchoolYear sy = db.getActiveSchoolYear();
+			Enrollment e = db.getCollegeEnrollmentBySY(spr.getPersonal().getStudentNo(), sy.getYear_start()+"-"+sy.getYear_end(), sy.getSemester());
+			
 			if(e.getEnrollmentNo().equals("")) {
 				System.out.println("Student not enrolled for the current sem. Adding new enrollment. ");
 				db.addNewStudentEnrollment(spr.getPersonal().getStudentNo(), "2017-2018", 1 );

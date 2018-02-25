@@ -103,9 +103,16 @@
 				
 					<tr>
 						<td><form:label path="strandCode" >Strand Code</form:label></td>
-						<td><form:input id="strandCode" path="strandCode"/></td>
+						<td>
+						<form:select  path="strandCode" id="dbStrands" value="${section.strandCode}" >
+							<form:option value="" label=""/>
+							<c:forEach var="strand" items="${strands}">   
+								<form:option value="${strand.strandCode}" label="${strand.strandCode}" /> 
+						   	</c:forEach>  
+						</form:select>
+						</td>
 					</tr>
-					
+				
 					<tr>
 						<td><form:label path="sectionName" >Name</form:label></td>
 						<td><form:input path="sectionName"/></td>
@@ -120,11 +127,18 @@
 						<td><form:label path="session" >Session</form:label></td>
 						<td><form:input id="session"   path="session" /></td>
 					</tr>
-				
+			
 					
 					<tr>
 						<td><form:label path="personnelID" >Adviser</form:label></td>
-						<td><form:input id="personnelID"   path="personnelID" /></td>
+						<td>
+							<form:select  path="personnelID" id="dbPersonnel" value="${section.personnelID}" >
+								<form:option value="" label=""/>
+								<c:forEach var="teacher" items="${teachers}">   
+									<form:option value="${teacher.personnelID}" label="${teacher.firstName}-${teacher.lastName}" /> 
+							   	</c:forEach>  
+							</form:select>
+						</td>
 					</tr>
 				</table>
 				<br><br>

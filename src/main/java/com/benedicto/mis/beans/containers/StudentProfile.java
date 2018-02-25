@@ -21,7 +21,8 @@ public class StudentProfile {
 	private String strandCode;
 	
 	private String studentStatus;
-	private String enrollmentStatus;
+	
+	private boolean enrolled;
 	private boolean shiftee;
 	private String shiftCourse;
 	private String shiftStrand;
@@ -31,7 +32,6 @@ public class StudentProfile {
 	private String applicationType;
 	private String empty;
 	private boolean checked;
-	
 	/**
 	 * @return the studentNo
 	 */
@@ -153,16 +153,16 @@ public class StudentProfile {
 		this.studentStatus = studentStatus;
 	}
 	/**
-	 * @return the enrollmentStatus
+	 * @return the enrolled
 	 */
-	public String getEnrollmentStatus() {
-		return enrollmentStatus;
+	public boolean isEnrolled() {
+		return enrolled;
 	}
 	/**
-	 * @param enrollmentStatus the enrollmentStatus to set
+	 * @param enrolled the enrolled to set
 	 */
-	public void setEnrollmentStatus(String enrollmentStatus) {
-		this.enrollmentStatus = enrollmentStatus;
+	public void setEnrolled(boolean enrolled) {
+		this.enrolled = enrolled;
 	}
 	/**
 	 * @return the shiftee
@@ -272,7 +272,6 @@ public class StudentProfile {
 	public void setChecked(boolean checked) {
 		this.checked = checked;
 	}
-	
 	
 	
 	

@@ -127,9 +127,21 @@
 				  importStyle: true
 				  
 			});
+			
+			$("#db_Option2, #db_Option3").on('input', function(){
+				var filter = this.value;
+				var year = $("#db_Option2").val();
+				var sy = $("#db_Option3").val();
+				
+				table.search( year+"-"+sy ).draw();
+				$("#ysubheader").html("");
+				
+				if(filter != ""){
+					$("#subheader").html(year+" "+sy);
+				}
+			});
 		});
 	</script>
-
 	
 	
 	<style>
@@ -147,7 +159,7 @@
 		<div style="width: 8.5in; text-align:center" >
 			<div style=" display: inline-block;" >
 				<div style="text-align:center;" class="content">
-					<h1 style="display: inline-block;">${courseDesc}</h1>
+					<p id="header" style="display: inline-block; fon-size:14px; font-weight:bold;">${courseDesc}</p>
 				</div>
 				
 				<div style="width: 7.5in;" class="content" >
@@ -186,7 +198,33 @@
 		<div  class="no-print" style="display: inline-block;	margin-top:100px;">
 			<div id="buttons">
 			</div>
+			
+			<div style="margin-top:100px;">
+				<select id="db_Option" >
+					<option value="printByTeacher" label="Enrolled"/> 
+					<option value="printByCourse" label="By Course"/> 
+					<option value="printByTeacher" label="By Strand"/> 
+					<option value="printByTeacher" label="By Section"/>
+					<option value="printByTeacher" label="By College Schedule"/>
+					<option value="printByTeacher" label="By SH Schedule"/>
+					
+					 
+					
+				</select>
+			</div>
+			
+			<div style="margin-top:20px;">
+				<select id="db_Option1" >
+					<option value="-------" label="---Courses---"/> 
+					<c:forEach var="course" items="${courses}">   
+						<option value="${course.courseID}" label="${course.courseDesc}"/>   
+				   	</c:forEach>
+				</select>
+				<input type="hidden" id="courseID" value="${course.courseID}"/> 
+			</div>
 		</div>
+		
+	
 	</div>
 
 </body>

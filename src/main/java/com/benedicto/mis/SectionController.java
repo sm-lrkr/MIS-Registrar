@@ -172,23 +172,25 @@ public class SectionController {
 		for(StudentProfile sp: unenlisted.getStudents()) {
 			System.out.println("Student No to be enlisted to section: " + sp.getStudentNo());
 			if(sp.isChecked()) {
-				Enrollment e = db.getSHEnrollmentBySY(sp.getStudentNo(), "2017-2018", 1);
+				
+				SchoolYear sy = db.getActiveSchoolYear();
+				Enrollment e = db.getCollegeEnrollmentBySY(sp.getStudentNo(), sy.getYear_start()+"-"+sy.getYear_end(), sy.getSemester());
+				
 				if(e.getEnrollmentNo().equals("")) {
 					e.setStudentNo(sp.getStudentNo());
-					e.setSchoolYear("2017-2018");
+					e.setSchoolYear(sy.getYear_start()+"-"+sy.getYear_end());
 					e.setSemester(1);
 					e.setStrandCode(sp.getStrandCode());
 					e.setSectionID(sectionID);
 					System.out.println("Student not enrolled for the current sem. Adding new enrollment. ");
 					db.addNewSHEnrollment(e);
-					e = db.getSHEnrollmentBySY(sp.getStudentNo(), "2017-2018", 1);
+					e = db.getSHEnrollmentBySY(sp.getStudentNo(), sy.getYear_start()+"-"+sy.getYear_end(), 1);
 				}
 				db.enlistSHToSection(e, sectionID);
 				for(Schedule s: schedules.getSchedules()) {
 					db.enlistSHStudentSchedules(e, s.getScheduleID());
 					db.addSHSubjectGrading(s, e.getEnrollmentNo());
 				}
-				
 			}
 		}
 		return new ModelAndView("redirect:/sections/sh/enlistment/?sectionID="+ sectionID);
@@ -279,12 +281,19 @@ public class SectionController {
 	public ModelAndView newSHSection() {
 		System.out.println("Add new subject");
 		List<Subject> list = db.getSHSubjects("");
+		List<Strand> strands = db.getSHStrands("");
+		List<Teacher> teachers = db.getPersonnels("");
+		
 		System.out.println("List size: "+ list.size());
+		
 		
 		ModelAndView model = new ModelAndView();
 		model.setViewName("sectionForm");
 		model.addObject("section", new Section());
 		model.addObject("sectionType", "sh");
+		model.addObject("strands", strands);
+		model.addObject("teachers", teachers);
+		
 		model.addObject("formType", "newSection");
 		model.addObject("pageTitle", "New Section");
 		

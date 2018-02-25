@@ -34,10 +34,10 @@
 					</td>
 					
 					<td>
-						<form:label path="enrollmentStatus">Enrollment Status</form:label>
+						<form:label path="enrolled">Enrollment Status</form:label>
 					</td>
 					<td>
-						<form:select path="enrollmentStatus">
+						<form:select path="enrolled">
 							<option value="false" label="Not Enrolled" />
 							<option value="true" label="Enrolled" />
 						</form:select>

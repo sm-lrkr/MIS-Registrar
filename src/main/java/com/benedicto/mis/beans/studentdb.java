@@ -125,7 +125,7 @@ public class studentdb {
 					ps.setString(3, _sp.getCourseID());
 					ps.setString(4, _sp.getCurriculumID());
 					ps.setString(5, _sp.getStudentID());
-					ps.setString(6, _sp.getEnrollmentStatus());
+					ps.setBoolean(6, _sp.isChecked());
 					ps.setBoolean(7, _sp.isShiftee());
 					ps.setString(8	, _sp.getShiftCourse());
 					ps.setString(9, _sp.getSemEntry());
@@ -153,7 +153,7 @@ public class studentdb {
 					ps.setString(3, _sp.getStrandCode());
 					ps.setString(4, _sp.getCurriculumID());
 					ps.setString(5, _sp.getStudentStatus());
-					ps.setString(6, _sp.getEnrollmentStatus());
+					ps.setBoolean(6, _sp.isChecked());
 					ps.setBoolean(7, _sp.isShiftee());
 					ps.setString(8, _sp.getShiftStrand());
 					ps.setString(9, _sp.getSemEntry());
@@ -165,12 +165,11 @@ public class studentdb {
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
-
 		return 0;
 	}
 	
 	public int updateCollegeProfile(StudentProfile sp) {
-		String sql = "update clg_profiles set StudentID = ?, CourseID = ? , CurriculumID = ?, StudentStatus = ?, EnrollmentStatus=?, "
+		String sql = "update clg_profiles set StudentID = ?, CourseID = ? , CurriculumID = ?, StudentStatus = ?, Enrolled=?, "
 				+ "Shiftee = ?, ShiftCourse = ?, SemEntry = ? , YearEntry = ?, GraduationYear = ?, ApplicationType = ?"
 				+ " WHERE StudentNo=?";
 				
@@ -181,7 +180,7 @@ public class studentdb {
 				ps.setString(2, _sp.getCourseID());
 				ps.setString(3, _sp.getCurriculumID());
 				ps.setString(4, _sp.getStudentStatus());
-				ps.setString(5, _sp.getEnrollmentStatus());
+				ps.setBoolean(5, _sp.isChecked());
 
 				ps.setBoolean(6, _sp.isShiftee());
 				ps.setString(7, _sp.getShiftCourse());
@@ -199,7 +198,7 @@ public class studentdb {
 	
 	
 	public int updateSHProfile(StudentProfile sp) {
-		String sql = "update shs_profiles set LRN = ?, StrandCode = ? , CurriculumID = ?, StudentStatus = ?, EnrollmentStatus=?, "
+		String sql = "update shs_profiles set LRN = ?, StrandCode = ? , CurriculumID = ?, StudentStatus = ?, Enrolled=?, "
 				+ "Shiftee = ?, ShiftStrand = ?, SemEntry = ? , YearEntry = ?, GraduationYear = ?, ApplicationType = ?"
 				+ " WHERE StudentNo=?";
 				
@@ -210,7 +209,7 @@ public class studentdb {
 				ps.setString(2, _sp.getStrandCode());
 				ps.setString(3, _sp.getCurriculumID());
 				ps.setString(4, _sp.getStudentStatus());
-				ps.setString(5, _sp.getEnrollmentStatus());
+				ps.setBoolean(5, _sp.isEnrolled());
 
 				ps.setBoolean(6, _sp.isShiftee());
 				ps.setString(7, _sp.getShiftStrand());
@@ -447,7 +446,7 @@ public class studentdb {
 				s.setStudentNo(rs.getString(5));
 				s.setCourseID(rs.getString(6));
 				s.setStudentStatus(rs.getString(8));
-				s.setEnrollmentStatus(rs.getString(9));
+				s.setEnrolled(rs.getBoolean(9));
 				
 				return s;
 			}
@@ -472,8 +471,7 @@ public class studentdb {
 				s.setStudentNo(rs.getString(5));
 				s.setStrandCode(rs.getString(6));
 				s.setStudentStatus(rs.getString(8));
-				s.setEnrollmentStatus(rs.getString(9));
-				
+				s.setEnrolled(rs.getBoolean(9));
 				return s;
 			}
 		});
@@ -494,8 +492,7 @@ public class studentdb {
 				s.setStudentID(rs.getString(4));
 				s.setStudentNo(rs.getString(5));
 				s.setStudentStatus(rs.getString(8));
-				s.setEnrollmentStatus(rs.getString(9));
-				
+				s.setEnrolled(rs.getBoolean(9));
 				return s;
 			}
 		});
@@ -835,6 +832,7 @@ public class studentdb {
 					s.setPrelimGrade(rs.getFloat(3));
 					s.setMidtermGrade(rs.getFloat(4));
 					s.setFinalGrade(rs.getFloat(5));
+					s.setBackupGrade(s.getFinalGrade());
 					s.setEquivalentGrade(rs.getFloat(6));
 					s.setDateModified(rs.getString(7));
 					s.setSubjectDesc(rs.getString(10));
@@ -1678,7 +1676,7 @@ public class studentdb {
 			return template.queryForObject(sql, new Object[] {studentNo, schoolYear, sem},
 					new BeanPropertyRowMapper<Enrollment>(Enrollment.class));
 		}catch(Exception ex) {
-			ex.printStackTrace();
+			//ex.printStackTrace();
 			Enrollment e = new Enrollment();
 			e.setEnrollmentNo("");
 			System.out.println("Returning empty enrollment: ");
@@ -1694,7 +1692,7 @@ public class studentdb {
 			return template.queryForObject(sql, new Object[] {studentNo, schoolYear, sem},
 					new BeanPropertyRowMapper<Enrollment>(Enrollment.class));
 		}catch(Exception ex) {
-			ex.printStackTrace();
+			//ex.printStackTrace();
 			Enrollment e = new Enrollment();
 			e.setEnrollmentNo("");
 			System.out.println("Returning empty enrollment: ");
@@ -1809,6 +1807,9 @@ public class studentdb {
 		}catch(Exception ex) {
 			SchoolYear sy = new SchoolYear();
 			sy.setId(0);
+			sy.setYear_start("");
+			sy.setYear_end("");
+			sy.setSemester(0);
 			return sy;
 		}
 	}

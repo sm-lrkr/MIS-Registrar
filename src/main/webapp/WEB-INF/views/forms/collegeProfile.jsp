@@ -75,18 +75,18 @@
 							<form:option value="dismissed" label="Dismissed" />
 						</form:select>
 					</td>
-					
+			
 					<td>
-						<form:label path="enrollmentStatus">Enrollment Status</form:label>
+						<form:label path="enrolled">Enrollment Status</form:label>
 					</td>
 					<td>
-						<form:select path="enrollmentStatus">
-							<option value="false" label="Not Enrolled" />
-							<option value="true" label="Enrolled" />
+						<form:select path="enrolled" value="${profile.enrolled}" >
+								<form:option value="0" label="Not Enrolled" />
+								<form:option value="1" label="Enrolled" />
 						</form:select>
 					</td>			
 				</tr>
-				
+			
 				<tr>
 					<td>
 						<form:label path="shiftee">Shiftee? </form:label>

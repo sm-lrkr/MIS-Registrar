@@ -69,18 +69,18 @@
 						
 						</form:select>
 					</td>
-					
+			
 					<td>
-						<form:label path="enrollmentStatus">Enrollment Status</form:label>
+						<form:label path="enrolled">Enrollment Status</form:label>
 					</td>
 					<td>
-						<form:select path="enrollmentStatus">
+						<form:select path="enrolled" value="${profile.enrolled}">
 							<option value="false" label="Not Enrolled" />
 							<option value="true" label="Enrolled" />
 						</form:select>
 					</td>			
 				</tr>
-				
+		
 				<tr>
 					<td>
 						<label>Shiftee?:</label>
@@ -96,7 +96,7 @@
 						<label>Shift Strand:</label>
 					</td>
 					<td>
-							<form:select path="shiftCourse" value="${profile.strandCode}">
+							<form:select path="shiftCourse" value="${profile.shiftStrand}">
 							<form:option value="" label=""/>
 							<c:forEach var="strand" items="${strands}">   
 								<form:option value="${strand.strandCode}" label="${strand.strandDesc}" /> 

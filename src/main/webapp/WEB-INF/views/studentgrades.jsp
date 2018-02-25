@@ -32,9 +32,9 @@
 	
 		<script type = "text/javascript">
 		$(document).ready(function(){
-			
+	
 			var activeTableID;
-		
+
 			$("table[id *= 'gradesview'] :input").prop("disabled", true);
 			$("table[id *= 'gradesview'] :input").prop("style", "width:40px;");
 			$("table[id *= 'gradesview'] :input").addClass("disabledInput");
@@ -92,14 +92,11 @@
 			<div style="margin-bottom: 20px;">
 				<h1 style="display: inline-block;">${student.lastName}, ${student.firstName} ${student.middleName}</h1>
 				<div class="floatright">
-					<button id="edit" class="linkButton" >Edit</button>   
-					<button id="save" class="linkButton"  >Save</button>   
-					<button id="cancel" class="linkButton"  >Cancel</button>   
-					
-					<a href="sprForm" id="print" ><span class="linkButton" >Print</span></a>   
+					<a href="sprForm" id="print" ><span class="linkButton" >TOR </span></a>   
+				 	<a href="sprForm" id="print" ><span class="linkButton" >Print</span></a>   
 				 </div>
 			</div>
-
+			
 			<form:form  action="${pageContext.request.contextPath}/grades/${dept}/save/?studentNo=${student.studentNo}" method="post" modelAttribute="allSemGrades" >
 				<c:forEach var="sg" items="${allSemGrades.semGrades}" varStatus="status">
 					<c:set var="ap" value="" />
@@ -128,17 +125,17 @@
 										<td>${grade.subjectDesc} </td>
 										<td>${grade.lecUnits + grade.labUnits} </td>
 												
-												
+											
 										<td>
 											<form:input type="hidden" path="semGrades[${status.index}].grades[${status1.index}].enrollmentNo" />
-											<form:input id="input" path="semGrades[${status.index}].grades[${status1.index}].prelimGrade" />  
-							
+											<form:input type="hidden" path="semGrades[${status.index}].grades[${status1.index}].backupGrade" />
+											${allSemGrades.semGrades[status.index].grades[status1.index].prelimGrade}
 										</td>
-									
-										<td><form:input id="input" path="semGrades[${status.index}].grades[${status1.index}].midtermGrade" /></td>
-										<td><form:input id="input" path="semGrades[${status.index}].grades[${status1.index}].finalGrade" /></td>
-										<td><form:input id="input" path="semGrades[${status.index}].grades[${status1.index}].equivalentGrade" /></td>
-										
+						
+										<td>${allSemGrades.semGrades[status.index].grades[status1.index].midtermGrade}</td>
+										<td><form:input path="semGrades[${status.index}].grades[${status1.index}].finalGrade" /></td>
+										<td>${allSemGrades.semGrades[status.index].grades[status1.index].equivalentGrade}</td>
+				
 										<td>${grade.dateModified} </td>
 									</tr>
 								</c:forEach>

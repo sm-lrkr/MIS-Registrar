@@ -144,9 +144,11 @@ public class GradesController {
 		
 		for(SemGrades sg: sgf.getSemGrades()) {
 			for(SubjectGrades g: sg.getGrades()) {
-				System.out.println("Enrollment: "+ g.getEnrollmentNo());
-				g.setDateModified(formattedDate);
-				db.updateCollegeSubjectGrading(g);
+				if(g.getFinalGrade()!=g.getBackupGrade()) {
+					System.out.println("Enrollment: "+ g.getEnrollmentNo());
+					g.setDateModified(formattedDate);
+					db.updateCollegeSubjectGrading(g);
+				}
 			}
 		}
 

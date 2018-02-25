@@ -206,12 +206,12 @@
 								</td>
 								
 								<td>
-									<form:label path="profile.enrollmentStatus">Enrollment Status</form:label>
+									<form:label path="profile.enrolled">Enrollment Status</form:label>
 								</td>
 								<td>
-									<form:select path="profile.enrollmentStatus" value="${profile.enrollmentStatus}">
-										<form:option value="false" label="Not Enrolled" />
-										<form:option value="true" label="Enrolled" />
+									<form:select path="profile.enrolled" value="${profile.enrolled}">
+										<form:option value="0" label="Not Enrolled" />
+										<form:option value="1" label="Enrolled" />
 									</form:select>
 								</td>			
 							</tr>

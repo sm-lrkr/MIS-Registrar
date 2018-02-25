@@ -113,14 +113,13 @@
 									<td><form:label path="studentStatus" >Status</form:label></td>
 									<td><form:input path="studentStatus" /></td>
 								</tr>
-							
+		
 								<tr>
-									<td><form:label path="enrollmentStatus" >Enrollment Status</form:label></td>
+									<td><form:label path="enrolled" >Enrollment Status</form:label></td>
 									<td>
-										 <form:select path="enrollmentStatus" id="db_Personnel" value="${profile.enrollmentStatus}" style="width:170px;" >
-											<form:option value="" label=""/>
-											<form:option value="true" label="Enrolled"/>
-											<form:option value="false" label="NOt Enrolled"/>
+										 <form:select path="enrolled" id="db_Personnel" value="${profile.enrolled}" style="width:170px;" >
+											<form:option value="1" label="Enrolled"/>
+											<form:option value="0" label="NOt Enrolled"/>
 																					
 										</form:select>	
 									</td>
