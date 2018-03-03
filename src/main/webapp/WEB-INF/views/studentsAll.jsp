@@ -68,16 +68,12 @@
 			 var table = $('#studview').DataTable( {
 				 	"dom" : 'rt',
 			        "columnDefs": [
-			        	{"title" : "StudentNo", "visible" : false, "targets": 0 },
-			        	{"title" : "ID/LRN"},
-			        	{"title" : "Last Name"},
-			        	{"title" : "First Name"},
-			        	{"title" : "Middle Name"},
-			       
+			        	{"targets": [0] , "visible" : false},
+			        	{"targets": [0,2,3,4,5], "searchable": false}
 			        ]
 			 } );
 			 
-			
+		
 	
 			table.on( 'dblclick', 'tr', function () {
 				var stdNo = table.row( this ).data()[0];
@@ -119,11 +115,24 @@
 		                ],
 		                className: 'blue'
 					}
-			   
+			 
 			    ]
 			}).container().appendTo($('#buttons'));
+		
+			$("#db_Option1, #db_Option2").on('input', function(){
+				var filter = this.value;
+				
+				var dept = $("#db_Option1").val();
+				var course = $("#db_Option2").val();
+		
+				alert(dept+""+course);
+				table.search( dept+""+course ).draw();
+				$("#ysubheader").html("");
 			
-			
+				if(filter != ""){
+					$("#subheader").html(year+" "+sy);
+				}
+			});
 		
 		});
 	</script>
@@ -144,33 +153,37 @@
 	<div style="display: flex; flex-direction: right;">
 		<div style="width: 8.5in; text-align:center" >
 			<div style=" display: inline-block;" >
-		
+	
 				<div style="text-align:center;" class="content">
-					<h1 style="display: inline-block;"  >Enrolled List</h1>
+					<h1 style="display: inline-block; margin-bottom:-15px;"  >Enrolled List</h1>
 					<h3>${schoolYear}</h3>
 				</div>
-				
+		
 				<div style="width: 7.5in;" class="content" >
 					<table id="studview" class="compact listTable" >  
 						<thead >
 							<tr>
 								<th >StudentNo</th>
+								<th>Profile Type</th>
 								<th>Id/LRN</th>
 								<th>Last Name</th>
 								<th>First Name</th>
 								<th>Middle Name</th>
+							
 							</tr>  
 						</thead>
-	
 						<tbody>
 							<c:forEach var="stud" items="${students}" varStatus="status">   
-							   	<c:if test="${stud.enrolled = true}" >
+							   	<c:if test="${stud.enrolled}" >
 								   	<tr>  
 									   	<td>${stud.studentNo}</td>  
+									   	<td>${stud.profileType}${stud.courseID}${stud.strandCode}</td>
 									   	<td>${stud.studentID}</td>  
 									   	<td>${stud.lastName}</td>  
 									   	<td>${stud.firstName}</td>  
 									   	<td>${stud.middleName}</td>  
+									   	  
+									   
 									</tr>  
 								</c:if>
 							</c:forEach>
@@ -198,10 +211,29 @@
 			
 			<div style="margin-top:20px;">
 				<select id="db_Option1" >
-					<option value="all" label="ALL"/> 
+					<option value="" label="ALL"/> 
 					<option value="clg" label="College"/> 
 					<option value="shs" label="Senior High"/> 
+					<option value="bsc" label="Basic Ed"/> 
 					
+				</select>
+				<input type="hidden" id="courseID" value="${course.courseID}"/> 
+			</div>
+			
+			<div style="margin-top:20px;">
+				<select id="db_Option2" >
+					<c:forEach var="course" items="${courses}">   
+						<option value="${course.courseID}" label="${course.courseID}"/>   
+				   	</c:forEach>
+				</select>
+				<input type="hidden" id="courseID" value="${course.courseID}"/> 
+			</div>
+
+			<div style="margin-top:20px;">
+				<select id="db_Option3" >
+					<c:forEach var="strand" items="${strands}">   
+						<option value="${strand.strandCode}" label="${strand.strandCode}"/>   
+				   	</c:forEach>
 				</select>
 				<input type="hidden" id="courseID" value="${course.courseID}"/> 
 			</div>

@@ -159,47 +159,47 @@ public class HomeController {
 //		return new ModelAndView("redirect:/enlistment/" + studentID);
 //	}
 	
-	@RequestMapping(value = "/unenlistSchedules/{studentID}", method = RequestMethod.POST)
-	public ModelAndView unenlistSchedules(@ModelAttribute("offered") SchedulesViewForm s,
-			@PathVariable("studentID") String studentID) {
-		Locale locale = new Locale("en_US");
-		logger.info("Welcome home! The client locale is {}.", locale);
-
-		for (Schedule S : s.getSchedules()) {
-			if (S.isChecked()) {
-				//db.unenlistStudentSubjects(studentID, S.getScheduleID());
-				//db.enlistStudentSubjects(studentID, S.getLabScheduleID());
-			}
-		}
-		return new ModelAndView("redirect:/enlistment/" + studentID);
-	}
-
-	@RequestMapping(value = "course/{courseID}", method = RequestMethod.GET)
-	public ModelAndView curriculum(@PathVariable("courseID") String courseID) {
-		Locale locale = new Locale("en_US");
-
-		logger.info("Welcome home! The client locale is {}.", locale);
-
-		Map<String, List<CurriculumSubject>> subjects = new HashMap<String, List<CurriculumSubject>>();
-		List<Curriculum> currics = db.getCurriculumsByCourse(courseID);
-		Course course = db.getCourseByID(courseID);
-		
-		Curriculum c = currics.get(0);
-
-		for (int i = 1; i <= 5; ++i) {
-			subjects.put(i + "-1", db.getCurriculumSubjects(c.getCurriculumID(), i, 1));
-			subjects.put(i + "-2", db.getCurriculumSubjects(c.getCurriculumID(), i, 2));
-			subjects.put(i + "-3", db.getCurriculumSubjects(c.getCurriculumID(), i, 3));
-		}
-
-		ModelAndView model = new ModelAndView();
-		model.setViewName("course");
-		model.addObject("courseID", courseID);
-		model.addObject("subjects", subjects);
-		model.addObject("course", course);
-		model.addObject("curriculums", currics);
-		return model;
-	}
+//	@RequestMapping(value = "/unenlistSchedules/{studentID}", method = RequestMethod.POST)
+//	public ModelAndView unenlistSchedules(@ModelAttribute("offered") SchedulesViewForm s,
+//			@PathVariable("studentID") String studentID) {
+//		Locale locale = new Locale("en_US");
+//		logger.info("Welcome home! The client locale is {}.", locale);
+//
+//		for (Schedule S : s.getSchedules()) {
+//			if (S.isChecked()) {
+//				//db.unenlistStudentSubjects(studentID, S.getScheduleID());
+//				//db.enlistStudentSubjects(studentID, S.getLabScheduleID());
+//			}
+//		}
+//		return new ModelAndView("redirect:/enlistment/" + studentID);
+//	}
+//
+//	@RequestMapping(value = "course/{courseID}", method = RequestMethod.GET)
+//	public ModelAndView curriculum(@PathVariable("courseID") String courseID) {
+//		Locale locale = new Locale("en_US");
+//
+//		logger.info("Welcome home! The client locale is {}.", locale);
+//
+//		Map<String, List<CurriculumSubject>> subjects = new HashMap<String, List<CurriculumSubject>>();
+//		List<Curriculum> currics = db.getCurriculumsByCourse(courseID);
+//		Course course = db.getCourseByID(courseID);
+//		
+//		Curriculum c = currics.get(0);
+//
+//		for (int i = 1; i <= 5; ++i) {
+//			subjects.put(i + "-1", db.getCurriculumSubjects(c.getCurriculumID(), i, 1));
+//			subjects.put(i + "-2", db.getCurriculumSubjects(c.getCurriculumID(), i, 2));
+//			subjects.put(i + "-3", db.getCurriculumSubjects(c.getCurriculumID(), i, 3));
+//		}
+//
+//		ModelAndView model = new ModelAndView();
+//		model.setViewName("course");
+//		model.addObject("courseID", courseID);
+//		model.addObject("subjects", subjects);
+//		model.addObject("course", course);
+//		model.addObject("curriculums", currics);
+//		return model;
+//	}
 //
 //	@RequestMapping(value = "/grades/{studentID}", method = RequestMethod.GET)
 //	public ModelAndView studentGrades(@PathVariable("studentID") String studentID) {
@@ -241,7 +241,7 @@ public class HomeController {
 //		return "Success";
 //	}
 
-	@RequestMapping(value = "/newCourse", method = RequestMethod.POST)
+	@RequestMapping(value = "/saveNewCourse", method = RequestMethod.POST)
 	public ModelAndView addNewCourse(@ModelAttribute("course") Course c) {
 		System.out.println("Add new course");
 		db.createCourse(c);
@@ -325,5 +325,16 @@ public class HomeController {
 	// List<Student> list = dao.getStudents();
 	// return new ModelAndView("index", "emp", list);
 	// }
+	
+	@RequestMapping(value = "/newCourse", method = RequestMethod.GET)
+	public ModelAndView newSHSubject() {
+		Course course = new Course();
+		ModelAndView model = new ModelAndView();
+		model.setViewName("courseForm");
+		model.addObject("course ", course);
+		
+		return model;
+	}
+	
 
 }

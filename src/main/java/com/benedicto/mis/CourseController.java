@@ -34,7 +34,7 @@ import com.benedicto.mis.beans.formbackers.StrandSubjects;
 @Controller
 @RequestMapping("/courses")
 public class CourseController {
-
+	
 	private static final Logger logger = LoggerFactory.getLogger(CourseController.class);
 
 	@Autowired
@@ -64,6 +64,21 @@ public class CourseController {
 
 		return model;
 	}
+	
+	@RequestMapping(value = "/newCourse", method = RequestMethod.GET)
+	public ModelAndView newCollegeSubject() {
+		System.out.println("Add new subject");
+		List<Subject> list = db.getCollegeSubjects("");
+		List<Department> depts = db.getDepartments("");
+		System.out.println("List size: "+ list.size());
+		
+		ModelAndView model = new ModelAndView();
+		model.setViewName("courseForm");
+		model.addObject("course", new Course());
+		model.addObject("departments",	 depts);
+		
+		return model;
+	}
 
 	@RequestMapping(value = "/strands", method = RequestMethod.GET)
 	public ModelAndView strands() {
@@ -91,14 +106,17 @@ public class CourseController {
 		String [] sems = {"", "1st Sem","2nd Sem", "Summer"};
 		
 		Course course = db.getCourseByID(courseID);
-		
-		Curriculum c = currics.get(0);
-
-		for (int i = 1; i <= 5; ++i) {
-			subjects.put(i + "-1", db.getCurriculumSubjects(c.getCurriculumID(), i, 1));
-			subjects.put(i + "-2", db.getCurriculumSubjects(c.getCurriculumID(), i, 2));
-			subjects.put(i + "-3", db.getCurriculumSubjects(c.getCurriculumID(), i, 3));
+		Curriculum c = new Curriculum();
+		if(currics.size() >0 ) {
+			c = currics.get(0);
+			for (int i = 1; i <= 5; ++i) {
+				subjects.put(i + "-1", db.getCurriculumSubjects(c.getCurriculumID(), i, 1));
+				subjects.put(i + "-2", db.getCurriculumSubjects(c.getCurriculumID(), i, 2));
+				subjects.put(i + "-3", db.getCurriculumSubjects(c.getCurriculumID(), i, 3));
+			}
 		}
+
+		
 		
 		ModelAndView model = new ModelAndView();
 		model.setViewName("course");
@@ -179,14 +197,13 @@ public class CourseController {
 	
 
 
-	@RequestMapping(value = "/newCourse", method = RequestMethod.POST)
+	@RequestMapping(value = "/saveNewCourse", method = RequestMethod.POST)
 	public ModelAndView addNewCourse(@ModelAttribute("course") Course c) {
 		System.out.println("Add new course");
 		db.createCourse(c);
-		return new ModelAndView("redirect:/courses");
+		return new ModelAndView("redirect:/courses/");
 	}
 
-	
 	
 
 	

@@ -60,7 +60,7 @@
 		<jsp:include page="includes/main-left.jsp" />
 		
 		<div>
-			<h1 style="display: inline-block; margin-top: 0px;">Subjects</h1>  
+			<h1 style="display: inline-block; margin-top: 0px;">Subjects - SH</h1>  
 			<div class="floatright">
 					<a href="${pageContext.request.contextPath}/subjects/newSubject/sh" ><span class="linkButton">Add New Subject</span></a>    
 			</div>

@@ -65,26 +65,7 @@
 				$("#enlistedTable").submit();
 			});
 			
-			
-			var table1 = $('#enlisted').DataTable( {
-			 	"sDom" : 'rt',
-		        "scrollY":        "300px",
-		        "scrollCollapse": false,
-		        "select": {
-		        	style : 'multi'
-		        },
-		        "columnDefs": [
-		        	{	"targets": 0,  
-		        		"checkboxes": {
-		        			"selectRow": true	
-		        		}	
-		        	},
-		        	{	"targets": [0,2,3,5,6,7],  
-		        		"orderable" : false
-		        	}
-		        ],
-		        'order': [[1, 'asc']]
-		 	} );
+	
 			
 		});
 	</script>
@@ -109,13 +90,15 @@
 				<jsp:include page="includes/offered.jsp" />
 			</div >
 			 <div id="horizontalAlign">
-	   		<div>
-				<button id= "enlist"> Enlist checked</button>
-			</div>
+		   		<div>
+					<button id= "enlist"> Enlist checked</button>
+				</div>
    			</div>
+   			
 			<div id="enlistedList" class="tableContainer">
 				<jsp:include page="includes/enlisted.jsp" />
 			</div>
+			
 			<div id="horizontalAlign">
 	   		<div class="divElements" >
 				<button id= "withdraw"> Widthdraw checked</button>

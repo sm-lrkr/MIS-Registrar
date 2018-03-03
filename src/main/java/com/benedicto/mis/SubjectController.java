@@ -83,6 +83,7 @@ public class SubjectController {
 		model.setViewName("shsubjects");
 		model.addObject("subjects", list);
 		model.addObject("subject", new Subject());
+		model.addObject("subjectType", "shs");
 		return model;
 	}
 	
@@ -108,6 +109,7 @@ public class SubjectController {
 		ModelAndView model = new ModelAndView();
 		model.setViewName("bscsubjects");
 		model.addObject("subjects", list);
+		model.addObject("subjectType", "bsc");
 		model.addObject("subject", new Subject());
 		return model;
 	}
@@ -145,6 +147,23 @@ public class SubjectController {
 		model.addObject("pageTitle", "New Subject");
 		
 		
+		return model;
+	}
+	
+	@RequestMapping(value = "/newSubject/bsc", method = RequestMethod.GET)
+	public ModelAndView newBSCSubject() {
+		System.out.println("Add new subject");
+		List<Subject> list = db.getBSCSubjects("");
+		System.out.println("List size: "+ list.size());
+		ModelAndView model = new ModelAndView();
+		model.setViewName("subjectForm");
+		model.addObject("subjects", list);
+		model.addObject("subject", new Subject());
+		model.addObject("subjectType", "bsc");
+		model.addObject("formType", "newSubject");
+		model.addObject("pageTitle", "New Subject");
+		
+		
 		
 		return model;
 	}
@@ -163,6 +182,14 @@ public class SubjectController {
 	public ModelAndView addNewSHSubject(@ModelAttribute("subject") Subject s) {
 		System.out.println("Add new course");
 		db.createSHSubject(s);
+		
+		return new ModelAndView("redirect:/subjects/sh");
+	}
+	
+	@RequestMapping(value = "/newSubject/bsc/save", method = RequestMethod.POST)
+	public ModelAndView addNewBSCSubject(@ModelAttribute("subject") Subject s) {
+		System.out.println("Add new course");
+		db.createBSCSubject(s);
 		
 		return new ModelAndView("redirect:/subjects/sh");
 	}

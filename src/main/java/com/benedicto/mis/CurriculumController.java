@@ -66,7 +66,6 @@ public class CurriculumController {
 		ModelAndView model = new ModelAndView();
 		model.setViewName("curriculum");
 		model.addObject("curriculum", c);
-		model.addObject("curriculumForm", curriculumForm);
 		model.addObject("subjectsForm", subjects);
 		model.addObject("years", years);
 		model.addObject("sems", sems);
@@ -81,25 +80,14 @@ public class CurriculumController {
 		String [] years = {"", "1st Year","2nd Year", "3rd Year", "4th Year", "5th Year"};
 		String [] sems = {"", "1st Sem","2nd Sem", "Summer"};
 		
-//		SubjectsViewForm subjects = new SubjectsViewForm();
-//		subjects.setSubjects(db.getSubjects(""));
-//		
-//		Curriculum c = new Curriculum();
-//		c.setCurriculumID("");
-//		c.setCurriculumDesc("");
-//		c.setCourseID(courseID);
-//		
-//		CurriculumForm curriculumForm = new CurriculumForm();
-//		curriculumForm.setCurricSubjects(new ArrayList<CurriculumSubject>());
-//		curriculumForm.setCurriculum(c);
-//		
-//		System.out.println("Size of curriculum subjects: "+ curriculumForm.getCurricSubjects().size());
-//		
+		Curriculum c = new Curriculum();
+		c.setCurriculumID("");
+		c.setCurriculumDesc("");
+		
+		
 		ModelAndView model = new ModelAndView();
 		model.setViewName("curriculum");
-//		model.addObject("curriculum", c);
-//		model.addObject("curriculumForm", curriculumForm);
-//		model.addObject("subjectsForm", subjects);
+		model.addObject("curriculum", c);
 		model.addObject("years", years);
 		model.addObject("sems", sems);
 		model.addObject("saveType", "saveNew");
@@ -164,27 +152,21 @@ public class CurriculumController {
 		return builder.toString();
 	}
 	
-	@RequestMapping(value = "/saveNew", method = RequestMethod.POST)
-	@ResponseBody
-	public String saveNew(@RequestParam("curricDesc") String curricDesc, @RequestParam("curricYear") String curricYear,@ModelAttribute("curricForm") CurriculumForm cf, @ModelAttribute("curriculum") Curriculum c) {
+	@RequestMapping(value = "/saveNew/", method = RequestMethod.POST)
+	public ModelAndView saveNew( @ModelAttribute("curriculum") Curriculum c) {
 		System.out.println("The course ID is: " + c.getCourseID());
-		System.out.println("The number of subjects is: " + cf.getCurricSubjects().size());
-		System.out.println("Desc: " + curricDesc);
-		System.out.println("Year: " + curricYear);
+		System.out.println("Desc: " + c.getCurriculumDesc());
+		System.out.println("Year: " + c.getYearImplemented());
 		
-		c.setCurriculumDesc(curricDesc);
-		c.setYearImplemented(curricYear);
-		db.createCurriculum(c);
-		//cf.setCurriculum(db.getLatestCourseCurriculum(courseID));
+		int id = db.createCurriculum(c);
 		String courseID = c.getCourseID();
 		c = db.getLatestCourseCurriculum(courseID);
-		
-		for(CurriculumSubject cs: cf.getCurricSubjects()) {
-			db.saveCurriculumSubjects(c.getCurriculumID(),cs.getSubjectCode(), cs.getYear(), cs.getSem());
-		}	
+		db.updateCurricSubjects(Integer.parseInt(c.getCurriculumID()));
+//		for(CurriculumSubject cs: cf.getCurricSubjects()) {
+//			db.saveCurriculumSubjects(c.getCurriculumID(),cs.getSubjectCode(), cs.getYear(), cs.getSem());
+//		}	
 			
-		
-		return "Success";
+		return new ModelAndView("redirect:/mis/courses");
 	}
 	
 	@RequestMapping(value = "/saveNewTest", method = RequestMethod.POST)

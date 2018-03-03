@@ -61,14 +61,23 @@ public class StudentController {
 	public ModelAndView printAllStudents(@RequestParam("filter") String filter) {
 		Locale locale = new Locale("en_US");
 		logger.info("Welcome home! The client locale is {}.", locale);
-		List<StudentProfile> list = db.getAllStudents("","");
-		
 		SchoolYear sy = db.getActiveSchoolYear();
+	
+		//List<StudentProfile> list = db.getAllStudents("","");
+		List<StudentProfile> list = db.getEnrolledCollegeStudents(sy.getYear_start()+"-"+sy.getYear_end(), sy.getSemester());
+		list.addAll(db.getSHSEnrolledstudents(sy.getYear_start()+"-"+sy.getYear_end(), sy.getSemester()));
+		
+		List<Course> courses = db.getCollegeCourses("");
+		List<Strand> strands = db.getSHStrands("");
+		
 		String [] sems = {"", "1st Semester","2nd Semester", "Summer"};
 		
 		ModelAndView model = new ModelAndView();
 		model.setViewName("studentsAll");
 		model.addObject("students", list);
+		model.addObject("courses", courses);
+		model.addObject("strands", strands);
+		
 		model.addObject("schoolYear", sy.getYear_start()+"-"+sy.getYear_end()+" "+ sems[sy.getSemester()]);
 		
 		
@@ -197,8 +206,6 @@ public class StudentController {
 		List<Department> departments = db.getDepartments("");
 		String [] gradeLevels = {"", "Grade 1","Grade 2", "Grade 3", "Grade 4", "Grade 5", "Grade 6", "Grade 7", "Grade 8", "Grade 9", "Grade 10"};
 		
-		
-
 		ModelAndView model = new ModelAndView();
 		model.setViewName("bsc");
 		model.addObject("students", list);
@@ -211,21 +218,29 @@ public class StudentController {
 
 
 	@RequestMapping(value = "/spr/saveEdited", method = RequestMethod.POST)
-	public ModelAndView save(@ModelAttribute("sprForm") SPRForm spr, BindingResult result, @RequestParam("profile") String profile) {
+	public ModelAndView save(@ModelAttribute("sprForm") SPRForm spr, BindingResult result, @RequestParam("profileForm") String profile) {
 		logger.info("The student No is: {}.", spr.getPersonal().getStudentNo());
 		System.out.println("Profile Type: " + profile);
 		System.out.println("Student No from profile : " + spr.getProfile().getStudentNo());
+		
 		db.updateSPR(spr.getPersonal());
+		spr.getFbg().setStudentNo(spr.getPersonal().getStudentNo());
 		db.updateStudentFBG(spr.getFbg());
 		
 		
+		//if(profile.trim().equals("collegeProfile")) {
 		if(profile.trim().equals("collegeProfile")) {
+				
 			db.updateCollegeProfile(spr.getProfile());
 		}
 	
 		else if(profile.trim().equalsIgnoreCase("shProfile")) {
 			System.out.println("shProfile");
 			db.updateSHProfile(spr.getProfile());
+		}
+		else if(profile.trim().equalsIgnoreCase("basicProfile")) {
+			System.out.println("basicProfile");
+			
 		}
 		else {
 			System.out.println("Profile Type: " +profile+".");
@@ -257,6 +272,43 @@ public class StudentController {
 		String studentNo = String.valueOf(db.createSPR(spr.getPersonal()));
 		spr.getFbg().setStudentNo(studentNo);
 		db.createFBG(spr.getFbg());
+		
+		SchoolYear sy = db.getActiveSchoolYear();
+		Enrollment e = db.getCollegeEnrollmentBySY(studentNo, sy.getYear_start()+"-"+sy.getYear_end(), sy.getSemester());
+		
+		if(spr.getProfile().getStudentID()!="") {
+			System.out.println("StudentID: " + spr.getProfile().getStudentID());
+			spr.getProfile().setStudentNo(studentNo);
+			db.createCollegeProfile(spr.getProfile());
+			
+			if(e.getEnrollmentNo().equals("") && spr.getProfile().isEnrolled()) {
+				System.out.println("Student not enrolled for the current sem. Adding new enrollment. ");
+				db.addNewStudentEnrollment(studentNo, "2017-2018", 1 );
+			}
+		}
+		
+		if(spr.getProfilesh().getLRN()!="") {
+			spr.getProfilesh().setStudentNo(studentNo);
+			db.createSHProfile(spr.getProfilesh());
+			e = db.getSHEnrollmentBySY(studentNo,  sy.getYear_start()+"-"+sy.getYear_end(), sy.getSemester());
+			if(e.getEnrollmentNo().equals("") && spr.getProfilesh().isEnrolled()) {
+				System.out.println("Student not enrolled for the current sem. Adding new enrollment. ");
+				db.addNewStudentEnrollment(studentNo, "2017-2018", 1 );
+			}
+			
+		}
+		
+		if(spr.getProfilebsc().getLRN()!="") {
+			spr.getProfilebsc().setStudentNo(studentNo);
+			db.createBSCProfile(spr.getProfilebsc());
+			e = db.getSHEnrollmentBySY(studentNo,  sy.getYear_start()+"-"+sy.getYear_end(), sy.getSemester());
+			if(e.getEnrollmentNo().equals("") && spr.getProfilesh().isEnrolled()) {
+				System.out.println("Student not enrolled for the current sem. Adding new enrollment. ");
+				db.addNewStudentEnrollment(spr.getPersonal().getStudentNo(), "2017-2018", 1 );
+			}
+			
+		}
+		
 		return new ModelAndView("redirect:/students/student/"+ studentNo);
 	}
 
@@ -265,14 +317,31 @@ public class StudentController {
 	public ModelAndView sprFormNew() {
 		logger.info("sprForm");
 
+		List<Course> courses = db.getCollegeCourses("");
+		List<Strand> strands = db.getSHStrands("");
+		
+		List<Curriculum> clgcurrics = db.getCollegeCurriculums("");
+		List<Curriculum> shscurrics = db.getSHCurriculums("");
+		List<Curriculum> bsccurrics = db.getBSCCurriculums("");
+		
 		ModelAndView model = new ModelAndView();
 		SPRForm spr = new SPRForm();
 		spr.setPersonal(new StudentPersonal());
+		spr.setProfile(new StudentProfile());
+		spr.setProfilesh(new StudentProfile());
+		spr.setProfilebsc(new StudentProfile());
 		spr.setFbg(new StudentFBG());
 		
 		model.setViewName("newspr");
 		model.addObject("sprForm", spr);
 		model.addObject("saveType", "saveNew");
+		
+		model.addObject("courses", courses);
+		model.addObject("strands", strands);
+		model.addObject("clgcurrics", clgcurrics);
+		model.addObject("shscurrics", shscurrics);
+		model.addObject("bsccurrics", bsccurrics);
+		
 		return model;
 	}
 	
@@ -348,27 +417,9 @@ public class StudentController {
 		
 		List<Strand> strands = db.getSHStrands("");
 		List<Curriculum> shscurrics = db.getSHCurriculums("");
+		List<Curriculum> bsccurrics = db.getBSCCurriculums("");
+		
 		List<Curriculum> currics;
-		
-		
-		
-		StudentProfile profile = db.getCollegeProfileByNo(studentNo);
-		currics = clgcurrics;
-		profileForm="collegeProfile";
-		
-		
-		if(profile.getStudentID().equals("")) {
-			profile = db.getSHProfileByNo(studentNo);
-			profileForm="shProfile";
-			currics = shscurrics;
-			if(profile.getLRN().equals("")) {
-				profile = db.getBSCProfileByNo(studentNo);
-				profileForm="basicProfile";
-				
-			}
-		}
-			
-		
 		
 		if (!studentNo.equals("")) {
 			stud = db.getStudentByNo(studentNo);
@@ -380,19 +431,36 @@ public class StudentController {
 		SPRForm sprForm = new SPRForm();
 		sprForm.setPersonal(stud);
 		sprForm.setFbg(fbg);
-		sprForm.setProfile(profile);
+		//sprForm.setProfile(profile);
 		
+		
+		currics = clgcurrics;
+		profileForm="collegeProfile";
+		sprForm.setProfile(db.getCollegeProfileByNo(studentNo));
+		sprForm.setProfilesh( db.getSHProfileByNo(studentNo));
+		sprForm.setProfilebsc(db.getBSCProfileByNo(studentNo));
+	
+	
+		if(sprForm.getProfile().getStudentID().equals("")) {
+			profileForm ="shProfile";
+			if(sprForm.getProfilesh().getLRN().equals("")) {
+				profileForm="basicProfile";
+			}
+		}
+	
 		ModelAndView model = new ModelAndView();
-		model.setViewName("student");
+		model.setViewName("newspr");
 		model.addObject("sprForm", sprForm);
 		model.addObject("student", stud);
-		model.addObject("profile", profile);
 		model.addObject("profileForm", profileForm);
+		model.addObject("params", "/?profileForm="+profileForm);
 		model.addObject("courses", courses);
 		model.addObject("strands", strands);
-		model.addObject("currics", currics);
-		model.addObject("studentFBG", fbg);
+		model.addObject("clgcurrics", currics);
+		model.addObject("shscurrics", shscurrics);
+		model.addObject("bsccurrics", bsccurrics);
 		model.addObject("saveType", "saveEdited");
+		model.addObject("studentFBG", fbg);
 		return model;
 	}
 	
@@ -605,10 +673,10 @@ public class StudentController {
 		db.deleteSPR(id);
 		return new ModelAndView("redirect: /index");
 	}
-
-	@ModelAttribute("schoolYear")
-	public String getInitializeMyObject() {
-		return "2017-2018";
-	}
+//
+//	@ModelAttribute("schoolYear")
+//	public String getInitializeMyObject() {
+//		return "2017-2018";
+//	}
 
 }

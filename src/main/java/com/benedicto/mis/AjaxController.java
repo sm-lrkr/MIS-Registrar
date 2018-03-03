@@ -242,5 +242,13 @@ public class AjaxController {
 		return new ModelAndView("includes/classesview", "schedules", schedules);
 	}
 	
-	
+
+	@RequestMapping(value="/saveSubjectToCurric", method = RequestMethod.POST)
+	@ResponseBody
+	public String saveSubjectsToCurric(@RequestParam("subjectCode") String subjectCode,
+			 								@RequestParam("yr") int yr,@RequestParam("sem") int sem) {
+		System.out.println("wahahahah");
+		dao.saveCurriculumSubjects("0", subjectCode, yr, sem);
+		return "success";
+	}
 }

@@ -60,7 +60,7 @@
 			<h2 style="display: inline-block; margin-top: 0px;" >${strand.strandDesc}</h2>  
 			
 			<div class="floatright">
-				<a href="${pageContext.request.contextPath}/curriculums/addCurriculum/${courseID}" class="linkButton">New Curriculum</a>
+				<a href="${pageContext.request.contextPath}/curriculums/addCurriculum/sh/${strand.strandCode}" class="linkButton">New Curriculum</a>
 			</div>
 		</div>
 		

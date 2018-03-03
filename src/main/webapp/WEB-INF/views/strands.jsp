@@ -58,7 +58,7 @@
 		<div>	
 			<h1 style="display: inline-block; margin-top: 0px;">Strands</h1>  
 			<div class="floatright">
-						<a href="sprForm" class="linkButton">New Strand</a>    
+						
 			</div>
 			
 			<div style="width: 1000px; " >

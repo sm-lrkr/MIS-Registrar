@@ -64,6 +64,33 @@
 			$("#editSPR :input").addClass("disabledInput");
 			$("#save").hide();
 			$("#cancel").hide();
+
+	
+			$("#dbTypes").on('input', function(){
+				var type = $("#dbTypes").val();
+				if(type == "clg"){
+					$(".clg").show();
+					$(".shs").hide();
+					$(".bsc").hide();
+						
+				}
+				if(type == "shs"){
+					$(".clg").hide();
+					$(".shs").show();
+					$(".bsc").hide();
+					
+				}
+				if(type == "bsc"){
+					$(".clg").hide();
+					$(".shs").hide();
+					$(".bsc").show();
+				}
+			});		
+		
+			$(".clg").show();
+			$(".shs").hide();
+			$(".bsc").hide();
+	
 			
 		});
 	</script>

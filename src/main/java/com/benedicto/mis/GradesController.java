@@ -74,7 +74,7 @@ public class GradesController {
 			float average = 0;
 			SemGrades semGrades = new SemGrades();
 			semGrades.setEnrollment(e);
-			semGrades.setGrades(db.getSHGrades(e.getEnrollmentNo()));
+			semGrades.setGrades(db.getSHGradesFromCurrentSem(e.getEnrollmentNo()));
 			for(SubjectGrades sg: semGrades.getGrades()) {
 				sg.setBackupGrade(sg.getFinalGrade());
 				average += sg.getFinalGrade();
@@ -110,7 +110,7 @@ public class GradesController {
 			float average = 0;
 			SemGrades semGrades = new SemGrades();
 			semGrades.setEnrollment(e);
-			semGrades.setGrades(db.getCollegeGrades(e.getEnrollmentNo()));
+			semGrades.setGrades(db.getCollegeGradesForCurrentSem(e.getEnrollmentNo()));
 			for(SubjectGrades sg: semGrades.getGrades()) {
 				sg.setBackupGrade(sg.getFinalGrade());
 				average += sg.getFinalGrade();
@@ -176,5 +176,74 @@ public class GradesController {
 		return new ModelAndView("redirect:/grades/shs/?studentNo="+ studentNo );
 	}
 	
+	@RequestMapping(value = "/clg/tor/", method = RequestMethod.GET)
+	public ModelAndView saveStudentGrades(@RequestParam("studentNo") String studentNo) {
+		logger.info("Update Grades");
+		List<SubjectGrades> credited = db.getAllCreditedCollegeGrades(studentNo);
+		StudentProfile student = db.getCollegeProfileByNo(studentNo);
+		Collections.sort(credited);
+	
+		System.out.println("Credited Grades: "+ credited.size());
+		String [] sems = {"", "1st Sem","2nd Sem", "Summer"};
+		
+		
+		ModelAndView model = new ModelAndView();
+		model.setViewName("transcriptForm");
+		model.addObject("student", student);
+		model.addObject("dept", "clg");
+		model.addObject("sems", sems);
+		
+		model.addObject("credited", credited);
+		model.addObject("subject", new Subject());
+		
+		
+		return model;
+			
+	}
+
+	@RequestMapping(value = "/clg/tor/print/", method = RequestMethod.GET)
+	public ModelAndView printStudentTOR(@RequestParam("studentNo") String studentNo) {
+		logger.info("Update Grades");
+		List<SubjectGrades> credited = db.getAllCreditedCollegeGrades(studentNo);
+		StudentProfile student = db.getCollegeProfileByNo(studentNo);
+		Collections.sort(credited);
+	
+		SemGradesForm allSemGrades = new SemGradesForm();
+		List<SemGrades> list = new ArrayList<SemGrades>();
+		List<Enrollment> enrollments = db.getCollegeEnrollmentsByStudentNo(studentNo);
+		
+		System.out.println("Enrollments count: " + enrollments.size());
+		for(Enrollment e: enrollments) {
+			float average = 0;
+			SemGrades semGrades = new SemGrades();
+			semGrades.setEnrollment(e);
+			semGrades.setGrades(db.getCollegeGradesForCurrentSem(e.getEnrollmentNo()));
+			for(SubjectGrades sg: semGrades.getGrades()) {
+				sg.setBackupGrade(sg.getFinalGrade());
+				average += sg.getFinalGrade();
+			}
+			average /= semGrades.getGrades().size();
+			semGrades.setAverage(average);
+			list.add(semGrades);
+		}
+		allSemGrades.setSemGrades(list);
+	
+		System.out.println("Credited Grades: "+ credited.size());
+		String [] sems = {"", "1st Sem","2nd Sem", "Summer"};
+		
+	
+		ModelAndView model = new ModelAndView();
+		model.setViewName("printTOR");
+		model.addObject("student", student);
+		model.addObject("dept", "clg");
+		model.addObject("sems", sems);
+		
+		model.addObject("credited", credited);
+		model.addObject("subject", new Subject());
+		model.addObject("allSemGrades", allSemGrades);
+		
+		return model;
+			
+	}
 
 }

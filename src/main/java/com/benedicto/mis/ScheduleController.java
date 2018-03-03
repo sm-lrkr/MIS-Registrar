@@ -168,25 +168,56 @@ public class ScheduleController {
 		Locale locale = new Locale("en_US");
 		logger.info("Welcome home! The client locale is {}.", locale);
 		
-		Enrollment e = db.getCollegeEnrollmentBySY(studentNo, "2017-2018", 1);
+		SchoolYear sy = db.getActiveSchoolYear();
+		Enrollment e = db.getCollegeEnrollmentBySY(studentNo, sy.getYear_start()+"-"+sy.getYear_end(), sy.getSemester());
 		
 		StudentPersonal stud = db.getStudentByNo(studentNo);
 		StudentProfile studCAB = db.getCollegeProfileByNo(studentNo);
-		System.out.println("Curriculum ID : " + studCAB.getCurriculumID());
- 
-		SchedulesViewForm schedules = new SchedulesViewForm();
+		System.out.println("Curriculum ID : " + studCAB.getCurriculumID()+" StudentNo: "+ studCAB.getStudentNo());
+			
+		
+		
+		
+		SchedulesViewForm offered = new SchedulesViewForm();
 		SchedulesViewForm enlisted = new SchedulesViewForm();
-		schedules.setSchedules(db.getCollegeSchedulesByStudentCurric("", studCAB.getCurriculumID(), studentNo));
+		offered.setSchedules(new ArrayList<Schedule>());
 		enlisted.setSchedules(db.getCollegeEnlistedSubjects(studentNo, e.getEnrollmentNo()));
+		List<Schedule> semscheds = db.getCollegeSchedulesByCurric(studCAB.getCurriculumID(),sy.getYear_start()+"-"+sy.getYear_end() , sy.getSemester());
+	
+		for(Schedule S:  semscheds) {
+			boolean isEnlisted = false;
+			
+			for(Schedule E: enlisted.getSchedules()) {
+				System.out.println("S ID: " + S.getScheduleID()+", E ID: "+ E.getScheduleID());
+				if(E.getScheduleID().equals(S.getScheduleID())) {
+					isEnlisted = true;
+					break;
+				}
+			}
+			if(!isEnlisted) {
+				offered.getSchedules().add(S);
+			}
+		}
+	
+		//offered.setSchedules(db.getCollegeSchedulesByStudentCurric("", studCAB.getCurriculumID(), studentNo));
 
-		System.out.println("Offered: " + schedules.getSchedules().size());
+		List<Schedule> temp = new ArrayList<Schedule>();
+		for(Schedule S: offered.getSchedules()) {
+			List<StudentProfile> _enlisted = db.getCollegeStudentsBySchedule(S.getScheduleID());
+			if(_enlisted.size()<40) {
+				temp.add(S);
+			}
+		}
+		//offered.setSchedules(offered.getSchedules());
+		
+		System.out.println("Offered: " + offered.getSchedules().size());
 		System.out.println("Enlisted: " + enlisted.getSchedules().size());
 
 		ModelAndView model = new ModelAndView();
 		model.setViewName("enlistment");
 		model.addObject("student", stud);
 		model.addObject("ID", studCAB.getStudentID());
-		model.addObject("offered", schedules);
+		model.addObject("offered", offered);
 		model.addObject("enlisted", enlisted);
 		return model;
 	}
@@ -229,20 +260,40 @@ public class ScheduleController {
 		DateFormat dateFormat = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT, locale);
 		String formattedDate = dateFormat.format(date);
 		
-		logger.info("Welcome home! The client locale is {}.", locale);
+		
+		TimeTrapper trapper = new TimeTrapper();
 		SchoolYear sy = db.getActiveSchoolYear();
 		Enrollment enrollment = db.getCollegeEnrollmentBySY(studentNo, sy.getYear_start()+"-"+sy.getYear_end(), sy.getSemester());
+		List<Schedule> enlisted = db.getCollegeEnlistedSubjects(studentNo, enrollment.getEnrollmentNo());
 		
+		boolean hasConflictsLec = false;
+		boolean hasConflictsLab = false;
 		
-		for (Schedule S : s.getSchedules()) {
-			if (S.isChecked()) {
-				db.enlistCollegeStudentSchedules(enrollment, S.getScheduleID());
-				//db.enlistStudentSubjects(studentID, S.getLabScheduleID());
-				db.addCollegeSubjectGrading(S, enrollment.getEnrollmentNo(), formattedDate);
+		for(Schedule S: s.getSchedules()) {
+			if(S.isChecked()) {
+				System.out.println(S.getScheduleID()+"-"+S.getSubjectCode()+"-");
+				
+				hasConflictsLec = trapper.timeConflict(enlisted, S.getLecTimeStart(), S.getLecTimeEnd(), S.getLecDays(), S.getLecRoom());
+				if(S.getLabTimeStart() != null)
+					hasConflictsLab = trapper.timeConflict(enlisted, S.getLabTimeStart(), S.getLabTimeEnd(), S.getLabDays(), S.getLabRoom());
+				
+				if(hasConflictsLec || hasConflictsLab) {
+					System.out.println(S.getScheduleID()+"-"+S.getSubjectCode()+"is conflict with one of the checked schedules ");
+					break;
+				}	
 			}
 		}
-
-		return new ModelAndView("redirect:/schedules/enlistment/college/" + studentNo);
+	
+		if(!hasConflictsLec && !hasConflictsLab) {
+			for (Schedule S : s.getSchedules()) {
+				if (S.isChecked()) {
+					db.enlistCollegeStudentSchedules(enrollment, S.getScheduleID());
+					db.addCollegeSubjectGrading(S, enrollment.getEnrollmentNo(), formattedDate);
+					
+				}
+			}
+		}
+		return new ModelAndView("redirect:/schedules/enlistment/college/?studentNo=" + studentNo);
 	}
 	
 	
@@ -258,7 +309,7 @@ public class ScheduleController {
 				db.removeCollegeSubjectsGrading(enrollment, S.getSubjectCode());
 			}
 		}
-		return new ModelAndView("redirect:/schedules/enlistment/college/" + studentNo);
+		return new ModelAndView("redirect:/schedules/enlistment/college/?studentNo=" + studentNo);
 	}
 
 

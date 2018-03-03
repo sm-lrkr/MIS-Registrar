@@ -3,11 +3,11 @@
 
 
 <form:form id="enlistedTable" action="${pageContext.request.contextPath}/schedules/withdraw/college/${student.studentNo}" method="post" modelAttribute="enlisted">
-		<table id="enlisted"  class="display compact">  
+		<table id="enlisted"  class="listTable">  
 			<thead>
 				<tr><th></th><th>Subject</th><th>Section</th><th>Units</th><th>Time Start</th><th>Time End</th><th>Days</th><th>Room</th></tr>  
 		   	</thead>
-		   	
+		   
 		   	<tbody>
 			   	<c:forEach var="sched" items="${enlisted.schedules}" varStatus="status">   
 				   	<tr>  

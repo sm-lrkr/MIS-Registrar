@@ -1,6 +1,6 @@
 package com.benedicto.mis.beans.containers;
 
-public class SubjectGrades extends Subject {
+public class SubjectGrades extends Subject implements Comparable<SubjectGrades>{
 	private float prelimGrade;
 	private float midtermGrade;
 	private float finalGrade;
@@ -9,6 +9,9 @@ public class SubjectGrades extends Subject {
 	private String dateModified;
 	private String studentNo;
 	private String enrollmentNo;
+	private String schoolYear;
+	private int semester;
+	
 	/**
 	 * @return the prelimGrade
 	 */
@@ -104,6 +107,44 @@ public class SubjectGrades extends Subject {
 	 */
 	public void setBackupGrade(float backupGrade) {
 		this.backupGrade = backupGrade;
+	}
+	/**
+	 * @return the schoolYear
+	 */
+	public String getSchoolYear() {
+		return schoolYear;
+	}
+	/**
+	 * @param schoolYear the schoolYear to set
+	 */
+	public void setSchoolYear(String schoolYear) {
+		this.schoolYear = schoolYear;
+	}
+	
+	
+	
+	
+	/**
+	 * @return the semester
+	 */
+	public int getSemester() {
+		return semester;
+	}
+	/**
+	 * @param semester the semester to set
+	 */
+	public void setSemester(int semester) {
+		this.semester = semester;
+	}
+	@Override
+	public int compareTo(SubjectGrades s) {
+		if(s.getSchoolYear()==this.getSchoolYear()) {
+			if(s.getSemester()==this.getSemester()) {
+				return this.getSubjectCode().compareTo(s.getSubjectCode());
+			}
+			return s.getSemester() - this.getSemester();
+		}	
+		return s.getSchoolYear().compareTo(this.getSchoolYear());
 	}
 	
 	

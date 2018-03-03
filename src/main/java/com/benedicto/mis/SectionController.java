@@ -34,7 +34,7 @@ import com.benedicto.mis.beans.formbackers.StudentsViewForm;
  * Handles requests for the application home page.
  */
 @Controller
-@RequestMapping("/sections")
+@RequestMapping("sections")
 public class SectionController {
 
 	private static final Logger logger = LoggerFactory.getLogger(SectionController.class);

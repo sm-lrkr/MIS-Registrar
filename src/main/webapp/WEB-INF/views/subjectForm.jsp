@@ -127,29 +127,32 @@
 						</tr>		         
 					</c:if>
 					
-					<tr>
-						<td><form:label path="preRequisites" > Pre Requisites</form:label></td>
-						<td><form:input id="preReq"   path="preRequisites" /></td>
-					</tr>
+				
+					<c:if test = "${subjectType ne 'bsc'}">
+						<tr>
+							<td><form:label path="preRequisites" > Pre Requisites</form:label></td>
+							<td><form:input id="preReq"   path="preRequisites" /></td>
+						</tr>
+					</c:if>
+	
+					<c:if test = "${subjectType == 'sh'}">
+						<tr>
+							<td><form:label path="type" >Type</form:label></td>
+							<td><form:select  path="type" id="dbTypes" value="${subject.type}" >
+									<form:option value="CORE" label="CORE"/>
+									 <form:option value="APPLIED" label="APPLIED"/>
+									 <form:option value="SPECIALIZATION" label="SPECIALIZATION"/>
+									
+								</form:select>
+							</td>
+						</tr>
+					</c:if>
 					
 				</table>
 				<br><br>
 			</form:form>
 		
 			<div style="float: right;">
-					<select id="db_Option" >
-						<c:choose>
-							<c:when test = "${subjectType == 'clg'}">
-								<option value="clg" label="College" selected="selected" /> 
-								<option value="sh" label="Senior High" /> 
-							</c:when>
-						
-							<c:when test = "${subjectType == 'shs'}">
-								<option value="clg" label="College"  /> 
-								<option value="sh" label="Senior High" selected="selected"/> 
-							</c:when>
-						</c:choose>
-					</select>
 					<input id="submit" type="button" class="linkButton" value="Save" >	
 			</div>
 		</div>

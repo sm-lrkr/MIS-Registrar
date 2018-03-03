@@ -4,26 +4,37 @@
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form" %>
 
 
-
-<div>
-
-<p>III. Basic-Ed Profile</p>
-		
-	<form:form method="POST" action="/mis/${saveType}" modelAttribute="profile" id="form2">
+<div class="bsc">
+<h4>Basic Profile</h4>
 		<div>
 			<table cellpadding="5" class="formTable">
 				<tr>
 					<td>
-						<form:input path="empty" hidden="true"/>
+						<form:input path="profilebsc.empty" hidden="true"/>
 					</td>
 				</tr>
 				
 				<tr>
+					<td><form:label path="profilesh.curriculumID">Curriculum</form:label></td>
 					<td>
-						<form:label path="studentStatus">Student Status</form:label>
+						<form:select  path="profilesh.curriculumID" id="dbCurriculum" value="${sprForm.profilesh.curriculumID}">
+							<form:option value="" label=""/>
+							<c:forEach var="crc" items="${shscurrics}">   
+								<form:option value="${crc.curriculumID}" label="${crc.curriculumDesc}" /> 
+						   	</c:forEach>  
+						</form:select>
+					</td>			
+					<td></td>
+					<td></td>
+					
+				</tr>
+			
+				<tr>
+					<td>
+						<form:label path="profilebsc.studentStatus">Student Status</form:label>
 					</td>
 					<td>
-						<form:select path="studentStatus">
+						<form:select path="profilebsc.studentStatus">
 							<form:option value="regular" label="Regular" />
 							<form:option value="irregular" label="Irregular" />
 							<form:option value="withdrawn" label="Withdrawn" />
@@ -34,10 +45,10 @@
 					</td>
 					
 					<td>
-						<form:label path="enrolled">Enrollment Status</form:label>
+						<form:label path="profilebsc.enrolled">Enrollment Status</form:label>
 					</td>
 					<td>
-						<form:select path="enrolled">
+						<form:select path="profilebsc.enrolled">
 							<option value="false" label="Not Enrolled" />
 							<option value="true" label="Enrolled" />
 						</form:select>
@@ -101,17 +112,14 @@
 						<label>Type of Application:</label>
 					</td>
 					<td>
-						<select>
-							<option value="NONE" label="" />
+						<form:select path="profilebsc.applicationType">
 							<option value="freshman" label="Freshman" />
 							<option value="transferee" label="Transferee" />
-						</select>
+						</form:select>
 					</td>			
 				</tr>
 				
 			</table>
 		</div>
 		<hr>
-	</form:form>
-	<input type="button" value="Submit" id="submit">
 </div>

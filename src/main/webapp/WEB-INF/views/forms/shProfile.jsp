@@ -5,34 +5,23 @@
 
 
 
-<div>
+<div class="shs">
+<h4>Senior High Profile</h4>
 
-<h3>Senior High Profile</h3>
-		
-	<form:form method="POST" action="${pageContext.request.contextPath}/students/spr/newProfile/shs/save/${student.studentNo}" modelAttribute="profile" id="profileForm">
-		<div>
+	<div>
 			<table cellpadding="5" class="formTable">
 				<tr>
 					<td>
-						<form:input path="empty" hidden="true"/>
+						<form:input path="profilesh.empty" hidden="true"/>
 					</td>
 				</tr>
 				
-				<tr >
-					<td>
-						<form:label path="LRN" >LRN </form:label>	
-					</td>
-					<td>
-						<form:input path="LRN" />
-					</td>
-					<td></td>
-					<td></td>
-				</tr>
+	
 				<tr>
 					
-					<td><form:label path="strandCode" >Strand</form:label></td>
+					<td><form:label path="profilesh.strandCode" >Strand</form:label></td>
 					<td colspan="3">
-						<form:select path="strandCode" id="db_Strands" value="${shsProfile.strandCode} ">
+						<form:select path="profilesh.strandCode" id="db_Strands" value="${shsProfile.strandCode} ">
 							<form:option value="" label=""/>
 							<c:forEach var="strand" items="${strands}">   
 								<form:option value="${strand.strandCode}" label="${strand.strandDesc} - ${strand.major}" /> 
@@ -41,9 +30,9 @@
 					</td>			
 				</tr>
 				<tr>
-					<td><form:label path="curriculumID">Curriculum</form:label></td>
+					<td><form:label path="profilesh.curriculumID">Curriculum</form:label></td>
 					<td>
-						<form:select  path="curriculumID" id="dbCurriculum" value="${shsProfile.curriculumID}">
+						<form:select  path="profilesh.curriculumID" id="dbCurriculum" value="${sprForm.profilesh.curriculumID}">
 							<form:option value="" label=""/>
 							<c:forEach var="crc" items="${shscurrics}">   
 								<form:option value="${crc.curriculumID}" label="${crc.curriculumDesc}" /> 
@@ -57,10 +46,10 @@
 				
 				<tr>
 					<td>
-						<form:label path="studentStatus">Student Status</form:label>
+						<form:label path="profilesh.studentStatus">Student Status</form:label>
 					</td>
 					<td>
-						<form:select path="studentStatus">
+						<form:select path="profilesh.studentStatus">
 							<form:option value="regular" label="Regular" />
 							<form:option value="irregular" label="Irregular" />
 							<form:option value="withdrawn" label="Withdrawn" />
@@ -71,10 +60,10 @@
 					</td>
 			
 					<td>
-						<form:label path="enrolled">Enrollment Status</form:label>
+						<form:label path="profilesh.enrolled">Enrollment Status</form:label>
 					</td>
 					<td>
-						<form:select path="enrolled" value="${profile.enrolled}">
+						<form:select path="profilesh.enrolled" value="${profile.enrolled}">
 							<option value="false" label="Not Enrolled" />
 							<option value="true" label="Enrolled" />
 						</form:select>
@@ -96,7 +85,7 @@
 						<label>Shift Strand:</label>
 					</td>
 					<td>
-							<form:select path="shiftCourse" value="${profile.shiftStrand}">
+							<form:select path="profilesh.shiftCourse" value="${profile.shiftStrand}">
 							<form:option value="" label=""/>
 							<c:forEach var="strand" items="${strands}">   
 								<form:option value="${strand.strandCode}" label="${strand.strandDesc}" /> 
@@ -111,7 +100,7 @@
 						<label>Semester Entry:</label>
 					</td>
 					<td>
-						<form:select path="semEntry">
+						<form:select path="profilesh.semEntry">
 							<option value="1" label="1st Semester" />
 							<option value="2" label="2nd Semester" />
 							<option value="3" label="Summer" /><option value="true" label="Enrolled" />
@@ -122,7 +111,7 @@
 						<label>Year of Entry:</label>
 					</td>
 					<td>
-						<form:select path="yearEntry">
+						<form:select path="profilesh.yearEntry">
 							<option value="2017" label="2017" />
 							<option value="2016" label="2016" />
 							<option value="2015" label="2015" />
@@ -154,7 +143,7 @@
 						<label>Year of Graduation:</label>
 					</td>
 					<td>
-						<form:select path="graduationYear">
+						<form:select path="profilesh.graduationYear">
 							<option value="2018" label="2018" />
 							<option value="2017" label="2017" />
 							<option value="2016" label="2016" />
@@ -181,7 +170,7 @@
 						<label>Type of Application:</label>
 					</td>
 					<td>
-						<form:select path="applicationType">
+						<form:select path="profilesh.applicationType">
 							<option value="freshman" label="Freshman" />
 							<option value="transferee" label="Transferee" />
 						</form:select>
@@ -190,8 +179,5 @@
 				
 			</table>
 		</div>
-	</form:form>
-	<div style="margin-top: 20px; float:right;">
-		<input type="button" class="linkButton"id="submit" value="Submit" >
-	</div>
+
 </div>

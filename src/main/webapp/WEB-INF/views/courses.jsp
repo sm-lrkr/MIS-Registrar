@@ -77,9 +77,9 @@
 	
 		<jsp:include page="includes/main-left.jsp" />
 		<div>	
-			<h1 style="display: inline-block; margin-top: 0px;">Courses</h1>  
+			<h1 style="display: inline-block; margin-top: 0px;">Programs - College</h1>  
 			<div class="floatright">
-						<a href="sprForm" class="linkButton">New Course</a>    
+						<a href="${pageContext.request.contextPath}/courses/newCourse" class="linkButton">New Program</a>    
 			</div>
 			
 			<div style="width: 1000px; " >

@@ -30,6 +30,7 @@ public class StudentProfile {
 	private String yearEntry;
 	private String graduationYear;
 	private String applicationType;
+	private String profileType;
 	private String empty;
 	private boolean checked;
 	/**
@@ -271,6 +272,18 @@ public class StudentProfile {
 	 */
 	public void setChecked(boolean checked) {
 		this.checked = checked;
+	}
+	/**
+	 * @return the profileType
+	 */
+	public String getProfileType() {
+		return profileType;
+	}
+	/**
+	 * @param profileType the profileType to set
+	 */
+	public void setProfileType(String profileType) {
+		this.profileType = profileType;
 	}
 	
 	

@@ -144,6 +144,7 @@
 				});
 			});
 			
+			
 			$("#btnSubmit").click(function(){
 				var searchurl = encodeURI('${pageContext.request.contextPath}/curriculums/saveNew/?curricDesc='+$("#tb_Desc").val()+'&curricYear='+ $("#tb_Year").val());
 					
@@ -179,6 +180,8 @@
 				});
 			});
 			
+			
+			
 			$("#btnCreate").click(function(){
 				var searchurl = encodeURI('${pageContext.request.contextPath}/curriculums/saveNewTest/');
 				
@@ -192,6 +195,8 @@
 				curriculum["curriculumDesc"] = $("#curriculumDesc").val();
 				curriculum["yearImplemented"] = $("#yearImplemented").val();
 				alert(JSON.stringify(curriculum));			
+				
+				
 				
 				alert("Getting all subjects");			
 				$.each(rowData, function(i, row){
@@ -257,7 +262,58 @@
 					       	alert(msg);
 					    }
 					
+					
+					
 				});
+			});
+		
+			$("#btnCreate1").click(function(){
+				var rowData = $("table[id*='semTable']").DataTable().rows().data().toArray();	
+				var ctx = "${pageContext.request.contextPath}";
+				alert(rowData);
+			
+				$.each(rowData, function(index, row){
+					alert(row[1]);
+				var subject = row[1];
+				var yr = row[7];
+				var sem = row[8];
+				
+					var searchurl = ctx+'/ajax/saveSubjectToCurric/?subjectCode='+subject+'&yr='+yr+'&sem='+sem;
+			
+			        $.ajax({
+						url: searchurl,
+						type: "POST" ,
+						success: function(result){
+							alert("Success");
+						},
+						error: function (jqXHR, exception) {
+						        var msg = '';
+						        if (jqXHR.status === 0) {
+						            msg = 'Not connect.\n Verify Network.';
+						        } else if (jqXHR.status == 404) {
+						            msg = 'Requested page not found. [404]';
+						        } else if (jqXHR.status == 500) {
+						            msg = 'Internal Server Error [500].';
+						        } else if (exception === 'parsererror') {
+						            msg = 'Requested JSON parse failed.';
+						        } else if (exception === 'timeout') {
+						            msg = 'Time out error.';
+						        } else if (exception === 'abort') {
+						            msg = 'Ajax request aborted.';
+						        } else {
+						            msg = 'Uncaught Error.\n' + jqXHR.responseText;
+						        }
+						       	alert(msg);
+						    }
+						
+						
+						
+					});
+				
+					
+				});
+				
+				$("#curricTable").submit();
 			});
 			
 			    $("#subb").click(function() {
@@ -267,6 +323,8 @@
 			        	$('#subjects').html(result);
 			          });
 			      });
+			    
+			    
 			    
 			    var table1 = $('#subjectsList').DataTable( {
 				 	"sDom" : 'frt',
@@ -293,7 +351,7 @@
 			        ],
 			        'order': [[1, 'asc']]
 			 	} );
-			    
+			  
 			    var table2 = $("table[id*='semTable']").DataTable( {
 				 	"sDom" : 'rt',
 			        "select": {
@@ -301,7 +359,7 @@
 			        },
 			        "columnDefs": [
 			        	{	
-			        		"targets": [3,4],  
+			        		"targets": [3,4], 
 			        	},
 			        	{	"targets": 0,  
 			        		"checkboxes": {
@@ -377,14 +435,13 @@
 			<div style="width: 100%;">
 				<div style="position: fixed;" >
 					<h3>Subjects List</h3>
-					<div id="subjects" style="width:  650px; height: 300px;">
+					<div id="subjects" style="width:  550px; height: 300px;">
 						<jsp:include page="includes/subjectschecklist.jsp" />
 					</div>
-					
+				
 					<div id="horizontalAlign" style="width: 600px;">
 						<div>
-							<input id="enlist" type="button" value="Add Checked"/>
-							<input id="test" type="button" value="Add to Curric"/>
+							<input id="test" type="button" value="Add Checked"/>
 							
 						</div>
 	
@@ -408,32 +465,30 @@
 								   
 						
 						<div>
-							<input id="remove" type="button" value="Remove checked"/>
 							<input id="testremove" type="button" value="Remove"/>
 						</div>
 					</div>
 				</div>
-				
+			
 				<div style=" float: right; padding-right: 50px;" >
 					<div id="form" style="height: 200px; ">
-						<form:form id="curricTable" action="" method="post" modelAttribute="curriculum">
+						<form:form id="curricTable" action="${pageContext.request.contextPath}/curriculums/saveNew/" method="post" modelAttribute="curriculum" >
 							<%-- First field binding doesnt work on submit to controller. courseID binds successfully and curriculumDesc doesnt --%>
-							<form:label path="courseID"> ${curriculum.courseID}</form:label>
-							<input type="hidden" id="courseID" value="${curriculu.courseID}"/>
 							<div style="display: flex; flex-direction: row;">
 								<div><p style="display: inline; padding-right:20px;" >Description: </p></div>
 								<div>
-									<input type="text" name="curriculumDesc" id="curriculumDesc"/>
+									<form:input path="curriculumDesc" />
+									<form:input type="hidden" path="courseID" />
+									
 								</div>
 							</div>
-							
+						
 							<div style="display: flex; flex-direction: row; padding-top:15px;">
-								<div><p style="display: inline; padding-right:15px;" >School Year: </p></div>
+								<div><p style="display: inline; padding-right:15px;" >Year: </p></div>
 								<div>
-									<input type="text" name="yearImplemented" id="yearImplemented" />
+									<form:input  type="text" path="yearImplemented"  />
 									<div  style="padding-top: 15px;"><input type="button" id="btnSubmit" value="Create"/></div>
-									<div  style="padding-top: 15px;"><input type="button" id="btnCreate" value="Create New"/></div>
-																				
+									<div  style="padding-top: 15px;"><input type="button" id="btnCreate1" value="Create New"/></div>
 								</div>
 							</div>
 						</form:form>

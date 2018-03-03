@@ -14,23 +14,23 @@
 					   	<form:checkbox path="schedules[${status.index}].checked" />
 				   	</td>
 				   	<td> ${sched.subjectCode}</td>  
-				   	<td> ${sched.section}</td>  
-				   	<td> ${sched.lecUnits}</td>  
-				   	<td> ${sched.lecTimeStart}</td>  
-				   	<td> ${sched.lecTimeEnd}</td>  
-				   	<td> ${sched.lecDays}</td>  
-				   	<td> ${sched.lecRoom}</td>  
+				   	<td>${sched.section}</td>  
+				   	<td>${sched.lecUnits}</td>  
+				   	<td><form:input type="hidden" path="schedules[${status.index}].lecTimeStart"/> ${sched.lecTimeStart}</td>  
+				   	<td><form:input type="hidden" path="schedules[${status.index}].lecTimeEnd"/> ${sched.lecTimeEnd}</td>  
+				   	<td><form:input type="hidden" path="schedules[${status.index}].lecDays"/> ${sched.lecDays}</td>  
+				   	<td><form:input type="hidden" path="schedules[${status.index}].lecRoom"/> ${sched.lecRoom}</td>  
 			   	</tr>
 				<c:if test="${sched.labDays ne '' }">			   
 				   	<tr>  
 				   		<td></td>
-						<td> ${sched.subjectCode}-LAB</td>  
-						<td> ${sched.section}</td>  
-						<td> ${sched.labUnits}</td>  
-						<td> ${sched.labTimeStart}</td>  
-						<td> ${sched.labTimeEnd}</td>  
-						<td> ${sched.labDays}</td>  
-						<td> ${sched.labRoom}</td>  
+						<td>${sched.subjectCode}-LAB</td>  
+						<td>${sched.section}</td>  
+						<td>${sched.labUnits}</td>  
+						<td><form:input type="hidden" path="schedules[${status.index}].lecRoom"/> ${sched.labTimeStart}</td>  
+						<td><form:input type="hidden" path="schedules[${status.index}].lecRoom"/> ${sched.labTimeEnd}</td>  
+						<td><form:input type="hidden" path="schedules[${status.index}].lecRoom"/> ${sched.labDays}</td>  
+						<td><form:input type="hidden" path="schedules[${status.index}].lecRoom"/> ${sched.labRoom}</td>  
 					</tr>    
 				</c:if>
 			</c:forEach>  

@@ -159,6 +159,7 @@
 		<div style="width: 8.5in; text-align:center" >
 			<div style=" display: inline-block;" >
 				<div style="text-align:center;" class="content">
+					<img src="${pageContext.request.contextPath}/resources/images/bclogo.png" />
 					<p id="header" style="display: inline-block; fon-size:14px; font-weight:bold;">${courseDesc}</p>
 				</div>
 				
