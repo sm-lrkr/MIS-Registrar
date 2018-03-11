@@ -70,7 +70,7 @@
 			        	{"title" : "Last Name"},
 			        	{"title" : "First Name"},
 			        	{"title" : "Middle Name"},
-			       
+			        	{"title" : "Status"}
 			        ]
 			 } );
 			 

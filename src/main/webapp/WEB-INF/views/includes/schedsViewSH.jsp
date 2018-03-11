@@ -2,12 +2,13 @@
 	
 		<table id="schedsview" class="display compact listTable">  
 			<thead>
-				<tr><th>Subject Code</th><th>Time Start</th><th>Time End</th><th>Room</th><th>Days</th><th>Teacher</th></tr>  
+				<tr><th>Schedule ID</th><th>Subject Code</th><th>Time Start</th><th>Time End</th><th>Room</th><th>Days</th><th>Teacher</th></tr>  
 		   	</thead>
-	
+
 			<tbody>
 				<c:forEach var="schedule" items="${schedulesForm.schedules}">   
 				   	<tr>  
+				   		<td>${schedule.scheduleID}</td>  
 					   	<td>${schedule.subjectCode}</td>  
 					   	<td>${schedule.lecTimeStart}</td>  
 					   	<td>${schedule.lecTimeEnd}</td>

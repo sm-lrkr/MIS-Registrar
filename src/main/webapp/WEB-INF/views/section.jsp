@@ -154,7 +154,7 @@
 	
 			<div style="width:1000px; margin-top:30px; ">
 				<div  style="margin-bottom: 20px;" >
-					<a href="${pageContext.request.contextPath}/sections/sh/enlistment/?sectionID=${section.sectionID}" class="linkButton"> Enlistment</a>    
+					<a href="${pageContext.request.contextPath}/sections/${sectionType}/enlistment/?sectionID=${section.sectionID}" class="linkButton"> Enlistment</a>    
 				</div>
 		
 		

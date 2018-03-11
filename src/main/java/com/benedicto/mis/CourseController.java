@@ -32,7 +32,7 @@ import com.benedicto.mis.beans.formbackers.StrandSubjects;
  * Handles requests for the application home page.
  */
 @Controller
-@RequestMapping("/courses")
+@RequestMapping("courses")
 public class CourseController {
 	
 	private static final Logger logger = LoggerFactory.getLogger(CourseController.class);
@@ -65,12 +65,24 @@ public class CourseController {
 		return model;
 	}
 	
-	@RequestMapping(value = "/newCourse", method = RequestMethod.GET)
-	public ModelAndView newCollegeSubject() {
-		System.out.println("Add new subject");
-		List<Subject> list = db.getCollegeSubjects("");
+	@RequestMapping(value = "/newCourse/", method = RequestMethod.GET)
+	public ModelAndView newCollegeCourse(@RequestParam("courseID") String courseID) {
+		System.out.println("Add new course");
 		List<Department> depts = db.getDepartments("");
-		System.out.println("List size: "+ list.size());
+		Course c = db.getCourseByID(courseID);
+		
+		ModelAndView model = new ModelAndView();
+		model.setViewName("courseForm");
+		model.addObject("course", c);
+		model.addObject("departments",	 depts);
+		
+		return model;
+	}
+	
+	@RequestMapping(value = "/editCourse", method = RequestMethod.GET)
+	public ModelAndView editCollegeCourse() {
+		System.out.println("Add new course");
+		List<Department> depts = db.getDepartments("");
 		
 		ModelAndView model = new ModelAndView();
 		model.setViewName("courseForm");
@@ -79,6 +91,21 @@ public class CourseController {
 		
 		return model;
 	}
+	
+	@RequestMapping(value = "/newStrand", method = RequestMethod.GET)
+	public ModelAndView newSHStrand() {
+		System.out.println("Add new subject");
+		List<Department> depts = db.getDepartments("");
+		
+		ModelAndView model = new ModelAndView();
+		model.setViewName("strandForm");
+		model.addObject("strand", new Strand());
+		model.addObject("departments",	 depts);
+		
+		return model;
+	}
+	
+	
 
 	@RequestMapping(value = "/strands", method = RequestMethod.GET)
 	public ModelAndView strands() {
@@ -94,8 +121,8 @@ public class CourseController {
 		return model;
 	}
 	
-	@RequestMapping(value = "/{courseID}", method = RequestMethod.GET)
-	public ModelAndView curriculum(@PathVariable("courseID") String courseID) {
+	@RequestMapping(value = "/{courseID}/", method = RequestMethod.GET)
+	public ModelAndView curriculum(@PathVariable("courseID") String courseID, @RequestParam("curricID") String curricID) {
 		Locale locale = new Locale("en_US");
 
 		logger.info("Welcome home! The client locale is {}.", locale);
@@ -108,7 +135,11 @@ public class CourseController {
 		Course course = db.getCourseByID(courseID);
 		Curriculum c = new Curriculum();
 		if(currics.size() >0 ) {
-			c = currics.get(0);
+			if(curricID.equals(""))
+				c = currics.get(0);
+			else
+				c = db.getCollegeCurriculumByID(curricID);
+			
 			for (int i = 1; i <= 5; ++i) {
 				subjects.put(i + "-1", db.getCurriculumSubjects(c.getCurriculumID(), i, 1));
 				subjects.put(i + "-2", db.getCurriculumSubjects(c.getCurriculumID(), i, 2));
@@ -116,7 +147,6 @@ public class CourseController {
 			}
 		}
 
-		
 		
 		ModelAndView model = new ModelAndView();
 		model.setViewName("course");
@@ -130,6 +160,74 @@ public class CourseController {
 
 		return model;
 	}
+	
+	@RequestMapping(value = "/strands/{strandCode}/", method = RequestMethod.GET)
+	public ModelAndView strand(@PathVariable("strandCode") String strandCode, @RequestParam("curricID") String curricID ) {
+		
+		List<Curriculum> currics = db.getSHCurriculumsByStrand(strandCode);
+		StrandSubjects strandSubjects = new StrandSubjects();
+		
+		String [] years = {"", "Grade 11","Grade 12"};
+		String [] sems = {"", "1st Sem","2nd Sem", "Summer"};
+		
+		Curriculum c = new Curriculum();
+		Strand strand = db.getSHStrandByCode(strandCode);
+		if(curricID.equals(""))
+			c = currics.get(0);
+		else
+			c = db.getSHCurriculumByID(curricID);
+		
+		System.out.println("Curriculum id: " + c.getCurriculumID());
+		
+		strandSubjects.setSubjects(db.getStrandSubjects(c.getCurriculumID()));
+		System.out.println("Subjects from strand: " + strandSubjects.getSubjects().size());
+		Collections.sort(strandSubjects.getSubjects());
+		
+		
+		ModelAndView model = new ModelAndView();
+		model.setViewName("strand");
+		
+		model.addObject("years", years);
+		model.addObject("sems", sems);
+		
+		model.addObject("strand", strand);
+		model.addObject("strandSubjects", strandSubjects);
+		model.addObject("curriculums", currics);
+		
+		return model;
+	}
+	
+	@RequestMapping(value = "/bsc", method = RequestMethod.GET)
+	public ModelAndView bscCurric(@RequestParam("curricID") String curricID ) {
+		
+		List<Curriculum> currics = db.getBSCCurriculums("");
+		StrandSubjects strandSubjects = new StrandSubjects();
+		
+		Curriculum c = new Curriculum();
+		
+		if(currics.size() > 0) {
+			if(curricID.equals(""))
+				c = currics.get(0);
+			else
+				c = db.getBSCCurriculumByID(curricID);
+			
+			System.out.println("Curriculum id: " + c.getCurriculumID());
+			
+			strandSubjects.setSubjects(db.getBSCCurricSubjects(c.getCurriculumID()));
+			System.out.println("Subjects from strand: " + strandSubjects.getSubjects().size());
+			Collections.sort(strandSubjects.getSubjects());
+		}
+		
+		ModelAndView model = new ModelAndView();
+		model.setViewName("bscCurriculum");
+		
+		model.addObject("strandSubjects", strandSubjects);
+		model.addObject("curriculums", currics);
+		
+		return model;
+	}
+	
+
 	
 	@RequestMapping(value = "/printCurriculum/", method = RequestMethod.GET)
 	public ModelAndView curriculumPrint(@RequestParam("curricID") String curricID) {
@@ -160,42 +258,6 @@ public class CourseController {
 		return model;
 	}
 	
-	
-	
-	@RequestMapping(value = "/strands/{strandCode}", method = RequestMethod.GET)
-	public ModelAndView strand(@PathVariable("strandCode") String strandCode) {
-		
-		List<Curriculum> currics = db.getSHCurriculumsByStrand(strandCode);
-		StrandSubjects strandSubjects = new StrandSubjects();
-		
-		String [] years = {"", "Grade 11","Grade 12"};
-		String [] sems = {"", "1st Sem","2nd Sem", "Summer"};
-		
-		Strand strand = db.getSHStrandByCode(strandCode);
-		Curriculum c = currics.get(0);
-
-		
-		strandSubjects.setSubjects(db.getStrandSubjects(c.getCurriculumID()));
-		Collections.sort(strandSubjects.getSubjects());
-		
-		System.out.println("Subjects from strand: " + strandSubjects.getSubjects().size());
-		
-		ModelAndView model = new ModelAndView();
-		model.setViewName("strand");
-		
-		model.addObject("years", years);
-		model.addObject("sems", sems);
-		
-		model.addObject("strand", strand);
-		model.addObject("strandSubjects", strandSubjects);
-		model.addObject("curriculums", currics);
-		
-		return model;
-	}
-	
-
-	
-
 
 	@RequestMapping(value = "/saveNewCourse", method = RequestMethod.POST)
 	public ModelAndView addNewCourse(@ModelAttribute("course") Course c) {
@@ -203,8 +265,11 @@ public class CourseController {
 		db.createCourse(c);
 		return new ModelAndView("redirect:/courses/");
 	}
-
 	
-
-	
+	@RequestMapping(value = "/saveNewStrand", method = RequestMethod.POST)
+	public ModelAndView addNewStrand(@ModelAttribute("strand") Strand s) {
+		System.out.println("Add new strand");
+		db.createStrand(s);
+		return new ModelAndView("redirect:/strands/");
+	}
 }

@@ -51,11 +51,12 @@ public class CurriculumController {
 		
 		SubjectsViewForm subjects = new SubjectsViewForm();
 		subjects.setSubjects(db.getCollegeSubjects(""));
-		
+		Course course = db.getCourseByID(courseID);
 		Curriculum c = new Curriculum();
-		c.setCurriculumID("");
+		c.setCurriculumID(course.getCourseDesc());
 		c.setCurriculumDesc("");
 		c.setCourseID(courseID);
+		
 		
 		CurriculumForm curriculumForm = new CurriculumForm();
 		curriculumForm.setCurricSubjects(new ArrayList<CurriculumSubject>());
@@ -66,6 +67,9 @@ public class CurriculumController {
 		ModelAndView model = new ModelAndView();
 		model.setViewName("curriculum");
 		model.addObject("curriculum", c);
+		model.addObject("courseID", courseID);
+		model.addObject("courseDesc", course.getCourseDesc());
+		
 		model.addObject("subjectsForm", subjects);
 		model.addObject("years", years);
 		model.addObject("sems", sems);
@@ -80,16 +84,65 @@ public class CurriculumController {
 		String [] years = {"", "1st Year","2nd Year", "3rd Year", "4th Year", "5th Year"};
 		String [] sems = {"", "1st Sem","2nd Sem", "Summer"};
 		
+		SubjectsViewForm subjects = new SubjectsViewForm();
+		subjects.setSubjects(db.getSHSubjects(""));
+		
 		Curriculum c = new Curriculum();
 		c.setCurriculumID("");
 		c.setCurriculumDesc("");
+		c.setStrandCode(strandCode);
 		
+		CurriculumForm curriculumForm = new CurriculumForm();
+		curriculumForm.setCurricSubjects(new ArrayList<CurriculumSubject>());
+		curriculumForm.setCurriculum(c);
 		
+		System.out.println("CourseID: "+ strandCode);
+	
 		ModelAndView model = new ModelAndView();
-		model.setViewName("curriculum");
+		model.setViewName("curriculumsh");
 		model.addObject("curriculum", c);
+		model.addObject("strandCode", strandCode);
+		
+		model.addObject("subjectsForm", subjects);
 		model.addObject("years", years);
 		model.addObject("sems", sems);
+		model.addObject("saveType", "saveNew");
+		return model;
+	}
+	
+	@RequestMapping(value = "/addCurriculum/bsc")
+	public ModelAndView addBSCCurriculum() {
+		logger.info("addCurriculum");
+		
+//		String [] years = {"", "1st Year","2nd Year", "3rd Year", "4th Year", "5th Year"};
+//		String [] jyears = {"", "Grade 7","Grade 8", "Grade 9", "Grade 10"};
+//		String [] eyears = {"", "Kinder", "Grade 1","Grade 2", "Grade 3", "Grade 4", "Grade 5", "Grade 6" };
+//		
+//		String [] sems = {"", "1st Sem","2nd Sem", "Summer"};
+		
+		SubjectsViewForm subjects = new SubjectsViewForm();
+		subjects.setSubjects(db.getBSCSubjects(""));
+		
+	
+		Curriculum c = new Curriculum();
+		c.setCurriculumID("");
+		c.setCurriculumDesc("");
+		//c.setStrandCode(strandCode);
+		
+		CurriculumForm curriculumForm = new CurriculumForm();
+		curriculumForm.setCurricSubjects(new ArrayList<CurriculumSubject>());
+		curriculumForm.setCurriculum(c);
+		
+		//System.out.println("CourseID: "+ strandCode);
+	
+		ModelAndView model = new ModelAndView();
+		model.setViewName("curriculumbsc");
+		model.addObject("curriculum", c);
+		//model.addObject("strandCode", strandCode);
+		
+		model.addObject("subjectsForm", subjects);
+//		model.addObject("years", years);
+//		model.addObject("sems", sems);
 		model.addObject("saveType", "saveNew");
 		return model;
 	}
@@ -161,12 +214,41 @@ public class CurriculumController {
 		int id = db.createCurriculum(c);
 		String courseID = c.getCourseID();
 		c = db.getLatestCourseCurriculum(courseID);
-		db.updateCurricSubjects(Integer.parseInt(c.getCurriculumID()));
+	//	db.updateCurricSubjects(Integer.parseInt(c.getCurriculumID()));
+		
+		db.updateCurricSubjects(id);
 //		for(CurriculumSubject cs: cf.getCurricSubjects()) {
 //			db.saveCurriculumSubjects(c.getCurriculumID(),cs.getSubjectCode(), cs.getYear(), cs.getSem());
 //		}	
-			
-		return new ModelAndView("redirect:/mis/courses");
+		return new ModelAndView("redirect:/courses/");
+	}
+	
+	@RequestMapping(value = "/sh/saveNew/", method = RequestMethod.POST)
+	public ModelAndView saveNewSH( @ModelAttribute("curriculum") Curriculum c) {
+		System.out.println("The course ID is: " + c.getCourseID());
+		System.out.println("Desc: " + c.getCurriculumDesc());
+		System.out.println("Year: " + c.getYearImplemented());
+		
+		//int id = db.createCurriculum(c);
+		int id = db.createSHCurriculum(c);
+		String strandCode = c.getStrandCode();
+		c = db.getLatestStrandCurriculum(strandCode);
+		db.updateSHCurricSubjects(Integer.parseInt(c.getCurriculumID()));
+		
+		return new ModelAndView("redirect:/courses/strands");
+	}
+	
+	@RequestMapping(value = "/bsc/saveNew/", method = RequestMethod.POST)
+	public ModelAndView saveNewBSC( @ModelAttribute("curriculum") Curriculum c) {
+		System.out.println("The course ID is: " + c.getCourseID());
+		System.out.println("Desc: " + c.getCurriculumDesc());
+		System.out.println("Year: " + c.getYearImplemented());
+		
+		//int id = db.createCurriculum(c);
+		int id = db.createBSCCurriculum(c);
+		
+		db.updateBSCCurricSubjects(id);
+		return new ModelAndView("redirect:/courses/bsc/?curricID="+id);
 	}
 	
 	@RequestMapping(value = "/saveNewTest", method = RequestMethod.POST)

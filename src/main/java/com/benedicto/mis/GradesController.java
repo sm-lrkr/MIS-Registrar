@@ -204,6 +204,7 @@ public class GradesController {
 	@RequestMapping(value = "/clg/tor/print/", method = RequestMethod.GET)
 	public ModelAndView printStudentTOR(@RequestParam("studentNo") String studentNo) {
 		logger.info("Update Grades");
+		System.out.println("Student No: "+ studentNo);
 		List<SubjectGrades> credited = db.getAllCreditedCollegeGrades(studentNo);
 		StudentProfile student = db.getCollegeProfileByNo(studentNo);
 		Collections.sort(credited);
@@ -224,14 +225,15 @@ public class GradesController {
 			}
 			average /= semGrades.getGrades().size();
 			semGrades.setAverage(average);
+			Collections.sort(semGrades.getGrades());
 			list.add(semGrades);
 		}
 		allSemGrades.setSemGrades(list);
 	
 		System.out.println("Credited Grades: "+ credited.size());
-		String [] sems = {"", "1st Sem","2nd Sem", "Summer"};
-		
-	
+		String [] sems = {"", "1st Semester","2nd Semester", "Summer"};
+		System.out.println("Student Name: " + student.getFirstName());
+
 		ModelAndView model = new ModelAndView();
 		model.setViewName("printTOR");
 		model.addObject("student", student);

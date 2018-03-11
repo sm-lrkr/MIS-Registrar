@@ -270,10 +270,10 @@
 			$("#btnCreate1").click(function(){
 				var rowData = $("table[id*='semTable']").DataTable().rows().data().toArray();	
 				var ctx = "${pageContext.request.contextPath}";
-				alert(rowData);
+				//alert(rowData);
 			
 				$.each(rowData, function(index, row){
-					alert(row[1]);
+					//alert(row[1]);
 				var subject = row[1];
 				var yr = row[7];
 				var sem = row[8];
@@ -284,7 +284,7 @@
 						url: searchurl,
 						type: "POST" ,
 						success: function(result){
-							alert("Success");
+							//alert("Success");
 						},
 						error: function (jqXHR, exception) {
 						        var msg = '';
@@ -304,10 +304,7 @@
 						            msg = 'Uncaught Error.\n' + jqXHR.responseText;
 						        }
 						       	alert(msg);
-						    }
-						
-						
-						
+						    }			
 					});
 				
 					
@@ -325,11 +322,12 @@
 			      });
 			    
 			    
-			    
+			  
 			    var table1 = $('#subjectsList').DataTable( {
 				 	"sDom" : 'frt',
 			        "scrollY":        "250px",
 			        "scrollCollapse": false,
+			        "paginate": false,
 			        "select": {
 			        	style : 'multi'
 			        },
@@ -358,9 +356,7 @@
 			        	style : 'multi'
 			        },
 			        "columnDefs": [
-			        	{	
-			        		"targets": [3,4], 
-			        	},
+			        
 			        	{	"targets": 0,  
 			        		"checkboxes": {
 			        			"selectRow": true	
@@ -374,7 +370,7 @@
 			        ],
 			        'order': [[1, 'asc']]
 			 	} );
-			    
+			   
 				$("#test").click(function(){
 					alert("Pressed");
 					var rowData = table1.rows( ".selected").data().toArray();	
@@ -424,11 +420,10 @@
 	<jsp:include page="includes/header.jsp" />
 	<div id="main">
 		<div style="width: 100%;">
-			
 			<div>
 					<h1 style="display: inline-block; margin-top: 0px;">New Curriculum</h1>
 					<div class="floatright">
-						<a href="${pageContext.request.contextPath}/" class="linkButton">Back to Main</a>    
+						<a href="${pageContext.request.contextPath}/" class="linkButton">Back to Main - ${courseID}</a>    
 			    	</div>
 		  	</div>
 		
@@ -440,10 +435,7 @@
 					</div>
 				
 					<div id="horizontalAlign" style="width: 600px;">
-						<div>
-							<input id="test" type="button" value="Add Checked"/>
-							
-						</div>
+						
 	
 						<div>
 							<select id="Year" >
@@ -463,6 +455,10 @@
 							 </select>
 						</div>
 								   
+						<div>
+							<input id="test" type="button" value="Add Checked"/>
+							
+						</div>		   
 						
 						<div>
 							<input id="testremove" type="button" value="Remove"/>
@@ -477,23 +473,22 @@
 							<div style="display: flex; flex-direction: row;">
 								<div><p style="display: inline; padding-right:20px;" >Description: </p></div>
 								<div>
-									<form:input path="curriculumDesc" />
+									<form:input path="curriculumDesc"  />
 									<form:input type="hidden" path="courseID" />
-									
+								
 								</div>
 							</div>
 						
 							<div style="display: flex; flex-direction: row; padding-top:15px;">
-								<div><p style="display: inline; padding-right:15px;" >Year: </p></div>
+								<div><p style="display: inline; padding-right:15px;" >SY Implemented: </p></div>
 								<div>
 									<form:input  type="text" path="yearImplemented"  />
-									<div  style="padding-top: 15px;"><input type="button" id="btnSubmit" value="Create"/></div>
 									<div  style="padding-top: 15px;"><input type="button" id="btnCreate1" value="Create New"/></div>
 								</div>
 							</div>
 						</form:form>
 					</div>
-					
+				
 					<h3>Curriculum Subjects</h3>
 					<hr>
 					<div id="curricSubjects" style="width:650px;">

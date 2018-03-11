@@ -66,12 +66,10 @@
 			<h1 style="display: inline-block; margin-top: 0px;">Subjects</h1>  
 			<div class="floatright">
 					<a href="${pageContext.request.contextPath}/subjects/newSubject/clg" ><span class="linkButton">Add New Subject</span></a>    
-					<button id="print" class="linkButton">Print</button>   
 			</div>
-			
+		
 			<div style="padding-bottom: 5px;">
-					<a id="all" class="linkButton" href="${pageContext.request.contextPath}/subjects/"> ALL </a> 
-			    	<a id="clg" class="linkButton" href="${pageContext.request.contextPath}/subjects/clg" > COLLEGE </a> 
+					<a id="clg" class="linkButton" href="${pageContext.request.contextPath}/subjects/clg" > COLLEGE </a> 
 			    	<a id="shs" class="linkButton" href="${pageContext.request.contextPath}/subjects/sh"> SENIOR H </a> 
 			    	<a id="bsc" class="linkButton" href="${pageContext.request.contextPath}/subjects/bsc"> BASIC </a> 
 			</div>

@@ -49,6 +49,12 @@
 				var curricID = $("#curricSelect").val();
                 window.open( encodeURI(ctx+"/courses/printCurriculum/?curricID="+curricID),'_blank');
 			});
+			
+			$("#curricSelect").on('input', function(){
+				var courseID = '${courseID}';
+				var curricID = $("#curricSelect").val();
+				window.location.href = "${pageContext.request.contextPath}/courses/" + courseID +"/?curricID="+curricID;
+			});
 		});
 	</script>
 	
@@ -78,6 +84,8 @@
 				
 				<div class="floatright">
 					<a href="${pageContext.request.contextPath}/curriculums/addCurriculum/${courseID}" class="linkButton">New Curriculum</a>
+					<a href="${pageContext.request.contextPath}/courses/editCourse/${courseID}" class="linkButton">Edit</a>
+									
 					<button type="button" id="print" class="linkButton" >Print</button> 
 				</div>
 			</div>

@@ -24,8 +24,8 @@
 					<form:input class="shs" path="profilesh.LRN"/>
 					<form:input class="bsc" path="profilebsc.LRN"/>
 				</td>
-				
-				<td><form:errors path="personal.lastName"></form:errors> </td>
+		
+				<td></td>
 				<td> <c:if test="${saveType=='saveNew'}">
 						<select id="dbTypes">
 							<option value="clg" label="College"/>

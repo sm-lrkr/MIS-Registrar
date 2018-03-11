@@ -171,7 +171,7 @@ public class SubjectController {
 	
 	@RequestMapping(value = "/newSubject/clg/save", method = RequestMethod.POST)
 	public ModelAndView addNewCollegeSubject(@ModelAttribute("subject") Subject s) {
-		System.out.println("Add new course");
+		System.out.println("Add new clg subject ");
 		db.createCollegeSubject(s);
 		return new ModelAndView("redirect:/subjects/clg");
 	}
@@ -180,7 +180,7 @@ public class SubjectController {
 
 	@RequestMapping(value = "/newSubject/sh/save", method = RequestMethod.POST)
 	public ModelAndView addNewSHSubject(@ModelAttribute("subject") Subject s) {
-		System.out.println("Add new course");
+		System.out.println("Add new sh subject");
 		db.createSHSubject(s);
 		
 		return new ModelAndView("redirect:/subjects/sh");
@@ -188,7 +188,7 @@ public class SubjectController {
 	
 	@RequestMapping(value = "/newSubject/bsc/save", method = RequestMethod.POST)
 	public ModelAndView addNewBSCSubject(@ModelAttribute("subject") Subject s) {
-		System.out.println("Add new course");
+		System.out.println("Add new bsc subject");
 		db.createBSCSubject(s);
 		
 		return new ModelAndView("redirect:/subjects/sh");

@@ -63,12 +63,13 @@
 			departmentSelect($('#deptSelect'), $('#courseSelect'), ctx);
 			courseSelect($('#search'), $('#courseSelect'), $('#studview'), ctx);
 			searchStudents($('#search'), $('#searchBtn'), $('#courseSelect'), $('#studview'), ctx);	
+	
 		
-			
 			 var table = $('#studview').DataTable( {
 				 	"dom" : 'rt',
+				 	"paginate" : false,
 			        "columnDefs": [
-			        	{"targets": [0] , "visible" : false},
+			        	{"targets": [0,1] , "visible" : false},
 			        	{"targets": [0,2,3,4,5], "searchable": false}
 			        ]
 			 } );

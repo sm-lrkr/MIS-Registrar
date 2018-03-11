@@ -5,7 +5,7 @@ public class Curriculum {
 	private String curriculumDesc;
 	private String courseID;
 	private String yearImplemented;
-	
+	private String strandCode;
 	
 	public String getCurriculumID() {
 		return curriculumID;
@@ -31,5 +31,18 @@ public class Curriculum {
 	public void setYearImplemented(String yearImplemented) {
 		this.yearImplemented = yearImplemented;
 	}
+	/**
+	 * @return the strandCode
+	 */
+	public String getStrandCode() {
+		return strandCode;
+	}
+	/**
+	 * @param strandCode the strandCode to set
+	 */
+	public void setStrandCode(String strandCode) {
+		this.strandCode = strandCode;
+	}
+	
 	
 }

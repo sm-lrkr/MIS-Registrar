@@ -65,7 +65,7 @@ public class StudentController {
 	
 		//List<StudentProfile> list = db.getAllStudents("","");
 		List<StudentProfile> list = db.getEnrolledCollegeStudents(sy.getYear_start()+"-"+sy.getYear_end(), sy.getSemester());
-		list.addAll(db.getSHSEnrolledstudents(sy.getYear_start()+"-"+sy.getYear_end(), sy.getSemester()));
+		list.addAll(db.getEnrolledSHstudents(sy.getYear_start()+"-"+sy.getYear_end(), sy.getSemester()));
 		
 		List<Course> courses = db.getCollegeCourses("");
 		List<Strand> strands = db.getSHStrands("");
@@ -227,41 +227,74 @@ public class StudentController {
 		spr.getFbg().setStudentNo(spr.getPersonal().getStudentNo());
 		db.updateStudentFBG(spr.getFbg());
 		
-		
+		System.out.println(profile);
 		//if(profile.trim().equals("collegeProfile")) {
-		if(profile.trim().equals("collegeProfile")) {
-				
+		
+		if(profile.equals("collegeProfile")) {
+			System.out.println(profile);
 			db.updateCollegeProfile(spr.getProfile());
 		}
-	
 		else if(profile.trim().equalsIgnoreCase("shProfile")) {
-			System.out.println("shProfile");
-			db.updateSHProfile(spr.getProfile());
+			
+			db.updateSHProfile(spr.getProfilesh());
 		}
 		else if(profile.trim().equalsIgnoreCase("basicProfile")) {
 			System.out.println("basicProfile");
-			
+			db.updateBSCProfile(spr.getProfilebsc());
 		}
 		else {
 			System.out.println("Profile Type: " +profile+".");
-			
 		}
 		
-		if(spr.getProfile().isChecked()) {
+		
+		if(spr.getProfile().isEnrolled()) {
 			System.out.println("Enrollment Status is true");
 			
 			SchoolYear sy = db.getActiveSchoolYear();
 			Enrollment e = db.getCollegeEnrollmentBySY(spr.getPersonal().getStudentNo(), sy.getYear_start()+"-"+sy.getYear_end(), sy.getSemester());
-			
 			if(e.getEnrollmentNo().equals("")) {
 				System.out.println("Student not enrolled for the current sem. Adding new enrollment. ");
-				db.addNewStudentEnrollment(spr.getPersonal().getStudentNo(), "2017-2018", 1 );
+				db.addNewStudentEnrollment(spr.getPersonal().getStudentNo(), sy.getYear_start()+"-"+sy.getYear_end(), sy.getSemester() );
 			}
 		}
 		else {
 			System.out.println("Student not enrolled.");
 		}
 		
+		if(spr.getProfilesh().isEnrolled()) {
+			System.out.println("Enrollment Status is true");
+			
+			SchoolYear sy = db.getActiveSchoolYear();
+			Enrollment e = db.getSHEnrollmentBySY(spr.getPersonal().getStudentNo(), sy.getYear_start()+"-"+sy.getYear_end(), sy.getSemester());
+			if(e.getEnrollmentNo().equals("")) {
+				System.out.println("Student not enrolled for the current sem. Adding new enrollment. ");
+				e.setStudentNo(spr.getPersonal().getStudentNo());
+				e.setSchoolYear(sy.getYear_start()+"-"+sy.getYear_end());
+				e.setSemester(sy.getSemester());
+				db.addNewSHEnrollment(e);
+			}
+		}
+		else {
+			System.out.println("Student not enrolled.");
+		}
+	
+		if(spr.getProfilebsc().isEnrolled()) {
+			System.out.println("Enrollment Status is true");
+			
+			SchoolYear sy = db.getActiveSchoolYear();
+			Enrollment e = db.getBSCEnrollmentBySY(spr.getPersonal().getStudentNo(), sy.getYear_start()+"-"+sy.getYear_end(), sy.getSemester());
+			if(e.getEnrollmentNo().equals("")) {
+				System.out.println("Student not enrolled for the current sem. Adding new enrollment. ");
+				e.setStudentNo(spr.getPersonal().getStudentNo());
+				e.setSchoolYear(sy.getYear_start()+"-"+sy.getYear_end());
+				e.setSemester(sy.getSemester());
+				db.addNewBSCEnrollment(e);
+			}
+		}
+		else {
+			System.out.println("Student not enrolled.");
+		}
+	
 		return new ModelAndView("redirect:/students/spr/info/"+ spr.getPersonal().getStudentNo());
 	}
 
@@ -269,9 +302,13 @@ public class StudentController {
 	public ModelAndView saveNew(@ModelAttribute("sprForm") @Valid SPRForm spr, BindingResult result) {
 		logger.info("The student Name is: {}.", spr.getPersonal().getFirstName());
 		System.out.println("asdfasf");
+		
+		//StudentProfile sp = db.getCollegeProfileByID(studentID);
+		
 		String studentNo = String.valueOf(db.createSPR(spr.getPersonal()));
 		spr.getFbg().setStudentNo(studentNo);
 		db.createFBG(spr.getFbg());
+		//db.createBorrowerProfile(studentNo);
 		
 		SchoolYear sy = db.getActiveSchoolYear();
 		Enrollment e = db.getCollegeEnrollmentBySY(studentNo, sy.getYear_start()+"-"+sy.getYear_end(), sy.getSemester());
@@ -281,32 +318,46 @@ public class StudentController {
 			spr.getProfile().setStudentNo(studentNo);
 			db.createCollegeProfile(spr.getProfile());
 			
+			
 			if(e.getEnrollmentNo().equals("") && spr.getProfile().isEnrolled()) {
 				System.out.println("Student not enrolled for the current sem. Adding new enrollment. ");
-				db.addNewStudentEnrollment(studentNo, "2017-2018", 1 );
+				e.setStudentNo(studentNo);
+				
+				db.addNewStudentEnrollment(studentNo,  sy.getYear_start()+"-"+sy.getYear_end(), sy.getSemester() );
 			}
 		}
 		
 		if(spr.getProfilesh().getLRN()!="") {
 			spr.getProfilesh().setStudentNo(studentNo);
+			String id = spr.getProfilesh().getCurriculumID();
+			id = id.replace(",", "");
+			spr.getProfilesh().setCurriculumID(id);
 			db.createSHProfile(spr.getProfilesh());
 			e = db.getSHEnrollmentBySY(studentNo,  sy.getYear_start()+"-"+sy.getYear_end(), sy.getSemester());
 			if(e.getEnrollmentNo().equals("") && spr.getProfilesh().isEnrolled()) {
 				System.out.println("Student not enrolled for the current sem. Adding new enrollment. ");
-				db.addNewStudentEnrollment(studentNo, "2017-2018", 1 );
+				e.setSchoolYear(sy.getYear_start()+"-"+sy.getYear_end());
+				e.setSemester(sy.getSemester());
+				e.setStrandCode(spr.getProfilesh().getStrandCode());
+				//db.addNewStudentEnrollment(studentNo,  sy.getYear_start()+"-"+sy.getYear_end(), sy.getSemester() );
+				e.setStudentNo(studentNo);
+				db.addNewSHEnrollment(e);
 			}
-			
-		}
 		
+		}
+		 
 		if(spr.getProfilebsc().getLRN()!="") {
 			spr.getProfilebsc().setStudentNo(studentNo);
 			db.createBSCProfile(spr.getProfilebsc());
 			e = db.getSHEnrollmentBySY(studentNo,  sy.getYear_start()+"-"+sy.getYear_end(), sy.getSemester());
 			if(e.getEnrollmentNo().equals("") && spr.getProfilesh().isEnrolled()) {
+				e.setStudentNo(studentNo);
+				e.setSchoolYear(sy.getYear_start()+"-"+sy.getYear_end());
+				e.setSemester(sy.getSemester());
+				
 				System.out.println("Student not enrolled for the current sem. Adding new enrollment. ");
-				db.addNewStudentEnrollment(spr.getPersonal().getStudentNo(), "2017-2018", 1 );
+				db.addNewBSCEnrollment(e );
 			}
-			
 		}
 		
 		return new ModelAndView("redirect:/students/student/"+ studentNo);
@@ -323,6 +374,11 @@ public class StudentController {
 		List<Curriculum> clgcurrics = db.getCollegeCurriculums("");
 		List<Curriculum> shscurrics = db.getSHCurriculums("");
 		List<Curriculum> bsccurrics = db.getBSCCurriculums("");
+		
+		for(Curriculum C: shscurrics) {
+			System.out.println("Curriculum ID: "+ C.getCurriculumID());
+		}
+	
 		
 		ModelAndView model = new ModelAndView();
 		SPRForm spr = new SPRForm();
@@ -341,6 +397,7 @@ public class StudentController {
 		model.addObject("clgcurrics", clgcurrics);
 		model.addObject("shscurrics", shscurrics);
 		model.addObject("bsccurrics", bsccurrics);
+		model.addObject("title", "New Student");
 		
 		return model;
 	}
@@ -427,6 +484,8 @@ public class StudentController {
 		}	
 
 		System.out.println("Student No.: "+ stud.getStudentNo());
+		System.out.println("Father's Name.: "+ fbg.getF_Name());
+		
 		
 		SPRForm sprForm = new SPRForm();
 		sprForm.setPersonal(stud);
@@ -439,7 +498,7 @@ public class StudentController {
 		sprForm.setProfile(db.getCollegeProfileByNo(studentNo));
 		sprForm.setProfilesh( db.getSHProfileByNo(studentNo));
 		sprForm.setProfilebsc(db.getBSCProfileByNo(studentNo));
-	
+		
 	
 		if(sprForm.getProfile().getStudentID().equals("")) {
 			profileForm ="shProfile";
@@ -447,6 +506,8 @@ public class StudentController {
 				profileForm="basicProfile";
 			}
 		}
+		
+		System.out.println("College year entry: " + sprForm.getProfile().getYearEntry());
 	
 		ModelAndView model = new ModelAndView();
 		model.setViewName("newspr");
@@ -461,6 +522,8 @@ public class StudentController {
 		model.addObject("bsccurrics", bsccurrics);
 		model.addObject("saveType", "saveEdited");
 		model.addObject("studentFBG", fbg);
+		model.addObject("title", "SPR");
+		
 		return model;
 	}
 	

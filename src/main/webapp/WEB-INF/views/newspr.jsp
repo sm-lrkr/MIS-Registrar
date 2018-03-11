@@ -24,6 +24,11 @@
 	
 	<script type = "text/javascript">
 		$(document).ready(function(){
+			$("#dbCurriculum").on('change', function(){
+				alert($("#dbCurriculum").val());
+			});
+		
+	
 			$("#db_Course").on('change', function(){
 				var ctx = "${pageContext.request.contextPath}";
 				var searchurl = encodeURI(ctx+'/ajax/selectValueChanged/?param='+$("#db_Course").val());
@@ -42,30 +47,92 @@
 				});
 			});
 		
+			var shiftee = $(".db_clgshiftee").val();
+			if(shiftee == "true"){
+				$(".db_clgshiftCourse").show();			
+			}else{
+				$(".db_clgshiftCourse").hide();
+			}
 			
+			var shiftee1 = $(".db_shsshiftee").val();
+			if(shiftee1 == "true"){
+				$(".db_shshiftCourse").show();			
+			}else{
+				$(".db_shsshiftCourse").hide();
+			}
+			
+			$(".db_clgshiftee").on('change', function(){
+				var shiftee = $(".db_clgshiftee").val();
+				if(shiftee == "true"){
+					$(".db_clgshiftCourse").show();			
+				}else{
+					$(".db_clgshiftCourse").hide();
+				}
+			});
+		
+			$(".db_shsshiftee").on('change', function(){
+				var shiftee = $(".db_shsshiftee").val();
+				if(shiftee == "true"){
+					$(".db_shsshiftCourse").show();			
+				}else{
+					$(".db_shsshiftCourse").hide();
+				}
+			});
+			
+		
+			var type = $(".db_prevSchool").val();
+			if(type == "public"){
+				$(".db_esc").hide();			
+			}else{
+				$(".db_esc").show();
+			}
+			$(".db_prevSchool").on('change', function(){
+				var type = $(".db_prevSchool").val();
+				if(type == "public"){
+					$(".db_esc").hide();			
+				}else{
+					$(".db_esc").show();
+				}
+			});
+
+	
 			$("#dbTypes").on('input', function(){
 				var type = $("#dbTypes").val();
 				if(type == "clg"){
 					$(".clg").show();
 					$(".shs").hide();
 					$(".bsc").hide();
+					$("input[class*='shs']").val('');
+					$("input[class*='bsc']").val('');
+					$('.shs').find('select').each(function(){this.selectedIndex = 0;});
+					$('.bsc').find('select').each(function(){this.selectedIndex = 0;});
 					
 				}
 				if(type == "shs"){
+					
 					$(".clg").hide();
 					$(".shs").show();
 					$(".bsc").hide();
-					
-					
+					$("input[class*='clg']").val('');
+					$("input[class*='bsc']").val('');
+					$('.clg').find('select').each(function(){this.selectedIndex = 0;});
+					$('.bsc').find('select').each(function(){this.selectedIndex = 0;});
+				
 				}
 				if(type == "bsc"){
 					$(".clg").hide();
 					$(".shs").hide();
 					$(".bsc").show();
+					$("input[class*='clg']").val('');
+					$("input[class*='shs']").val('');
+					$('.clg').find('select').each(function(){this.selectedIndex = 0;});
+					$('.shs').find('select').each(function(){this.selectedIndex = 0;});
+					
 				}
+				var validator = $("#saveNew, #saveEdited").validate().resetForm();
+				
 			});		
-			
-			
+
 			$("#save").click(function() {
 		        $("#saveEdited").submit();
 		     });
@@ -97,7 +164,19 @@
 			$(".clg").show();
 			$(".shs").hide();
 			$(".bsc").hide();
-		
+	
+			if(profileForm=='shProfile'){
+				$(".clg").hide();
+				$(".shs").show();
+				$(".bsc").hide();
+			}
+			else if(profileForm=='basicProfile'){
+				$(".clg").hide();
+				$(".shs").hide();
+				$(".bsc").show();
+				
+			}
+	
 		
 		});
 		
@@ -117,15 +196,13 @@
 	<jsp:include page="includes/main-left.jsp" />
 	<div>
 		<div>
-			<h1 style="display: inline-block; margin-top: 0px;">New Student</h1>
+			<h1 style="display: inline-block; margin-top: 0px;">${title}</h1>
 			<input type="hidden" id="url" value="${pageContext.request.contextPath}/students/student/" />
 			<c:if test="${saveType=='saveEdited'}" >
 				<div class="floatright">
 						<button id="edit" class="linkButton" >Edit</button>   
 						<button id="save" class="linkButton"  >Save</button>   
 						<button id="cancel" class="linkButton"  >Cancel</button>   
-						
-						<a href="sprForm" id="print" ><span class="linkButton" >Print</span></a>   
 				</div>
 			</c:if>
 		</div>

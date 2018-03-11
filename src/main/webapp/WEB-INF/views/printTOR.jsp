@@ -61,21 +61,55 @@
 		$(document).ready(function(){
 			var ctx = "${pageContext.request.contextPath}";
 			var url = encodeURI(ctx + '/ajax/departmentSelectChanged/?param=');
-			departmentSelect($('#deptSelect'), $('#courseSelect'), ctx);
-			courseSelect($('#search'), $('#courseSelect'), $('#studview'), ctx);
-			searchStudents($('#search'), $('#searchBtn'), $('#courseSelect'), $('#studview'), ctx);	
+		
+			$("#edit").on('click', function(){
+				alert("clicked");
+				var remarks = $("#tb_remarks").val();
+				var registrar = $("#tb_registrar").val();
+				var director = $("#tb_director").val();
 
-			 var table = $('#schedsview').DataTable( {
-				 	"dom" : 'rt',
-				 	 "columnDefs": [
-				        	{"targets": 6, "visible" : false},
-				        	{"targets": [0,1,2,3,4,5], "searchable": false}
-				     ]
-			 } );
-
-			table.search( $("#db_Option2").val() ).draw();
-			 
-			var buttons = new $.fn.dataTable.Buttons(table, {
+				if($("#tb_remarks").val()!=""){
+					$("#remarks").html('REMARKS: <u>'+remarks+'</u>');
+				}
+			
+				if($("#tb_registrar").val()!=""){
+					$("#registrar").html(remarks);
+					
+				}
+			
+				if($("#tb_director").val()!=""){
+					$("#director").html(director);
+				}
+				
+			});
+		
+			var table1 = $('#allsubjects').DataTable( {
+			 	"sDom" : 'rt',
+		        "scrollY":        "300px",
+		        "scrollCollapse": false,
+		        "paging" : false,
+		        "select": {
+		        	style : 'single'
+		        }
+		 	} );
+			
+			table1.on( 'dblclick', 'tr', function () {
+				var subjectCode = table.row( this ).data()[0];
+				var current = $("#preReq").val();
+				if(current !== "")
+				{
+					current = current.concat(", ");	
+				}	
+				
+				if(current.indexOf(subjectCode) == -1)
+				{
+					$("#preReq").val(current.concat(subjectCode));
+				}
+				
+				
+			});
+			
+			var buttons = new $.fn.dataTable.Buttons(table1, {
 			     buttons: [
 			    		{
 			            	text: 'PRINT',
@@ -87,35 +121,48 @@
 			            	},
 			            	className: 'blue'
 			            },
-			    	 {
-			    	 	extend: 'collection',
-		                text: 'Export',
-		                autoClose: true,
-		                buttons: [
-		                    'copy',
-		                    {  
-		                    	extend: 'excel', 
-		                    	exportOptions: {
-				                	columns: ':visible'
-				                }
-		                    },
-		                    {  
-		                    	extend: 'csv', 
-		                    	exportOptions: {
-				                	columns: ':visible'
-				                }
-		                    },
-		                    'pdf'
-		              
-		                ],
-		                className: 'blue'
-					}
-	
+				    	 {
+				    	 	extend: 'collection',
+			                text: 'Export',
+			                autoClose: true,
+			                buttons: [
+			                    'copy',
+			                    {  
+			                    	extend: 'excel', 
+			                    	exportOptions: {
+					                	columns: ':visible'
+					                }
+			                    },
+			                    {  
+			                    	extend: 'csv', 
+			                    	exportOptions: {
+					                	columns: ':visible'
+					                }
+			                    },
+			                    'pdf'
+			              
+			                ],
+			                className: 'blue'
+						},
+						{
+			            	text: 'REMOVE SELECTED',
+			            	action: function ( e, dt, node, config ) {
+			            		table.rows( '.selected' ).remove().draw();
+			            	},
+			            	className: 'blue'
+			            }
+			
 			    ]
 			}).container().appendTo($('#buttons'));
-			$("#db_Option1").val($("#teacherID").val());
-			$("#sy").html($("#db_Option2").val());
-
+			
+	
+			 var table = $('#gradesview').DataTable( {
+				 	"dom" : 'rtf'
+			 } );
+			
+		
+				
+			
 			$("#db_Option").on('input', function(){
 				var printBy = $("#db_Option").val();
 				if(printBy != ""){
@@ -123,23 +170,7 @@
 				}
 			});
 	
-			$("#db_Option1").on('input', function(){
-				var teacherID = $("#db_Option1").val();
-				if(teacherID != ""){
-					window.location.href = encodeURI("${pageContext.request.contextPath}/schedules/clg/printByTeacher/?teacherID=" + teacherID);
-				}
-			});
 		
-			$("#db_Option2").on('input', function(){
-				var year = this.value;
-				table.search( year ).draw();
-				$("#sy").html("");
-				if(year != ""){
-					$("#sy").html(this.value);
-				}
-		
-				
-			});
 		});
 	</script>
 
@@ -155,11 +186,24 @@
 		}
 
 		@page {
-		  margin-top: 0.5in;
+		  margin-top: 0.2in;
 		  margin-bottom: 0.5in;
 		  margin-left: 0.5in;
 		  margin-right: 0.5in;
 		}
+
+		tr{
+			font-size: 12px;
+		}
+		td{
+			font-weight: bold;
+			font-size:12px;
+			text-align: left;
+			cell-padding: 0px;
+		}
+		
+
+	
 	</style>
 </head>
 <body>
@@ -167,31 +211,39 @@
 		<div style="width: 8.5in; text-align:center" >
 			<div style=" display: inline-block;" >
 				<div class="content" style="text-align: center;">
-					<p style="font-size: 18px; font-weight: bold;">${student.firstName} ${student.lastName}</p>
-					<p  style="font-size: 14px; font-weight: bold; margin-top: -10px;" id="sy"></p>
+					<img src="${pageContext.request.contextPath}/resources/images/bclogo.png" />
+					<hr>
+					<p style="font-size: 20px; font-weight: bold; ">OFFICIAL TRANSCRIPT OF RECORDS</p>
 				</div>
-		
+				<div style="width: 100%; border-bottom: 1px solid black; margin-bottom: -330px; text-align:left;">
+					<p style="font-size: 14px; font-weight: bold;  display:inline-block; ">Name: ${student.firstName} ${student.lastName}</p>
+					<p style="font-size: 14px; font-weight: bold; float: right; margin-right: 10px;">I.D. No: ${student.studentID}</p>
+				</div>
 				<div style="width: 7.5in; margin-top:30px;" class="content" >
 					<form:form  action="${pageContext.request.contextPath}/grades/${dept}/save/?studentNo=${student.studentNo}" method="post" modelAttribute="allSemGrades" >
-					
-						<c:forEach var="sg" items="${allSemGrades.semGrades}" varStatus="status">
-						<c:set var="ap" value="" />
-						<div style="width: 1000px; ">
-							<div style="margin-bottom: 5px;">
-								<h3 style="display: inline-block;" >SY: ${sg.enrollment.schoolYear} , Sem: ${sg.enrollment.semester}</h3>
-							</div>
-								
-							<table id="gradesview${status.index}" class="display compact listTable">
+							<div style="width: 7.5in; border-bottom: 1px solid black;">
+							<table id="gradesview" class=" compact" >
 								<thead>
-									<th>Subject Code</th>
-									<th>Description</th>
-									<th>Grades</th>
-									<th>Credit/s</th>
-									<th>School Year</th>
-									<th>Semester</th>
+									<tr>
+										<th>Subject Code</th>
+										<th>Description</th>
+										<th >Grades</th>
+										<th>Credit/s</th>
+									</tr>
 								</thead>
-									
+					
 								<tbody>
+			
+						<c:forEach var="sg" items="${allSemGrades.semGrades}" varStatus="status">
+							<c:set var="ap" value="" />
+					
+								<tr>
+									<td style="text-align:center; font-weight:1500; font-size: 12px;" > ${sems[sg.enrollment.semester]} ${sg.enrollment.schoolYear}</td>
+									<td></td>
+									<td></td>
+									<td></td>
+									
+								</tr>
 									<c:forEach var="grade" items="${sg.grades}" varStatus="status1">
 										<tr>
 											<td>
@@ -199,28 +251,45 @@
 												<form:input type="hidden" path="semGrades[${status.index}].grades[${status1.index}].subjectCode" />	
 											</td>
 											<td>${grade.subjectDesc} </td>
-											<td>${grade.lecUnits + grade.labUnits} </td>
-													
-												
-											<td>
+											<td style="text-align:center;">
 												<form:input type="hidden" path="semGrades[${status.index}].grades[${status1.index}].enrollmentNo" />
 												<form:input type="hidden" path="semGrades[${status.index}].grades[${status1.index}].backupGrade" />
 												${allSemGrades.semGrades[status.index].grades[status1.index].prelimGrade}
 											</td>
-							
-											<td>${allSemGrades.semGrades[status.index].grades[status1.index].midtermGrade}</td>
-											<td><form:input path="semGrades[${status.index}].grades[${status1.index}].finalGrade" /></td>
-											<td>${allSemGrades.semGrades[status.index].grades[status1.index].equivalentGrade}</td>
-					
-											<td>${grade.dateModified} </td>
+											<td style="text-align:center;"  >${grade.lecUnits + grade.labUnits} </td>
 										</tr>
 									</c:forEach>
-									<tr style="border-top: 1px solid grey;" ><td colspan="8">GPA: ${sg.average}  </td></tr>
-								</tbody>
-									
+				
+								</c:forEach>
+							</tbody>
 							</table>	
-						</div>
-					</c:forEach>
+							</div>
+							<div style=" margin-top:-10px; margin-bottom: -10px;">
+									<p style="font-size: 12px; font-weight: bold; padding:0px;">**********(MORE ENTRIES NEXT PAGE)**********</p>
+							</div>
+	
+							<div style="text-align: left; margin-top:-10px; border-top: 1px solid black; border-bottom: 2px solid black;">
+								<p style="font-size: 12px; font-weight: bold; padding:0px;">Note: This transcript is not valid if there is/are erasure(s) in the grades</p>
+								<div style="width: 100%; display: flex; flex-direction: horizontal;" >
+									<div style="text-lign: left;">
+										<p id="remarks" style="font-size: 14px; font-weight: bold; padding:0px;">REMARKS: <u>FOR EVALUATION PURPOSES ONLY</u></p>
+										<p style="font-size: 12px; font-weight: bold; margin-left: 50px;">Prepared by :</p>
+										<p id="registrar" style="font-size: 14px; font-weight: bold; margin-left: 100px;padding:0px; text-decoration: underline;">MIGUELA A. INDIG</p>
+										<p style="font-size: 12px; font-weight: bold; margin-left: 100px;padding:0px;">School Registrar</p>
+										<p style="font-size: 10px; font-weight: bold; margin-left: 50px; padding:0px;">Not valid without<br>School Dry Seal: </p>
+									</div>
+									<div style="display: inline-block; margin-right: 10px; padding-left:50px;">
+											<p style="font-size: 14px; font-weight: bold; margin-left: 100px; padding:0px;">DATE ISSUED: </p>
+											<p style="font-size: 12px; font-weight: bold; margin-left: 100px; padding:0px;">Approved by: </p>
+											<p id="director" style="font-size: 14px; font-weight: bold; margin-left: 100px; padding:0px; text-decoration: underline;">RANULFO L VISAYA JR., M.Ed.: </p>
+											<p style="font-size: 12px; font-weight: bold; margin-left: 100px; padding:0px;">School Director: </p>
+										
+									</div>
+								</div>	
+							</div>
+							<p style="font-size: 9px; font-weight: bold; ">A.S. Fortuna Street, Mandaue City 6014, Cebu, Philippines * 
+											Tel. Nos.:(63-32)345-6873|345-6874 Telefax No.:(63-62)345-5790 * benedictoregistrar@yahoo.com</p>
+	
 					</form:form>
 				</div>
 			</div>
@@ -228,7 +297,6 @@
 	
 		<div  class="no-print" style="display: inline-block;	margin-top:100px;">
 			<div id="buttons">
-
 			</div>
 			
 			<div style="margin-top:100px;">
@@ -238,7 +306,52 @@
 					
 				</select>
 			</div>
-
+			
+			<div style="margin-top:100px;">
+				Remarks:
+				<input style=" margin-bottom: 10px;" type="text" id="tb_remarks" /><br>
+				Registrar:
+				<input style=" margin-bottom: 10px;" type="text" id="tb_registrar" /><br>
+				Director:
+				<input style=" margin-bottom: 10px;" type="text" id="tb_director" /><br>
+			</div>
+			
+			<div>
+				<button type="button" class="linkButton" id="edit" >Edit</button>
+			</div>
+			
+			<div>
+				<table id="allsubjects" class="display compact listTable">  
+					<thead>
+						<tr>
+							<th>Subject Code</th>
+							<th>Description</th>
+							<th>Grades</th>
+							<th>Credit/s</th>
+							<th>School Year</th>
+							<th>Semester</th>
+							<th>School</th>
+							
+											
+						</tr>  
+				   	</thead>
+			
+					<tbody>
+						<c:forEach var="subj" items="${credited}">   
+						   	<tr>  
+							   	<td>${subj.subjectCode}</td>  
+							   	<td>${subj.subjectDesc}</td>  
+							   	<td>${subj.finalGrade}</td>  
+							   	<td>${subj.lecUnits + subj.labUnits}</td>
+							   	<td>${subj.schoolYear}</td>
+							   	<td>${sems[subj.semester]}</td>
+							   	<td>Benedicto College</td>
+							   </tr>  
+				   		</c:forEach>
+					</tbody>
+					  
+			  	 </table>  
+			</div>
 		</div>
 	</div>
 

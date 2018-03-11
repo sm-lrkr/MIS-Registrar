@@ -31,6 +31,9 @@ public class StudentProfile {
 	private String graduationYear;
 	private String applicationType;
 	private String profileType;
+	private String prevSchoolType;
+	private boolean ESC;
+	
 	private String empty;
 	private boolean checked;
 	/**
@@ -285,8 +288,32 @@ public class StudentProfile {
 	public void setProfileType(String profileType) {
 		this.profileType = profileType;
 	}
+	/**
+	 * @return the prevSchoolType
+	 */
+	public String getPrevSchoolType() {
+		return prevSchoolType;
+	}
+	/**
+	 * @param prevSchoolType the prevSchoolType to set
+	 */
+	public void setPrevSchoolType(String prevSchoolType) {
+		this.prevSchoolType = prevSchoolType;
+	}
+	/**
+	 * @return the eSC
+	 */
+	public boolean isESC() {
+		return ESC;
+	}
+	/**
+	 * @param eSC the eSC to set
+	 */
+	public void setESC(boolean eSC) {
+		ESC = eSC;
+	}
 	
-	
+		
 	
 
 }

@@ -186,7 +186,7 @@ public class ScheduleController {
 	
 		for(Schedule S:  semscheds) {
 			boolean isEnlisted = false;
-			
+			List<StudentProfile> sps = db.getCollegEnlistedStudents(S.getScheduleID());
 			for(Schedule E: enlisted.getSchedules()) {
 				System.out.println("S ID: " + S.getScheduleID()+", E ID: "+ E.getScheduleID());
 				if(E.getScheduleID().equals(S.getScheduleID())) {
@@ -194,11 +194,11 @@ public class ScheduleController {
 					break;
 				}
 			}
-			if(!isEnlisted) {
+			if(!isEnlisted && sps.size() < 10) {
 				offered.getSchedules().add(S);
 			}
 		}
-	
+
 		//offered.setSchedules(db.getCollegeSchedulesByStudentCurric("", studCAB.getCurriculumID(), studentNo));
 
 		List<Schedule> temp = new ArrayList<Schedule>();
@@ -236,7 +236,7 @@ public class ScheduleController {
 		SchedulesViewForm schedules = new SchedulesViewForm();
 		SchedulesViewForm enlisted = new SchedulesViewForm();
 		
-		schedules.setSchedules(db.getSHSchedulesBySection(e.getSectionID()));
+		schedules.setSchedules(db.getSHSchedulesBySection(e.getSectionID(), sy.getYear_start()+"-"+sy.getYear_end(), sy.getSemester()));
 		enlisted.setSchedules(db.getSHEnlistedSubjects(studentNo, e.getEnrollmentNo()));
 
 		System.out.println("Offered: " + schedules.getSchedules().size());
@@ -265,30 +265,44 @@ public class ScheduleController {
 		SchoolYear sy = db.getActiveSchoolYear();
 		Enrollment enrollment = db.getCollegeEnrollmentBySY(studentNo, sy.getYear_start()+"-"+sy.getYear_end(), sy.getSemester());
 		List<Schedule> enlisted = db.getCollegeEnlistedSubjects(studentNo, enrollment.getEnrollmentNo());
+		List<Schedule> temp = new ArrayList<Schedule>();
 		
 		boolean hasConflictsLec = false;
 		boolean hasConflictsLab = false;
+		boolean hasConflictsLec1 = false;
+		boolean hasConflictsLab1 = false;
 		
 		for(Schedule S: s.getSchedules()) {
-			if(S.isChecked()) {
-				System.out.println(S.getScheduleID()+"-"+S.getSubjectCode()+"-");
+			if(S.isChecked()) 
+				temp.add(S);
+		}
+		
+		for(Schedule S: temp) {
+			List<Schedule> scheds = new ArrayList<Schedule>();
+			scheds.addAll(temp);
+			scheds.remove(S);
+			System.out.println(S.getScheduleID()+"-"+S.getSubjectCode()+"-");
+			
+			hasConflictsLec1 = trapper.timeConflict(scheds, S.getLecTimeStart(), S.getLecTimeEnd(), S.getLecDays(), S.getLecRoom());
+			hasConflictsLec = trapper.timeConflict(enlisted, S.getLecTimeStart(), S.getLecTimeEnd(), S.getLecDays(), S.getLecRoom());
+			if(S.getLabTimeStart() != null) {
+				hasConflictsLab = trapper.timeConflict(enlisted, S.getLabTimeStart(), S.getLabTimeEnd(), S.getLabDays(), S.getLabRoom());
+				hasConflictsLab1 = trapper.timeConflict(scheds, S.getLabTimeStart(), S.getLabTimeEnd(), S.getLabDays(), S.getLabRoom());
 				
-				hasConflictsLec = trapper.timeConflict(enlisted, S.getLecTimeStart(), S.getLecTimeEnd(), S.getLecDays(), S.getLecRoom());
-				if(S.getLabTimeStart() != null)
-					hasConflictsLab = trapper.timeConflict(enlisted, S.getLabTimeStart(), S.getLabTimeEnd(), S.getLabDays(), S.getLabRoom());
+			}	
 				
-				if(hasConflictsLec || hasConflictsLab) {
-					System.out.println(S.getScheduleID()+"-"+S.getSubjectCode()+"is conflict with one of the checked schedules ");
-					break;
-				}	
-			}
+			if(hasConflictsLec || hasConflictsLab) {
+				System.out.println(S.getScheduleID()+"-"+S.getSubjectCode()+"is conflict with one of the checked schedules ");
+				break;
+			}	
+			
 		}
 	
-		if(!hasConflictsLec && !hasConflictsLab) {
+		if(!hasConflictsLec && !hasConflictsLab && !hasConflictsLec1 && !hasConflictsLab1 ) {
 			for (Schedule S : s.getSchedules()) {
 				if (S.isChecked()) {
 					db.enlistCollegeStudentSchedules(enrollment, S.getScheduleID());
-					db.addCollegeSubjectGrading(S, enrollment.getEnrollmentNo(), formattedDate);
+					db.addCollegeSubjectGrading(S, enrollment.getEnrollmentNo(), formattedDate, S.getScheduleID());
 					
 				}
 			}
@@ -301,10 +315,12 @@ public class ScheduleController {
 	public ModelAndView unenlistSchedules(@ModelAttribute("enlisted") SchedulesViewForm s,
 			@PathVariable("studentNo") String studentNo) {
 		
-		Enrollment enrollment = db.getCollegeEnrollmentBySY(studentNo, "2017-2018", 1);
+		SchoolYear sy = db.getActiveSchoolYear();
+		Enrollment enrollment = db.getCollegeEnrollmentBySY(studentNo, sy.getYear_start()+"-"+sy.getYear_end(), sy.getSemester());
 		
 		for (Schedule S : s.getSchedules()) {
 			if (S.isChecked()) {
+				System.out.println("Schedule Checked: "+ S.getScheduleID());
 				db.withdrawStudentSubjects(enrollment, S.getScheduleID());
 				db.removeCollegeSubjectsGrading(enrollment, S.getSubjectCode());
 			}

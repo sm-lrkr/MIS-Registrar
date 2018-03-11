@@ -107,10 +107,9 @@
 			<div class="floatright">
 				<button id="print" class="linkButton">Print</button>   
 			</div>
-			
+		
 			<div style="padding-bottom: 5px;">
-					<a id="all" class="linkButton" href="${pageContext.request.contextPath}/schedules/"> ALL </a> 
-			    	<a id="clg" class="linkButton" href="${pageContext.request.contextPath}/schedules/clg" > COLLEGE </a> 
+					<a id="clg" class="linkButton" href="${pageContext.request.contextPath}/schedules/clg" > COLLEGE </a> 
 			    	<a id="shs" class="linkButton" href="${pageContext.request.contextPath}/schedules/sh"> SENIOR H </a> 
 			    	<a id="bsc" class="linkButton" href="${pageContext.request.contextPath}/schedules/bsc"> BASIC </a> 
 			</div>

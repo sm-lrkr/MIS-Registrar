@@ -40,9 +40,8 @@
 			
 			table.on( 'dblclick', 'tr', function () {
 				var strandCode = table.row( this ).data()[0];
-				window.location.href = "${pageContext.request.contextPath}/courses/strands/" + strandCode;
+				window.location.href = encodeURI("${pageContext.request.contextPath}/courses/strands/" + strandCode+"/?curricID=");
 			} );
-		
 		});
 	</script>
 	
@@ -58,7 +57,7 @@
 		<div>	
 			<h1 style="display: inline-block; margin-top: 0px;">Strands</h1>  
 			<div class="floatright">
-						
+						<a href="${pageContext.request.contextPath}/courses/newStrand" class="linkButton">New Strand</a>    
 			</div>
 			
 			<div style="width: 1000px; " >
@@ -66,7 +65,7 @@
 					<thead>
 						<tr><th>StrandCode</th><th>Track</th><th>Description</th><th>Major</th></tr>  
 				   	</thead>
-					
+				
 					<tbody>
 						<c:forEach var="strand" items="${strands}">   
 						   	<tr>  

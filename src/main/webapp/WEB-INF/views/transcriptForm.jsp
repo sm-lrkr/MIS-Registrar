@@ -131,7 +131,17 @@
 							     		
 					
 					<tr>
-						<td><form:label path="preRequisites" > Pre Requisites</form:label></td>
+						<td><form:label path="preRequisites" > School Year</form:label></td>
+						<td><form:input id="preReq"   path="preRequisites" /></td>
+					</tr>
+					
+					<tr>
+						<td><form:label path="preRequisites" > Semester</form:label></td>
+						<td><form:input id="preReq"   path="preRequisites" /></td>
+					</tr>
+					
+					<tr>
+						<td><form:label path="preRequisites" > School</form:label></td>
 						<td><form:input id="preReq"   path="preRequisites" /></td>
 					</tr>
 					
@@ -153,6 +163,8 @@
 						<th>Credit/s</th>
 						<th>School Year</th>
 						<th>Semester</th>
+						<th>School</th>
+						
 										
 					</tr>  
 			   	</thead>
@@ -166,8 +178,8 @@
 						   	<td>${subj.lecUnits + subj.labUnits}</td>
 						   	<td>${subj.schoolYear}</td>
 						   	<td>${sems[subj.semester]}</td>
-						   
-						 	</tr>  
+						   	<td>Benedicto College</td>
+						   </tr>  
 			   		</c:forEach>
 				</tbody>
 				  

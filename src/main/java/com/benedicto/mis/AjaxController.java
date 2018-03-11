@@ -251,4 +251,24 @@ public class AjaxController {
 		dao.saveCurriculumSubjects("0", subjectCode, yr, sem);
 		return "success";
 	}
+	
+	@RequestMapping(value="/saveSubjectToCurric/sh/", method = RequestMethod.POST)
+	@ResponseBody
+	public String saveSubjectsSHToCurric(@RequestParam("subjectCode") String subjectCode,
+			 								@RequestParam("yr") int yr,@RequestParam("sem") int sem) {
+		System.out.println("wahahahah");
+		dao.saveSHCurriculumSubjects("0", subjectCode, yr, sem);
+		return "success";
+	}
+	
+	
+	@RequestMapping(value="/saveSubjectToCurric/bsc/", method = RequestMethod.POST)
+	@ResponseBody
+	public String saveSubjectsBSCToCurric(@RequestParam("subjectCode") String subjectCode,
+			 								@RequestParam("yr") int yr) {
+		System.out.println("wahahahah");
+		dao.saveBSCCurriculumSubjects("0", subjectCode, yr);
+		return "success";
+	}
+
 }

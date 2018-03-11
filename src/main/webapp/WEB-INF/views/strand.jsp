@@ -40,6 +40,13 @@
 			$("#search").on('input', function(){
 	
 			});
+			
+		
+			$("#db_curriculum").on('input', function(){
+				var strandCode = '${strand.strandCode}';
+				var curricID = $("#db_curriculum").val();
+				window.location.href = encodeURI("${pageContext.request.contextPath}/courses/strands/" + strandCode+"/?curricID="+curricID);
+			});
 		});
 	</script>
 	
@@ -66,7 +73,7 @@
 		
 		
 		<div style=" padding-bottom: 30px;">
-			<select  id="dbCurriculum">
+			<select  id="db_curriculum">
 					<c:forEach var="crc" items="${curriculums}">   
 								<option value="${crc.curriculumID}" label="${crc.curriculumDesc}" /> 
 					</c:forEach>  

@@ -78,7 +78,7 @@
 		<div>
 			<h1 style="display: inline-block; margin-top: 0px;">New Program</h1>  
 		
-			<form:form method="POST" id="courseForm" action="${pageContext.request.contextPath}/saveNewCourse" modelAttribute="course" >
+			<form:form method="POST" id="courseForm" action="${pageContext.request.contextPath}/courses/saveNewCourse" modelAttribute="course" >
 				<table class="formTable" style="margin-top: 30px;">
 					<tr>
 						<td><form:label path="courseID" >Program</form:label></td>

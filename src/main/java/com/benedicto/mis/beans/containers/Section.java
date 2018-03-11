@@ -9,6 +9,7 @@ public class Section {
 	private String session;
 	private String personnelID;
 	private String personnelName;
+	private int gradeLevel;
 	
 	
 	
@@ -88,6 +89,18 @@ public class Section {
 	 */
 	public void setPersonnelName(String personnelName) {
 		this.personnelName = personnelName;
+	}
+	/**
+	 * @return the gradeLevel
+	 */
+	public int getGradeLevel() {
+		return gradeLevel;
+	}
+	/**
+	 * @param gradeLevel the gradeLevel to set
+	 */
+	public void setGradeLevel(int gradeLevel) {
+		this.gradeLevel = gradeLevel;
 	}
 	
 	

@@ -61,7 +61,7 @@
 			
 			table.on( 'dblclick', 'tr', function () {
 				var courseID = table.row( this ).data()[0];
-				window.location.href = "${pageContext.request.contextPath}/courses/" + courseID;
+				window.location.href = encodeURI("${pageContext.request.contextPath}/courses/" + courseID+"/?curricID=");
 			} );
 
 		});

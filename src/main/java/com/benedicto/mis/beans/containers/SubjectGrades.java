@@ -11,6 +11,7 @@ public class SubjectGrades extends Subject implements Comparable<SubjectGrades>{
 	private String enrollmentNo;
 	private String schoolYear;
 	private int semester;
+	private String scheduleID;
 	
 	/**
 	 * @return the prelimGrade
@@ -135,6 +136,21 @@ public class SubjectGrades extends Subject implements Comparable<SubjectGrades>{
 	 */
 	public void setSemester(int semester) {
 		this.semester = semester;
+	}
+	
+	
+	
+	/**
+	 * @return the scheduleID
+	 */
+	public String getScheduleID() {
+		return scheduleID;
+	}
+	/**
+	 * @param scheduleID the scheduleID to set
+	 */
+	public void setScheduleID(String scheduleID) {
+		this.scheduleID = scheduleID;
 	}
 	@Override
 	public int compareTo(SubjectGrades s) {

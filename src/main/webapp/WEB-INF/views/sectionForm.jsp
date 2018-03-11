@@ -61,25 +61,7 @@
 			});
 			
 			$("#submit").click(function() {
-				var data = table.rows().data();
-				var subjectCode = $("#subjectCode").val();
-				var count = 0;
-				
-				data.each(function (value, index) {
-				    if(subjectCode.toUpperCase() == value[0].toUpperCase())
-				    {
-				    	 count += 1;
-				    }
-				});
-
-				if(count == 0)
-				{
-					$("#subjectForm").submit();	
-				}
-				else
-				{
-					alert("Subject already exists.");	
-				}
+				$("#sectionForm").submit();
 				
 		     });
 
@@ -100,18 +82,19 @@
 		
 			<form:form id="sectionForm" action="${pageContext.request.contextPath}/sections/${formType}/${sectionType}/save" modelAttribute="section" >
 				<table class="formTable" style="margin-top: 30px;">
-				
-					<tr>
-						<td><form:label path="strandCode" >Strand Code</form:label></td>
-						<td>
-						<form:select  path="strandCode" id="dbStrands" value="${section.strandCode}" >
-							<form:option value="" label=""/>
-							<c:forEach var="strand" items="${strands}">   
-								<form:option value="${strand.strandCode}" label="${strand.strandCode}" /> 
-						   	</c:forEach>  
-						</form:select>
-						</td>
-					</tr>
+					<c:if test="${sectionType == 'sh'}">
+						<tr>
+							<td><form:label path="strandCode" >Strand Code</form:label></td>
+							<td>
+							<form:select  path="strandCode" id="dbStrands" value="${section.strandCode}" >
+								<form:option value="" label=""/>
+								<c:forEach var="strand" items="${strands}">   
+									<form:option value="${strand.strandCode}" label="${strand.strandCode}" /> 
+							   	</c:forEach>  
+							</form:select>
+							</td>
+						</tr>
+					</c:if>
 				
 					<tr>
 						<td><form:label path="sectionName" >Name</form:label></td>
@@ -120,20 +103,62 @@
 					
 					<tr>
 						<td><form:label path="room" > Room</form:label></td>
-						<td><form:input id="room"   path="room" /></td>
+						<td>
+							<form:select  path="room" id="dbPersonnel" value="${section.room}" >
+								<form:option value="" label=""/>
+								<c:forEach var="rm" items="${rooms}">   
+									<form:option value="${rm.facil_name}" label="${rm.facil_name}" /> 
+							   	</c:forEach>  
+							</form:select>
+						</td>
 					</tr>
-					
+		
 					<tr>
 						<td><form:label path="session" >Session</form:label></td>
-						<td><form:input id="session"   path="session" /></td>
+						<td>
+							<form:select  path="session"  value="${section.session}" >
+								<form:option value="" label="" />
+								<form:option value="Day" label="Day" />
+								<form:option value="Night" label="Night" />
+								
+							</form:select>
+						</td>
 					</tr>
 			
-					
+					<tr>
+						<td><form:label path="gradeLevel" >Grade Level</form:label></td>
+						<td>
+							<form:select  path="gradeLevel" id="dbPersonnel" >
+								<form:option value="0" label="" />
+								<c:choose>
+									<c:when test="${sectionType == 'sh'}">
+										<form:option value="11" label="Grade 11" />
+										<form:option value="12" label="Grade 12" />
+									</c:when>
+									<c:when test="${sectionType == 'bsc'}">
+										<form:option value="10" label="Grade 10" />
+										<form:option value="9" label="Grade 9" />
+										<form:option value="8" label="Grade 8" />
+										<form:option value="7" label="Grade 7" />
+										<form:option value="6" label="Grade 6" />
+										<form:option value="5" label="Grade 5" />
+										<form:option value="4" label="Grade 4" />
+										<form:option value="3" label="Grade 3" />
+										<form:option value="2" label="Grade 2" />
+										<form:option value="1" label="Grade 1" />	
+										<form:option value="-1" label="Kinder" />	
+									</c:when>
+									
+								</c:choose>
+							</form:select>
+						</td>
+					</tr>
+			
 					<tr>
 						<td><form:label path="personnelID" >Adviser</form:label></td>
 						<td>
 							<form:select  path="personnelID" id="dbPersonnel" value="${section.personnelID}" >
-								<form:option value="" label=""/>
+								<form:option value="-1" label=""/>
 								<c:forEach var="teacher" items="${teachers}">   
 									<form:option value="${teacher.personnelID}" label="${teacher.firstName}-${teacher.lastName}" /> 
 							   	</c:forEach>  

@@ -1,5 +1,5 @@
 $().ready(function(){
-	$("#newSPR").validate({
+	var validator = $("#saveNew, #saveEdited").validate({
 		rules: {
 		    // simple rule, converted to {required:true}
 			"personal.lastName": "required",
@@ -12,83 +12,77 @@ $().ready(function(){
 		    "personal.country": "required",
 		    "personal.citizenship": "required",
 		    "personal.cityAddress": "required",
-		    "personal.provincialAddress": "required",
-		    "profile.StudentID" :  {
+		    "personal.provincialAddress": "required",  	
+		    "profile.studentID" :  {
 				required: true,
-		    	minlength: 10,
-		    },    	
+		    	minlength: 10
+		    }, 
 			"profilesh.LRN" :  {
 				required: true,
-		    	minlength: 11,
+		    	minlength: 11
 		    }, 
 		    "profilebsc.LRN" :  {
 				required: true,
-		    	minlength: 11,
+		    	minlength: 11
 		    },
 		    "profile.courseID": "required",
 		    "profilesh.strandCode": "required",
 		    "profile.curriculumID": "required",
 		    "profilesh.curriculumID": "required",
-		    "profilesh.courseID": "required",
+		    "profilebsc.curriculumID": "required",
+		  
 		  },
 		  messages: {
-			    "personal.lastName":{
+			  "profile.studentID":{
 			    	required: " Required",
-			    },
-		  		"peronal.firstName":{
-		  			required: "Required",
-		    	},"peronal.gender":{
-		  			required: "Required",
-		    	},"peronal.birthDate":{
-		  			required: "Required",
-		    	},"peronal.birthPlace":{
-		  			required: "Required",
-		    	},"peronal.cityAddress":{
-		  			required: "Required",
-		    	},"peronal.region":{
-		  			required: "Required",
-		    	},"peronal.country":{
-		  			required: "Required",
-		    	},"peronal.citizenship":{
-		  			required: "Required"
-		    	}
-		  },
-		
-	});
-	
-	$("#editSPR").validate({
-		rules: {
-		    // simple rule, converted to {required:true}
-			"student.lastName": "required",
-		    "student.firstName": "required",
-		    "profile.studentID": {
-		    	required: true,
-		    	minlength: 10
-		    },
-		    "profile.courseID": "required",
-		    "profile.curriculumID": "required"
-		  },
-		  messages: {
-			    "student.lastName":{
-			    	required: "!",
-			    },
-		  		"student.firstName":{
-		  			required: "!"
-		    	},
-			    "profile.studentID": {
-			    	required: "!",
 			    	minlength: "at least 10 characters"
 			    },
-			    "profile.courseID": {
-			    	required: "!"
+			   "personal.lastName":{
+			    	required: " Required"
 			    },
-			    "profile.curriculumID": {
-			    	required: "Please select curriculum."
-			    }
-		  },
-		
+			    "personal.citizenship":{
+			    	required: " Required"
+			    },
+			    "personal.firstName":{
+			    	required: " Required"
+			    },
+			    "personal.middleName":{
+			    	required: " Required"
+			    },
+			    "personal.birthDate":{
+			    	required: " Required"
+			    },
+			    "personal.birthPlace":{
+			    	required: " Required"
+			    },
+			    "personal.cityAddress":{
+			    	required: " Required"
+			    },
+			    "personal.provincialAddress":{
+			    	required: " Required"
+			    },
+			    "personal.region":{
+			    	required: " Required"
+			    },
+			    "personal.country":{
+			    	required: " Required"
+			    },
+			    "profile.courseID":{
+			    	required: " Required"
+			    },
+			    "profilesh.strandCode":{
+			    	required: " Required"
+			    },
+			    "profile.curriculumID":{
+			    	required: " Required"
+			    },
+			    "profilesh.curriculumID":{
+			    	required: " Required"
+			    },
+			    "profilebsc.curriculumID":{
+			    	required: " Required"
+			    },
+		  }
 	});
 });
 
-
-	

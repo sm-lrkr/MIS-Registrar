@@ -77,7 +77,25 @@
 			</div>
 			
 			<div style="width: 1000px; " >
-				<jsp:include page="includes/sectionsview.jsp" />
+					<table id="sectionsview" class="display compact listTable">  
+						<thead>
+							<tr><th>SectionID</th><th>Section</th><th>Strand</th><th>Room</th><th>Session</th><th>Grade</th><th>Adviser</th></tr>  
+					   	</thead>
+					   	
+						<tbody>
+							<c:forEach var="section" items="${sections}">   
+							   	<tr>
+								   	<td>${section.sectionID}</td>  
+								   	<td>${section.sectionName}</td>  
+								   	<td>${section.strandCode}</td>  
+								   	<td>${section.room}</td>
+								   	<td>${section.session}</td>
+								   	<td>${section.gradeLevel}</td>
+								   	<td>${section.personnelName}</td>
+								</tr>  
+						   	</c:forEach>  
+						</tbody>
+					 </table>  
 			</div>
 			
 		</div>

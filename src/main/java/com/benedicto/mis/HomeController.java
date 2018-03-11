@@ -277,36 +277,36 @@ public class HomeController {
 		return new ModelAndView("redirect:/subjects");
 	}
 
-	@RequestMapping(value = "/addCurriculum/{courseID}")
-	public ModelAndView addCurriculum(@PathVariable("courseID") String courseID) {
-		logger.info("addCurriculum");
-		List<Subject> list = db.getCollegeSubjects("");
-		SubjectsViewForm subjects = new SubjectsViewForm();
-		subjects.setSubjects(list);
+//	@RequestMapping(value = "/addCurriculum/{courseID}")
+//	public ModelAndView addCurriculum(@PathVariable("courseID") String courseID) {
+//		logger.info("addCurriculum");
+//		List<Subject> list = db.getCollegeSubjects("");
+//		SubjectsViewForm subjects = new SubjectsViewForm();
+//		subjects.setSubjects(list);
+//
+//		ModelAndView model = new ModelAndView();
+//		model.setViewName("curriculum");
+//		model.addObject("subjects", subjects);
+//		model.addObject("listed", new ArrayList<Subject>());
+//		model.addObject("saveType", "saveNew");
+//		return model;
+//	}
 
-		ModelAndView model = new ModelAndView();
-		model.setViewName("curriculum");
-		model.addObject("subjects", subjects);
-		model.addObject("listed", new ArrayList<Subject>());
-		model.addObject("saveType", "saveNew");
-		return model;
-	}
-
-	@RequestMapping(value = "/newspr")
-	public ModelAndView sprFormNew() {
-		logger.info("sprForm");
-		List<Course> courses = db.getCollegeCourses("");
-		List<Curriculum> currics = db.getCollegeCurriculums("");
-
-		ModelAndView model = new ModelAndView();
-		model.setViewName("newspr");
-		model.addObject("student", new StudentPersonal());
-		model.addObject("studentCAB", new StudentProfile());
-		model.addObject("courses", courses);
-		model.addObject("curriculums", currics);
-		model.addObject("saveType", "saveNew");
-		return model;
-	}
+//	@RequestMapping(value = "/newspr")
+//	public ModelAndView sprFormNew() {
+//		logger.info("sprForm");
+//		List<Course> courses = db.getCollegeCourses("");
+//		List<Curriculum> currics = db.getCollegeCurriculums("");
+//
+//		ModelAndView model = new ModelAndView();
+//		model.setViewName("newspr");
+//		model.addObject("student", new StudentPersonal());
+//		model.addObject("studentCAB", new StudentProfile());
+//		model.addObject("courses", courses);
+//		model.addObject("curriculums", currics);
+//		model.addObject("saveType", "saveNew");
+//		return model;
+//	}
 
 	@RequestMapping(value = "/deleteSPR/{studentID}")
 	public ModelAndView deleteSPR(@PathVariable("studentID") String id) {
@@ -315,26 +315,26 @@ public class HomeController {
 		return new ModelAndView("redirect: /index");
 	}
 
-	@ModelAttribute("schoolYear")
-	public String getInitializeMyObject() {
-		return "2017-2018";
-	}
-
-	// @RequestMapping(value="/")
-	// public ModelAndView home() {
-	// List<Student> list = dao.getStudents();
-	// return new ModelAndView("index", "emp", list);
-	// }
-	
-	@RequestMapping(value = "/newCourse", method = RequestMethod.GET)
-	public ModelAndView newSHSubject() {
-		Course course = new Course();
-		ModelAndView model = new ModelAndView();
-		model.setViewName("courseForm");
-		model.addObject("course ", course);
-		
-		return model;
-	}
+//	@ModelAttribute("schoolYear")
+//	public String getInitializeMyObject() {
+//		return "2017-2018";
+//	}
+//
+//	// @RequestMapping(value="/")
+//	// public ModelAndView home() {
+//	// List<Student> list = dao.getStudents();
+//	// return new ModelAndView("index", "emp", list);
+//	// }
+//	
+//	@RequestMapping(value = "/newCourse", method = RequestMethod.GET)
+//	public ModelAndView newSHSubject() {
+//		Course course = new Course();
+//		ModelAndView model = new ModelAndView();
+//		model.setViewName("courseForm");
+//		model.addObject("course ", course);
+//		
+//		return model;
+	//}
 	
 
 }
