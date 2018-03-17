@@ -60,8 +60,8 @@ public class SubjectController {
 		return model;
 	}
 	
-	@RequestMapping(value = "/clg/{subjectCode}", method = RequestMethod.GET)
-	public ModelAndView clgSubject(@PathVariable("subjectCode") String subjectCode) {
+	@RequestMapping(value = "/clg/", method = RequestMethod.GET)
+	public ModelAndView clgSubject(@RequestParam("subjectCode") String subjectCode) {
 		Subject subject = db.getCollegeSubjectByCode(subjectCode);
 		List<Schedule> schedules = db.getCollegeSchedules(subjectCode,"");
 		List<Curriculum> currics = db.getCollegeCurriculumsBySubject(subjectCode);
@@ -86,9 +86,9 @@ public class SubjectController {
 		model.addObject("subjectType", "shs");
 		return model;
 	}
-	
-	@RequestMapping(value = "/sh/{subjectCode}", method = RequestMethod.GET)
-	public ModelAndView shSubject(@PathVariable("subjectCode") String subjectCode) {
+
+	@RequestMapping(value = "/sh/", method = RequestMethod.GET)
+	public ModelAndView shSubject(@RequestParam("subjectCode") String subjectCode) {
 		Subject subject = db.getSHSubjectByCode(subjectCode);
 		List<Schedule> schedules = db.getSHSchedules(subjectCode,"");
 		List<Curriculum> currics = db.getSHCurriculumsBySubject(subjectCode);
@@ -185,7 +185,7 @@ public class SubjectController {
 		
 		return new ModelAndView("redirect:/subjects/sh");
 	}
-	
+
 	@RequestMapping(value = "/newSubject/bsc/save", method = RequestMethod.POST)
 	public ModelAndView addNewBSCSubject(@ModelAttribute("subject") Subject s) {
 		System.out.println("Add new bsc subject");
@@ -194,8 +194,8 @@ public class SubjectController {
 		return new ModelAndView("redirect:/subjects/sh");
 	}
 
-	@RequestMapping(value = "/editSubject/clg/{subjectCode}", method = RequestMethod.GET)
-	public ModelAndView editCollegeSubject(@PathVariable("subjectCode") String subjectCode) {
+	@RequestMapping(value = "/editSubject/clg/", method = RequestMethod.GET)
+	public ModelAndView editCollegeSubject(@RequestParam("subjectCode") String subjectCode) {
 		System.out.println("Edit existing subject");
 		
 		Subject subject = db.getCollegeSubjectByCode(subjectCode);
@@ -212,23 +212,23 @@ public class SubjectController {
 		ModelAndView model = new ModelAndView();
 		model.setViewName("subjectForm");
 		model.addObject("subjects", list);
+		model.addObject("subjectCode", "/?origCode="+subjectCode);
 		model.addObject("subject", subject);
 		model.addObject("subjectType", "clg");
 		model.addObject("formType", "editSubject");
 		model.addObject("pageTitle", subject.getSubjectCode()+" - " + subject.getSubjectDesc());
 		
-		
 		return model;
 	}
-	
-	@RequestMapping(value = "/editSubject/clg/save/{subjectCode}", method = RequestMethod.POST)
-	public ModelAndView saveEditedCollegeSubject(@PathVariable("subjectCode") String subjectCode, @ModelAttribute("subject") Subject s) {
+
+	@RequestMapping(value = "/editSubject/clg/save/", method = RequestMethod.POST)
+	public ModelAndView saveEditedCollegeSubject(@RequestParam("origCode") String origCode,@ModelAttribute("subject") Subject s) {
 		System.out.println("Save edited subject.");
-		db.updateCollegeSubject(s, subjectCode);
-		return new ModelAndView("redirect:/subjects/clg/"+ s.getSubjectCode());
+		db.updateCollegeSubject(s, origCode);
+		return new ModelAndView("redirect:/subjects/clg/?subjectCode="+ s.getSubjectCode());
 	}	
 	
-	@RequestMapping(value = "/editSubject/shs/{subjectCode}", method = RequestMethod.GET)
+	@RequestMapping(value = "/editSubject/shs/{subjectCode}", method = RequestMethod.POST)
 	public ModelAndView editSHSubject(@PathVariable("subjectCode") String subjectCode) {
 		System.out.println("Edit existing subject");
 		List<Subject> list = db.getSHSubjects("");

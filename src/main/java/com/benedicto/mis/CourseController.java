@@ -65,15 +65,15 @@ public class CourseController {
 		return model;
 	}
 	
-	@RequestMapping(value = "/newCourse/", method = RequestMethod.GET)
-	public ModelAndView newCollegeCourse(@RequestParam("courseID") String courseID) {
+	@RequestMapping(value = "/newCourse", method = RequestMethod.GET)
+	public ModelAndView newCollegeCourse() {
 		System.out.println("Add new course");
 		List<Department> depts = db.getDepartments("");
-		Course c = db.getCourseByID(courseID);
+		//Course c = db.getCourseByID(courseID);
 		
 		ModelAndView model = new ModelAndView();
 		model.setViewName("courseForm");
-		model.addObject("course", c);
+		model.addObject("course", new Course());
 		model.addObject("departments",	 depts);
 		
 		return model;
@@ -154,7 +154,7 @@ public class CourseController {
 		model.addObject("subjects", subjects);
 		model.addObject("years", years);
 		model.addObject("sems", sems);
-		
+		model.addObject("curricID", c.getCurriculumID());
 		model.addObject("course", course);
 		model.addObject("curriculums", currics);
 
@@ -172,17 +172,20 @@ public class CourseController {
 		
 		Curriculum c = new Curriculum();
 		Strand strand = db.getSHStrandByCode(strandCode);
-		if(curricID.equals(""))
-			c = currics.get(0);
-		else
-			c = db.getSHCurriculumByID(curricID);
+		if(currics.size() > 0) {
+			if(curricID.equals(""))
+				c = currics.get(0);
+			else
+				c = db.getSHCurriculumByID(curricID);
+			
+			System.out.println("Curriculum id: " + c.getCurriculumID());
+			
+			strandSubjects.setSubjects(db.getStrandSubjects(c.getCurriculumID()));
+			System.out.println("Subjects from strand: " + strandSubjects.getSubjects().size());
+			Collections.sort(strandSubjects.getSubjects());
+		}
 		
-		System.out.println("Curriculum id: " + c.getCurriculumID());
-		
-		strandSubjects.setSubjects(db.getStrandSubjects(c.getCurriculumID()));
-		System.out.println("Subjects from strand: " + strandSubjects.getSubjects().size());
-		Collections.sort(strandSubjects.getSubjects());
-		
+	
 		
 		ModelAndView model = new ModelAndView();
 		model.setViewName("strand");
@@ -246,14 +249,65 @@ public class CourseController {
 			subjects.put(i + "-2", db.getCurriculumSubjects(curric.getCurriculumID(), i, 2));
 			subjects.put(i + "-3", db.getCurriculumSubjects(curric.getCurriculumID(), i, 3));
 		}
-		
+	
 		ModelAndView model = new ModelAndView();
 		model.setViewName("printCurriculum");
 		model.addObject("courseID", course.getCourseID());
+		model.addObject("curric", curric);
 		model.addObject("subjects", subjects);
 		model.addObject("years", years);
 		model.addObject("sems", sems);
 		model.addObject("course", course);
+		
+		return model;
+	}
+	
+	@RequestMapping(value = "/strands/printCurriculum/", method = RequestMethod.GET)
+	public ModelAndView curriculumPrintSH(@RequestParam("curricID") String curricID) {
+		Locale locale = new Locale("en_US");
+		logger.info("Welcome home! The client locale is {}.", locale);
+		Curriculum c = db.getSHCurriculumByID(curricID);
+		List<Curriculum> currics = db.getSHCurriculumsByStrand(c.getStrandCode());
+		StrandSubjects strandSubjects = new StrandSubjects();
+		
+		String [] years = {"", "Grade 11","Grade 12"};
+		String [] sems = {"", "1st Sem","2nd Sem", "Summer"};
+		
+		
+		Strand strand = db.getSHStrandByCode(c.getStrandCode());
+		if(currics.size() > 0) {
+			if(curricID.equals(""))
+				c = currics.get(0);
+			else
+				c = db.getSHCurriculumByID(curricID);
+			
+			System.out.println("Curriculum id: " + c.getCurriculumID());
+			
+			strandSubjects.setSubjects(db.getStrandSubjects(c.getCurriculumID()));
+			System.out.println("Subjects from strand: " + strandSubjects.getSubjects().size());
+			Collections.sort(strandSubjects.getSubjects());
+		}
+		
+	
+		
+		ModelAndView model = new ModelAndView();
+		model.setViewName("printCurriculumSH");
+		
+		model.addObject("years", years);
+		model.addObject("sems", sems);
+		model.addObject("curric", c);
+		model.addObject("strandCode", strand.getStrandCode());
+		model.addObject("strand", strand);
+		model.addObject("strandSubjects", strandSubjects);
+		model.addObject("curriculums", currics);
+		
+
+//		model.addObject("years", years);
+//		model.addObject("sems", sems);
+//		
+//		model.addObject("strand", strand);
+//		model.addObject("strandSubjects", strandSubjects);
+//		model.addObject("curriculums", currics);
 		
 		return model;
 	}

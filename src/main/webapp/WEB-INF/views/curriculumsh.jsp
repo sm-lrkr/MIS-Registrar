@@ -409,16 +409,28 @@
 		
 	</script>
 	
+	<style>
+		@media print
+		{    
+		    .no-print, .no-print *
+		    {
+		        display: none !important;
+		    }
+		}
+		
+		
+	</style>
 	
 </head>
 <body>
 
-	
+	<div class="no-print">
 	<jsp:include page="includes/header.jsp" />
+	</div>
 	<div id="main">
 		<div style="width: 100%;">
 		
-			<div>
+			<div class="no-print">
 					<h1 style="display: inline-block; margin-top: 0px;">New Curriculum - ${strandCode}</h1>
 					<div class="floatright">
 						<a href="${pageContext.request.contextPath}/" class="linkButton">Back to Main</a>    

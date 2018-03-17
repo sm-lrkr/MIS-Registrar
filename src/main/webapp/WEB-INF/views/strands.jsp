@@ -60,6 +60,12 @@
 						<a href="${pageContext.request.contextPath}/courses/newStrand" class="linkButton">New Strand</a>    
 			</div>
 			
+			<div style="padding-bottom: 5px;" class="buttons" >
+					<a id="clg" class="linkButton" href="${pageContext.request.contextPath}/courses/" > COLLEGE </a> 
+			    	<a id="shs" class="linkButton" href="${pageContext.request.contextPath}/courses/strands	"> SENIOR H </a> 
+			    	<a id="bsc" class="linkButton" href="${pageContext.request.contextPath}/courses/bsc/?curricID="> BASIC </a> 
+			</div>
+		
 			<div style="width: 1000px; " >
 				<table id="strandsview"class="display compact listTable">  
 					<thead>

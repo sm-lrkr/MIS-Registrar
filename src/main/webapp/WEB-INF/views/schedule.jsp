@@ -32,8 +32,8 @@
 
 	<script type = "text/javascript">
 		$(document).ready(function(){
+			var ctx = "${pageContext.request.contextPath}";
 
-	
 			var table = $('#studview').DataTable( {
 			 	"sDom" : 'rtf',
 		        "scrollY":        "350px",
@@ -91,6 +91,11 @@
 			$("#scheduleForm :input").prop("disabled", true);
 			$("#scheduleForm :input").addClass("disabledInput");
 			
+			$("#print").click(function(){
+				alert("clicked");
+				var scheduleID = '${schedule.scheduleID}';
+                window.open( encodeURI(ctx+"/schedules/clg/printEnlisted/?schedID="+scheduleID),'_blank');
+			});
 			
 		});
 	</script>
@@ -108,7 +113,8 @@
 		<div>
 			<h1 style="display: inline-block; margin-top: 0px;">${subjectCode}</h1>  
 			<div class="floatright">
-						<a href="newSchedule" class="linkButton">New Schedule</a>    
+						<a href="newSchedule" class="linkButton">New Schedule</a> 
+						<button type="button" id="print" class="linkButton" >Print</button> 
 			</div>
 			<div style="margin-bottom: 50px;">
 				<form:form id="scheduleForm" action="" modelAttribute="schedule">

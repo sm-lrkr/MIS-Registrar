@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
@@ -383,6 +384,18 @@ public class studentdb {
 				new BeanPropertyRowMapper<StudentPersonal>(StudentPersonal.class));
 	}
 	
+	public StudentProfile getStudentByID(String studentNo) {
+		try {
+			String sql = "select * from clg_profile where StudentID=?";
+			return template.queryForObject(sql, new Object[] { studentNo },
+					new BeanPropertyRowMapper<StudentProfile>(StudentProfile.class));
+		
+		}catch(Exception ex) {
+			StudentProfile sp = new StudentProfile();
+			sp.setStudentID("");
+			return sp;
+		}
+	}
 	
 	
 	public StudentFBG getStudentFBGByNo(String studentNo) {
@@ -875,16 +888,22 @@ public class studentdb {
 		final Subject _s = s;
 		final String _subjectCode = subjectCode;
 		
-		return template.update(sql, new PreparedStatementSetter() {
-			public void setValues(PreparedStatement ps) throws SQLException {
-				ps.setString(1, _s.getSubjectCode());
-				ps.setString(2, _s.getSubjectDesc());
-				ps.setInt(3, _s.getLecUnits());
-				ps.setInt(4, _s.getLabUnits());
-				ps.setString(5, _s.getPreRequisites());
-				ps.setString(6, _subjectCode);
-			}
-		});
+		try {
+			return template.update(sql, new PreparedStatementSetter() {
+				public void setValues(PreparedStatement ps) throws SQLException {
+					ps.setString(1, _s.getSubjectCode());
+					ps.setString(2, _s.getSubjectDesc());
+					ps.setInt(3, _s.getLecUnits());
+					ps.setInt(4, _s.getLabUnits());
+					ps.setString(5, _s.getPreRequisites());
+					ps.setString(6, _subjectCode);
+				}
+			});
+		}catch(Exception ex) {
+			ex.printStackTrace();
+			return 0;
+		}
+		
 	}
 	
 	public int updateSHSubject(Subject s, String subjectCode) {
@@ -948,6 +967,8 @@ public class studentdb {
 				s.setSubjectDesc(rs.getString(2));
 				s.setPreRequisites(rs.getString(3));
 				s.setType(rs.getString(4));
+				s.setLecUnits(rs.getInt("Units"));
+				
 				return s;
 			}
 		});
@@ -1007,6 +1028,7 @@ public class studentdb {
 				subject.setSubjectDesc(rs.getString(6));
 				subject.setPreRequisites(rs.getString(7));
 				subject.setType(rs.getString(8));
+				subject.setLecUnits(rs.getInt("Units"));
 
 				strandSubject.setSubject(subject);
 
@@ -1965,6 +1987,7 @@ public class studentdb {
 	}
 	
 	public int updateCollegeSubjectGrading(SubjectGrades sg) {
+		
 		String sql = "update clg_grades set Prelim = ?, Midterm = ? , Final = ?, GradeEquivalent = ?, DateModified= ? "
 				+ " WHERE EnrollmentNo=? AND SubjectCode=? ";
 				
@@ -2082,6 +2105,30 @@ public class studentdb {
 		}
 		return 0;
 	}
+
+	
+	public int addNewStudentVerification(Enrollment e, String studentID, int lvl) {
+		String sql = "INSERT INTO std_eval(ID, Verification, Evaluated, EnrollmentNo, StudentNo) " + " VALUES(?,?,?,?,?)";
+		final String _studentID = studentID;
+	
+		final String verification  = String.format("%03d", Integer.parseInt(e.getEnrollmentNo())) + String.valueOf(lvl) ;
+		final Enrollment _e = e;
+		
+		try {
+			return template.update(sql, new PreparedStatementSetter() {
+				public void setValues(PreparedStatement ps) throws SQLException {
+					ps.setString(1, _studentID);
+					ps.setString(2, verification);
+					ps.setBoolean(3, false);
+					ps.setString(4, _e.getEnrollmentNo());
+					ps.setString(5, _e.getStudentNo());
+				}
+			});
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+		return 0;
+	}
 	
 	public int addNewSHEnrollment(Enrollment e) {
 		String sql = "INSERT INTO shs_enrollments(StudentNo, SchoolYear, Semester, SectionID, StrandCode) " + " VALUES(?,?,?,?,?)";
@@ -2141,6 +2188,20 @@ public class studentdb {
 		return template.update(sql, EnrollmentNo);
 	}
 	
+	public EvaluationProfile getEvaluationProfileByEnrollment(String enrollmentNo){
+		String sql = "select * from std_eval where EnrollmentNo = ?  ";
+		try {
+			return template.queryForObject(sql, new Object[] {Integer.parseInt(enrollmentNo)},
+					new BeanPropertyRowMapper<EvaluationProfile>(EvaluationProfile.class));
+		}catch(Exception ex) {
+			ex.printStackTrace();
+			EvaluationProfile e = new EvaluationProfile();
+			e.setEvaluationNo(0);
+			System.out.println("Returning empty evaluationt: ");
+			return e;
+		}
+
+	}
 	
 	public Enrollment getCollegeEnrollmentBySY(String studentNo, String schoolYear, int sem){
 		String sql = "select * from std_enrollments where StudentNo = ? AND SchoolYear = ? AND Semester = ? "
@@ -2158,6 +2219,7 @@ public class studentdb {
 		}
 		
 	}
+	
 	
 	public Enrollment getSHEnrollmentBySY(String studentNo, String schoolYear, int sem){
 		String sql = "select * from shs_enrollments where StudentNo = ? AND SchoolYear = ? AND Semester = ? "
@@ -2252,10 +2314,10 @@ public class studentdb {
 			public Teacher mapRow(ResultSet rs, int row) throws SQLException {
 				Teacher t = new Teacher();
 				t.setPersonnelID(rs.getString(1));
-				t.setFirstName(rs.getString(2));
-				t.setMiddleName(rs.getString(3));
-				t.setLastName(rs.getString(4));
-				
+				t.setFirst_name(rs.getString("first_name"));
+				t.setLast_name(rs.getString("last_name"));
+				t.setMiddle_name(rs.getString("middle_Name"));
+			
 				return t;
 			}
 		});
@@ -2263,15 +2325,15 @@ public class studentdb {
 	
 	public Teacher getPersonnelByID(String personnelID) {
 		String sql = "select * from personnels where PersonnelID=?";
-		
+	
 		try {
 			return template.queryForObject(sql, new Object[] { personnelID }, new BeanPropertyRowMapper<Teacher>(Teacher.class));
 		}catch(Exception ex) {
 			Teacher t = new Teacher();
 			t.setPersonnelID("");
-			t.setFirstName("");
-			t.setLastName("");
-			t.setMiddleName("");
+			t.setFirst_name("");
+			t.setLast_name("");
+			t.setMiddle_name("");
 			return t;
 		}
 	}

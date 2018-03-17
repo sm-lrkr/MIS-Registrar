@@ -117,6 +117,7 @@ public class ScheduleController {
 	@RequestMapping(value = "/clg/{subjectCode}/", method = RequestMethod.GET)
 	public ModelAndView clgSchedule(@PathVariable("subjectCode") String subjectCode, @RequestParam("id") String scheduleID) {
 		List<StudentProfile> students = db.getCollegeStudentsBySchedule(scheduleID);
+		SchoolYear sy =db.getActiveSchoolYear();
 		Schedule schedule = db.getCollegeScheduleByID(scheduleID);
 		String _class="LEC";
 		
@@ -130,6 +131,31 @@ public class ScheduleController {
 		model.addObject("schedule", schedule);
 		model.addObject("students", students);
 		model.addObject("classType", _class);
+		model.addObject("schoolYear", sy.getYear_start()+"-"+sy.getYear_end());
+		
+		
+		return model;
+	}
+	
+	@RequestMapping(value = "/clg/printEnlisted/", method = RequestMethod.GET)
+	public ModelAndView clgprintEnlisted( @RequestParam("schedID") String scheduleID) {
+		List<StudentProfile> students = db.getCollegeStudentsBySchedule(scheduleID);
+		Schedule schedule = db.getCollegeScheduleByID(scheduleID);
+		String _class="LEC";
+		SchoolYear sy = db.getActiveSchoolYear();
+		System.out.println("Teacher name: "+ schedule.getPersonnelName());
+		Teacher teacher = db.getPersonnelByID(schedule.getScheduleID());
+		System.out.println("Teacher name: "+ teacher.getFirst_name());
+	
+		String [] sems = {"", "1st Sem","2nd Sem", "Summer"};
+		ModelAndView model = new ModelAndView();
+		model.setViewName("studentsBySchedule");
+		model.addObject("schedule", schedule);
+		model.addObject("students", students);
+		model.addObject("classType", _class);
+		model.addObject("teacher", teacher);
+		
+		model.addObject("schoolYear", sy.getYear_start()+"-"+sy.getYear_end()+" "+ sems[sy.getSemester()]);
 		
 		return model;
 	}
@@ -260,10 +286,24 @@ public class ScheduleController {
 		DateFormat dateFormat = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT, locale);
 		String formattedDate = dateFormat.format(date);
 		
-		
+		StudentProfile sp = db.getCollegeProfileByNo(studentNo);
 		TimeTrapper trapper = new TimeTrapper();
 		SchoolYear sy = db.getActiveSchoolYear();
+		
 		Enrollment enrollment = db.getCollegeEnrollmentBySY(studentNo, sy.getYear_start()+"-"+sy.getYear_end(), sy.getSemester());
+		if(enrollment.getEnrollmentNo().equals("")) {
+			db.addNewStudentEnrollment(studentNo, sy.getYear_start()+"-"+sy.getYear_end(), sy.getSemester());
+			enrollment = db.getCollegeEnrollmentBySY(studentNo, sy.getYear_start()+"-"+sy.getYear_end(), sy.getSemester());
+		}
+		System.out.println("Enrollment enrollment No: "+ enrollment.getEnrollmentNo());
+		EvaluationProfile eval = db.getEvaluationProfileByEnrollment(enrollment.getEnrollmentNo());
+		System.out.println("EnrollmentNo: " + eval.getEvaluationNo());
+		System.out.println("ID: " + eval.getId());
+
+		if(eval.getEvaluationNo()==0) {
+			db.addNewStudentVerification(enrollment, sp.getStudentID(), 3);
+		}
+	
 		List<Schedule> enlisted = db.getCollegeEnlistedSubjects(studentNo, enrollment.getEnrollmentNo());
 		List<Schedule> temp = new ArrayList<Schedule>();
 		
@@ -297,8 +337,9 @@ public class ScheduleController {
 			}	
 			
 		}
-	
+		
 		if(!hasConflictsLec && !hasConflictsLab && !hasConflictsLec1 && !hasConflictsLab1 ) {
+		//if(!hasConflictsLec && !hasConflictsLab ) {
 			for (Schedule S : s.getSchedules()) {
 				if (S.isChecked()) {
 					db.enlistCollegeStudentSchedules(enrollment, S.getScheduleID());

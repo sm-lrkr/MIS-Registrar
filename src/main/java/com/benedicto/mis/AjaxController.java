@@ -146,6 +146,18 @@ public class AjaxController {
 		return new ModelAndView("includes/subjectschecklist", "subjectsForm", subs);
 	}
 	
+	
+	@RequestMapping(value="/studentIDExists/", method = RequestMethod.GET)
+	@ResponseBody
+	public String studentIDExists(@RequestParam("studentID") String studentID) {
+		StudentProfile sp = dao.getCollegeProfileByID(studentID);
+		
+	
+		return sp.getStudentID();
+	}
+	
+	
+	
 	@RequestMapping(value="/enlistSubjects", method = RequestMethod.POST)
 	@ResponseBody
 	public ModelAndView enlistSubjects(@RequestParam("year") int year, @RequestParam("sem") int sem, @ModelAttribute("subjects") SubjectsViewForm s,

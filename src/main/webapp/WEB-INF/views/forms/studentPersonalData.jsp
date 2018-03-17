@@ -12,7 +12,7 @@
 				<td><form:input path="fbg.studentNo" type="hidden"/></td>
 				<td><form:input path="profile.studentNo" type="hidden" /></td>
 			</tr>
-
+			
 			<tr>
 				<td>
 					<form:label class="clg" path="profile.studentID" >*StudentID</form:label>
@@ -20,9 +20,9 @@
 					<form:label class="bsc" path="profilebsc.LRN" >*LRN</form:label>
 					</td>
 				<td>
-					<form:input class="clg" path="profile.studentID"/>
-					<form:input class="shs" path="profilesh.LRN"/>
-					<form:input class="bsc" path="profilebsc.LRN"/>
+					<form:input id="clgid" class="clg" path="profile.studentID"/>
+					<form:input id="shid"  class="shs" path="profilesh.LRN"/>
+					<form:input id="bscid" class="bsc" path="profilebsc.LRN"/>
 				</td>
 		
 				<td></td>

@@ -423,10 +423,10 @@
 			<div>
 					<h1 style="display: inline-block; margin-top: 0px;">New Curriculum</h1>
 					<div class="floatright">
-						<a href="${pageContext.request.contextPath}/" class="linkButton">Back to Main - ${courseID}</a>    
+						<a href="${pageContext.request.contextPath}/" class="linkButton">Back to Main</a>    
 			    	</div>
 		  	</div>
-		
+	
 			<div style="width: 100%;">
 				<div style="position: fixed;" >
 					<h3>Subjects List</h3>
@@ -473,22 +473,53 @@
 							<div style="display: flex; flex-direction: row;">
 								<div><p style="display: inline; padding-right:20px;" >Description: </p></div>
 								<div>
-									<form:input path="curriculumDesc"  />
+									<form:input path="curriculumDesc" value="${courseDesc}" />
 									<form:input type="hidden" path="courseID" />
-								
+							
 								</div>
 							</div>
-						
+					
 							<div style="display: flex; flex-direction: row; padding-top:15px;">
 								<div><p style="display: inline; padding-right:15px;" >SY Implemented: </p></div>
 								<div>
-									<form:input  type="text" path="yearImplemented"  />
+									<form:select  id="schoolYear" path="yearImplemented">
+												<form:option value="2000-2001" label="2000-2001" />  
+												<form:option value="2001-2002" label="2001-2002" />  
+												<form:option value="2002-2003" label="2002-2003" /> 
+												<form:option value="2003-2004" label="2003-2004" />  
+												<form:option value="2004-2006" label="2004-2006" />  
+												<form:option value="2005-2006" label="2005-2006" />  
+												<form:option value="2006-2007" label="2006-2007" />  
+												<form:option value="2007-2008" label="2007-2008" /> 
+												<form:option value="2008-2009" label="2008-2009" />  
+												<form:option value="2009-2010" label="2009-2010" />  
+												<form:option value="2010-2011" label="2010-2011" />  
+												<form:option value="2011-2012" label="2011-2012" />  
+												<form:option value="2012-2013" label="2012-2013" />  
+												<form:option value="2013-2014" label="2013-2014" />  
+												<form:option value="2014-2015" label="2014-2015" />  
+												<form:option value="2015-2016" label="2015-2016" />  
+												<form:option value="2016-2017" label="2016-2017" />  
+												<form:option value="2017-2018" label="2017-2018" />  
+												<form:option value="2018-2019" label="2018-2019" />  
+												<form:option value="2019-2020" label="2019-2020" />  
+												<form:option value="2020-2021" label="2020-2021" />  
+												<form:option value="2021-2022" label="2021-2022" />  
+												<form:option value="2022-2023" label="2022-2023" />  
+												<form:option value="2023-2024" label="2023-2024" />  
+												<form:option value="2024-2025" label="2024-2025" />  
+												<form:option value="2025-2026" label="2025-2026" />
+												<form:option value="2026-2027" label="2026-2027" />
+												<form:option value="2027-2028" label="2027-2028" />
+												<form:option value="2028-2029" label="2028-2029" />
+												<form:option value="2029-2030" label="2029-2030" />
+											</form:select>
 									<div  style="padding-top: 15px;"><input type="button" id="btnCreate1" value="Create New"/></div>
 								</div>
 							</div>
 						</form:form>
 					</div>
-				
+			
 					<h3>Curriculum Subjects</h3>
 					<hr>
 					<div id="curricSubjects" style="width:650px;">

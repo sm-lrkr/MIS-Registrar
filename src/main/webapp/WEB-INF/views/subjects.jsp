@@ -39,10 +39,10 @@
 		        	style : 'single'
 		        }
 		 	} );
-			
+		
 			table.on( 'dblclick', 'tr', function () {
 				var subjectCode = table.row( this ).data()[0];
-				window.location.href = "${pageContext.request.contextPath}/subjects/clg/" + subjectCode;
+				window.location.href = "${pageContext.request.contextPath}/subjects/clg/?subjectCode=" + subjectCode;
 			} );
 			
 			$("#print").click(function(){

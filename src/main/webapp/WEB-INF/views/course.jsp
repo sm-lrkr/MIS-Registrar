@@ -44,7 +44,7 @@
 					$(this).html('');
 				}
 			});
-			
+		
 			$("#print").click(function(){
 				var curricID = $("#curricSelect").val();
                 window.open( encodeURI(ctx+"/courses/printCurriculum/?curricID="+curricID),'_blank');
@@ -55,6 +55,9 @@
 				var curricID = $("#curricSelect").val();
 				window.location.href = "${pageContext.request.contextPath}/courses/" + courseID +"/?curricID="+curricID;
 			});
+		
+			var curricID = "${curricID}";
+			$("#curricSelect").val(curricID);
 		});
 	</script>
 	
@@ -92,7 +95,7 @@
 			
 			
 			<div style=" padding-bottom: 30px;">
-				<select  id="curricSelect">
+				<select  id="curricSelect" >
 						<c:forEach var="crc" items="${curriculums}">   
 									<option value="${crc.curriculumID}" label="${crc.curriculumDesc}" /> 
 						</c:forEach>  

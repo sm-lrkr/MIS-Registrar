@@ -21,13 +21,66 @@
 	<script type="text/javascript" src="${jqueryValidate}" ></script>
 	<script type="text/javascript" src="${sprFormValidate}" ></script>
 	
-	
+
 	<script type = "text/javascript">
 		$(document).ready(function(){
 			$("#dbCurriculum").on('change', function(){
 				alert($("#dbCurriculum").val());
 			});
-		
+			
+			$("#submit").click(function() {
+				alert("clicked");	
+				var ctx = "${pageContext.request.contextPath}";
+					var id = "";
+					//alert("clgid"+$("#clgid").val());
+					if($("#clgid").val()!="")
+					{
+					
+						id = $("#clgid").val(); 
+					}
+					else if($("#shid").val()!=""){
+						id = $("#shid").val();
+					}
+					else if($("#bscid").val() !=""){
+						id = $("#bscid").val();
+					}	
+					alert(id);
+					var searchurl = encodeURI(ctx+'/ajax/studentIDExists/?studentID='+id);
+					$.ajax({
+					
+						url: searchurl,
+						type: "GET" ,
+						success: function(result){
+							if(result==""){
+								alert("ID is unique: "+ result);
+								$("form").submit();
+							}
+							else{
+								alert("ID exists: "+ result);
+								return false;
+							}
+						},
+						error: function (jqXHR, exception) {
+					        var msg = '';
+					        if (jqXHR.status === 0) {
+					            msg = 'Not connect.\n Verify Network.';
+					        } else if (jqXHR.status == 404) {
+					            msg = 'Requested page not found. [404]';
+					        } else if (jqXHR.status == 500) {
+					            msg = 'Internal Server Error [500].';
+					        } else if (exception === 'parsererror') {
+					            msg = 'Requested JSON parse failed.';
+					        } else if (exception === 'timeout') {
+					            msg = 'Time out error.';
+					        } else if (exception === 'abort') {
+					            msg = 'Ajax request aborted.';
+					        } else {
+					            msg = 'Uncaught Error.\n' + jqXHR.responseText;
+					        }
+					       	alert(msg);
+					    }			
+					});
+		     });
 	
 			$("#db_Course").on('change', function(){
 				var ctx = "${pageContext.request.contextPath}";
@@ -43,7 +96,7 @@
 					error:function(e) {  
 					      alert('Error: ' + e);   
 					}  
-					
+				
 				});
 			});
 		
@@ -176,13 +229,10 @@
 				$(".bsc").show();
 				
 			}
-	
-		
+			
 		});
 		
-	
 
-	
 	</script>
 	
 	
@@ -206,7 +256,7 @@
 				</div>
 			</c:if>
 		</div>
-		<form:form method="POST" action="${pageContext.request.contextPath}/students/spr/${saveType}${params}" modelAttribute="sprForm" id="${saveType}" >
+		<form:form method="POST" action="${pageContext.request.contextPath}/students/spr/${saveType}${params}" modelAttribute="sprForm" id="${saveType}" class="sprForm" >
 			<jsp:include page="forms/studentPersonalData.jsp" />
 			<jsp:include page="forms/studentFBG.jsp" />
 			<c:choose>
@@ -214,16 +264,17 @@
 					<jsp:include page="forms/collegeProfile.jsp" />
 					<jsp:include page="forms/shProfile.jsp" />
 					<jsp:include page="forms/basicProfile.jsp" />
-					<input type="submit" class="linkButton" style="float:right;" value="Save New"/>
-	
+					<!--<input type="submit" class="linkButton" style="float:right;" value="Save New"/>-->
+				
 				</c:when>
 				<c:otherwise>
 					<jsp:include page="forms/${profileForm}.jsp" />
-					<input type="submit" class="linkButton" style="float:right;" value="Save"/>
+					<!--  <input id="submit" type="submit" class="linkButton" style="float:right;" value="Save"/>-->
+					
 				</c:otherwise>
 			</c:choose>
-			
 		</form:form>
+		<button type="button" id="submit" class="linkButton">Save</button>
 	</div>
 </div>
 <jsp:include page="includes/footer.jsp" />

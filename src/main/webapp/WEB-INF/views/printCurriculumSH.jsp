@@ -104,8 +104,34 @@
 					<h2 style="margin-bottom: 5px;">${curric.curriculumDesc}</h2>
 					<h4 style="margin-top:5px;" >${curric.yearImplemented}</h4>
 				</div>
+		
+				<div id="curricSubjects" style="width:650px;" class="divcontent">
+				   		<c:forEach begin="11" end="12" varStatus="year">
+						<div>
+							<h3>${years[year.index-10]}</h3>
+							<c:forEach begin="1" end="3" varStatus="sem">
+								<table id="semsubjects" class="compact listTable printTable">  
+									<tr><th colspan="5" >${sems[sem.index]}</th></tr>
+									<tr><th>CODE</th><th>DESCRIPTIVE TITLE</th><th>UNITS</th><th>PRE-REQUISITE(s)</th><th>TYPE</th></tr>  
+									<c:forEach var="subj" items="${strandSubjects.subjects}" varStatus="status">
+										 	<c:if test="${subj.year == year.index && subj.sem == sem.index}">
+							   					<tr>
+													<td>${subj.subject.subjectCode}</td>
+													<td>${subj.subject.subjectDesc}</td>
+													<td>${subj.subject.lecUnits}</td>
+													<td>${subj.subject.preRequisites}</td>
+													<td>${subj.subject.type}</td>
+													
+												</tr>
+							   				</c:if>
+									</c:forEach>   
+								</table>
+							</c:forEach>   
+						</div>
+					</c:forEach>
+					</div>	
 			
-					<c:forEach begin="1" end="5" varStatus="year">
+					<c:forEach begin="11" end="12" varStatus="year">
 						<div style=" text-align: center;" class="divcontent" >
 						<c:set var = "yr"> ${year.index}-1</c:set>
 						<c:if test="${not empty subjects[yr] }">

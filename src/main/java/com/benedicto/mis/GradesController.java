@@ -247,5 +247,30 @@ public class GradesController {
 		return model;
 			
 	}
+	
+	@RequestMapping(value = "/clg/grades/print/", method = RequestMethod.GET)
+	public ModelAndView printStudentGrades(@RequestParam("studentNo") String studentNo) {
+		logger.info("Update Grades");
+		System.out.println("Student No: "+ studentNo);
+		StudentProfile student = db.getCollegeProfileByNo(studentNo);
+	
+		SchoolYear sy = db.getActiveSchoolYear();
+		Enrollment e = db.getCollegeEnrollmentBySY(studentNo, sy.getYear_start()+"-"+sy.getYear_end(), sy.getSemester());
+		SemGrades semGrades = new SemGrades();
+		semGrades.setGrades(db.getCollegeGradesForCurrentSem(e.getEnrollmentNo()));
+	
+		String [] sems = {"", "1st Semester","2nd Semester", "Summer"};
+		System.out.println("Student Name: " + student.getFirstName());
+
+		ModelAndView model = new ModelAndView();
+		model.setViewName("printGrades");
+		model.addObject("student", student);
+		model.addObject("semGrades", semGrades);
+		model.addObject("schoolYear", e.getSchoolYear()+"-"+sems[e.getSemester()]);
+		model.addObject("subject", new Subject());
+		
+		return model;
+			
+	}
 
 }

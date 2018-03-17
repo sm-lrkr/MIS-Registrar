@@ -95,17 +95,17 @@
 </head>
 <body>
 
-	
+
 	<jsp:include page="includes/header.jsp" />
 	<div id="main">
 	
 		<jsp:include page="includes/main-left.jsp" />
 		<div>
 			<h1 style="display: inline-block; margin-top: 0px;">${pageTitle}</h1>  
-		
-			<form:form id="subjectForm" action="${pageContext.request.contextPath}/subjects/${formType}/${subjectType}/save" modelAttribute="subject" >
+	
+			<form:form method="POST" id="subjectForm" action="${pageContext.request.contextPath}/subjects/${formType}/${subjectType}/save${subjectCode}" modelAttribute="subject" >
 				<table class="formTable" style="margin-top: 30px;">
-				
+			
 					<tr>
 						<td><form:label path="subjectCode" >Subject Code</form:label></td>
 						<td><form:input id="subjectCode" path="subjectCode"/></td>

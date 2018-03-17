@@ -21,9 +21,10 @@
 	<script type="text/javascript" src="${jscript}" ></script>
 	<script type = "text/javascript">
 		$(document).ready(function(){
+			var ctx = "${pageContext.request.contextPath}";
 			$("#btnSearch").click(function(){
 				var searchurl = encodeURI('ajax/ajaxdemo/?param='+$("#search").val());
-					
+				
 				$.ajax({
 					
 					url: searchurl,
@@ -41,15 +42,29 @@
 	
 			});
 			
-		
+	
 			$("#db_curriculum").on('input', function(){
 				var strandCode = '${strand.strandCode}';
 				var curricID = $("#db_curriculum").val();
 				window.location.href = encodeURI("${pageContext.request.contextPath}/courses/strands/" + strandCode+"/?curricID="+curricID);
 			});
+			
+			$("#print").click(function(){
+				alert("clicked");
+				var curricID = $("#curricSelect").val();
+                window.open( encodeURI(ctx+"/courses/strands/printCurriculum/?curricID="+curricID),'_blank');
+			});
 		});
 	</script>
 	
+	<style type="text/css">
+		@page {
+		  margin-top: 0.2in;
+		  margin-bottom: 0.5in;
+		  margin-left: 1in;
+		  margin-right: 1in;
+		}
+	</style>
 	
 </head>
 <body>
@@ -57,9 +72,8 @@
 	
 	<jsp:include page="includes/header.jsp" />
 	<div id="main">
-	
 		<jsp:include page="includes/main-left.jsp" />
-		
+	
 		<div>
 		
 		<div style="width: 100%; margin-bottom: 25px;">
@@ -68,12 +82,13 @@
 			
 			<div class="floatright">
 				<a href="${pageContext.request.contextPath}/curriculums/addCurriculum/sh/${strand.strandCode}" class="linkButton">New Curriculum</a>
+				<button type="button" id="print" class="linkButton" >Print</button> 
 			</div>
 		</div>
-		
+	
 		
 		<div style=" padding-bottom: 30px;">
-			<select  id="db_curriculum">
+			<select  id="curricSelect">
 					<c:forEach var="crc" items="${curriculums}">   
 								<option value="${crc.curriculumID}" label="${crc.curriculumDesc}" /> 
 					</c:forEach>  
@@ -86,16 +101,17 @@
 							<h3>${years[year.index-10]}</h3>
 							<c:forEach begin="1" end="3" varStatus="sem">
 								<table id="semsubjects" class="listTable">  
-									<tr><th colspan="4" >${sems[sem.index]}</th></tr>
-									<tr><th>CODE</th><th>DESCRIPTIVE TITLE</th><th>PRE-REQUISITE(s)</th><th>TYPE</th></tr>  
+									<tr><th colspan="5" >${sems[sem.index]}</th></tr>
+									<tr><th>CODE</th><th>DESCRIPTIVE TITLE</th><th>UNITS</th><th>PRE-REQUISITE(s)</th><th>TYPE</th></tr>  
 									<c:forEach var="subj" items="${strandSubjects.subjects}" varStatus="status">
 										 	<c:if test="${subj.year == year.index && subj.sem == sem.index}">
 							   					<tr>
 													<td>${subj.subject.subjectCode}</td>
 													<td>${subj.subject.subjectDesc}</td>
+													<td>${subj.subject.lecUnits}</td>
 													<td>${subj.subject.preRequisites}</td>
 													<td>${subj.subject.type}</td>
-														
+													
 												</tr>
 							   				</c:if>
 									</c:forEach>   

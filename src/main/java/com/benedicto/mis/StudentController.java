@@ -322,7 +322,6 @@ public class StudentController {
 			if(e.getEnrollmentNo().equals("") && spr.getProfile().isEnrolled()) {
 				System.out.println("Student not enrolled for the current sem. Adding new enrollment. ");
 				e.setStudentNo(studentNo);
-				
 				db.addNewStudentEnrollment(studentNo,  sy.getYear_start()+"-"+sy.getYear_end(), sy.getSemester() );
 			}
 		}

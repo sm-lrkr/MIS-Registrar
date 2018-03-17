@@ -45,14 +45,13 @@
 			
 			table.on( 'dblclick', 'tr', function () {
 				var subjectCode = table.row( this ).data()[0];
-				window.location.href = "${pageContext.request.contextPath}/subjects/sh/" + subjectCode;
+				window.location.href = "${pageContext.request.contextPath}/subjects/sh/?subjectCode=" + subjectCode;
 			} );
 		});
 	</script>
 	
 </head>
 <body>
-
 	
 	<jsp:include page="includes/header.jsp" />
 	<div id="main">

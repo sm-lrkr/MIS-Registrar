@@ -25,7 +25,7 @@
 
 
     
-   
+  
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
@@ -153,54 +153,69 @@
 		        display: none !important;
 		    }
 		}
-		
+	
 		@page {
 		  margin-top: 0.2in;
 		  margin-bottom: 0.5in;
-		  margin-left: 1in;
-		  margin-right: 1in;
+		  margin-left: 0.5in;
+		  margin-right: 0.5in;
+		}
+	
+		td{
+			text-align: left;
+			font-size: 12px;
+	
 		}
 	</style>
 </head>
 <body>
 	<div style="display: flex; flex-direction: right;">
 		<div style="width: 8.5in; text-align:center" >
+			
 			<div style=" display: inline-block;" >
+			
 				<div style="text-align:center;" class="content">
 					<img src="${pageContext.request.contextPath}/resources/images/bclogo.png" />
-					<p id="header" style="display: inline-block; fon-size:14px; font-weight:bold;">${courseDesc}</p>
 				</div>
 				
-				<div style="width: 7.5in;" class="content" >
-					<table id="studview" class="compact listTable" >  
-						<thead >
-							<tr>
-								<th >StudentNo</th>
-								<th>Id/LRN</th>
-								<th>Last Name</th>
-								<th>First Name</th>
-								<th>Middle Name</th>
-								<c:if test = "${byCourse ne true}">
-									<th>Course</th>
-								</c:if>
-							</tr>  
-						</thead>
-									
-						<tbody>
-							<c:forEach var="stud" items="${students}" varStatus="status">   
-							   	<tr>  
-								   	<td>${stud.studentNo}</td>  
-								   	<td>${stud.studentID}</td>  
-								   	<td>${stud.lastName}</td>  
-								   	<td>${stud.firstName}</td>  
-								   	<td>${stud.middleName}</td>  
-								   	<c:if test = "${byCourse ne true}">
-										<td>${stud.courseID}</td>
-									</c:if>
-							   	</tr>  
-							</c:forEach>
-						</tbody>  
-					</table>  
+				<h2>${schoolYear} </h2>
+	
+				<div style="width: 7.5in; margin-top: 20px; text-align:left;" class="content"  >
+					<h4 style="margin-bottom:-15px;">ID: ${student.studentID}  </h4>	
+					<h4 style="float:right; margin-right:20px;">Course: ${student.courseID}  </h4>	
+					<h4 style="margin-bottom:-15px;" >Name: ${student.lastName}, ${student.firstName} ${student.middleName}  </h4>	
+					<table id="gradesview" class="display compact listTable ">
+							<thead>
+								<tr><th>Code</th><th>Description</th><th>Units</th><th>Prelim</th><th>Midterm</th><th>Final</th></tr>
+							</thead>
+					
+							<tbody>
+								<c:forEach var="grade" items="${semGrades.grades}" varStatus="status1">
+									<tr>
+										<td>
+											${grade.subjectCode} 
+										</td>
+										<td>${grade.subjectDesc} </td>
+										<td>${grade.lecUnits + grade.labUnits} </td>
+										<td>
+											<c:if test="${grade.prelimGrade ne 0}">
+												${grade.prelimGrade}
+											</c:if>
+										</td>
+										<td>
+											<c:if test="${grade.midtermGrade ne 0}">
+												${grade.midtermGrade}
+											</c:if>
+										</td>
+										<td>
+											<c:if test="${grade.finalGrade ne 0}">
+												${grade.finalGrade}
+											</c:if>
+										</td>
+									</tr>
+								</c:forEach>
+							</tbody>
+					</table>	
 				</div>
 			</div>
 		</div>
@@ -208,29 +223,7 @@
 			<div id="buttons">
 			</div>
 			
-			<div style="margin-top:100px;">
-				<select id="db_Option" >
-					<option value="printByTeacher" label="Enrolled"/> 
-					<option value="printByCourse" label="By Course"/> 
-					<option value="printByTeacher" label="By Strand"/> 
-					<option value="printByTeacher" label="By Section"/>
-					<option value="printByTeacher" label="By College Schedule"/>
-					<option value="printByTeacher" label="By SH Schedule"/>
-					
-					 
-					
-				</select>
-			</div>
-			
-			<div style="margin-top:20px;">
-				<select id="db_Option1" >
-					<option value="-------" label="---Courses---"/> 
-					<c:forEach var="course" items="${courses}">   
-						<option value="${course.courseID}" label="${course.courseDesc}"/>   
-				   	</c:forEach>
-				</select>
-				<input type="hidden" id="courseID" value="${course.courseID}"/> 
-			</div>
+		
 		</div>
 		
 	

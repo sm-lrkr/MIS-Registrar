@@ -110,7 +110,7 @@
 				<table class="formTable" style="margin-top: 30px;">
 				
 					<tr>
-						<td><form:label path="subjectCode" >Subject Code</form:label></td>
+						<td>Subject Code</td>
 						<td><form:input id="subjectCode" path="subjectCode"/></td>
 					</tr>
 					
@@ -141,7 +141,7 @@
 					</tr>
 					
 					<tr>
-						<td><form:label path="preRequisites" > School</form:label></td>
+						<td><form:label path="preRequisites" > Scchool</form:label></td>
 						<td><form:input id="preReq"   path="preRequisites" /></td>
 					</tr>
 					

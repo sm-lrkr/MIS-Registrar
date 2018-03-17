@@ -241,43 +241,43 @@ public class HomeController {
 //		return "Success";
 //	}
 
-	@RequestMapping(value = "/saveNewCourse", method = RequestMethod.POST)
-	public ModelAndView addNewCourse(@ModelAttribute("course") Course c) {
-		System.out.println("Add new course");
-		db.createCourse(c);
-		return new ModelAndView("redirect:/courses");
-	}
-
-	
-	@RequestMapping(value = "/subjectForm", method = RequestMethod.GET)
-	public ModelAndView subjectForm(@ModelAttribute("subject") Subject s) {
-		System.out.println("Add new subject");
-	
-		return new ModelAndView("subjectForm", "subject", new Subject());
-	}
-	
-	@RequestMapping(value = "/scheduleForm", method = RequestMethod.GET)
-	public ModelAndView scheduleForm(@ModelAttribute("subject") Subject s) {
-		System.out.println("Add new subject");
-	
-		return new ModelAndView("subjectForm", "subject", new Subject());
-	}
-	
-	@RequestMapping(value = "/newSubject", method = RequestMethod.POST)
-	public ModelAndView addNewSubject(@ModelAttribute("subject") Subject s) {
-		System.out.println("Add new course");
-		db.createCollegeSubject(s);
-		return new ModelAndView("redirect:/subjects");
-	}
-	
-	@RequestMapping(value = "/newSchedule", method = RequestMethod.POST)
-	public ModelAndView addNewSchedule(@ModelAttribute("schedule") Schedule s) {
-		System.out.println("Add new course");
-		db.createSchedule(s);
-		return new ModelAndView("redirect:/subjects");
-	}
-
-//	@RequestMapping(value = "/addCurriculum/{courseID}")
+//	@RequestMapping(value = "/saveNewCourse", method = RequestMethod.POST)
+//	public ModelAndView addNewCourse(@ModelAttribute("course") Course c) {
+//		System.out.println("Add new course");
+//		db.createCourse(c);
+//		return new ModelAndView("redirect:/courses");
+//	}
+//
+//	
+//	@RequestMapping(value = "/subjectForm", method = RequestMethod.GET)
+//	public ModelAndView subjectForm(@ModelAttribute("subject") Subject s) {
+//		System.out.println("Add new subject");
+//	
+//		return new ModelAndView("subjectForm", "subject", new Subject());
+//	}
+//	
+//	@RequestMapping(value = "/scheduleForm", method = RequestMethod.GET)
+//	public ModelAndView scheduleForm(@ModelAttribute("subject") Subject s) {
+//		System.out.println("Add new subject");
+//	
+//		return new ModelAndView("subjectForm", "subject", new Subject());
+//	}
+//	
+//	@RequestMapping(value = "/newSubject", method = RequestMethod.POST)
+//	public ModelAndView addNewSubject(@ModelAttribute("subject") Subject s) {
+//		System.out.println("Add new course");
+//		db.createCollegeSubject(s);
+//		return new ModelAndView("redirect:/subjects");
+//	}
+//	
+//	@RequestMapping(value = "/newSchedule", method = RequestMethod.POST)
+//	public ModelAndView addNewSchedule(@ModelAttribute("schedule") Schedule s) {
+//		System.out.println("Add new course");
+//		db.createSchedule(s);
+//		return new ModelAndView("redirect:/subjects");
+//	}
+//
+////	@RequestMapping(value = "/addCurriculum/{courseID}")
 //	public ModelAndView addCurriculum(@PathVariable("courseID") String courseID) {
 //		logger.info("addCurriculum");
 //		List<Subject> list = db.getCollegeSubjects("");

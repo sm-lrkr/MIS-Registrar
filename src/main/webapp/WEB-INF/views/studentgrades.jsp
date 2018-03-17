@@ -92,11 +92,11 @@
 			<div style="margin-bottom: 20px;">
 				<h1 style="display: inline-block;">${student.lastName}, ${student.firstName} ${student.middleName}</h1>
 				<div class="floatright">
-					<a href="${pageContext.request.contextPath}/grades/${dept}/tor/?studentNo=${student.studentNo}" id="print" ><span class="linkButton" >TOR </span></a>   
-				 	<a href="sprForm" id="print" ><span class="linkButton" >Print</span></a>   
+					<a href="${pageContext.request.contextPath}/grades/${dept}/tor/print/?studentNo=${student.studentNo}" id="print" ><span class="linkButton" >TOR </span></a>   
+				 	<a href="${pageContext.request.contextPath}/grades/${dept}/grades/print/?studentNo=${student.studentNo}" id="printgrades" ><span class="linkButton" >Print</span></a>   
 				 </div>
 			</div>
-	
+
 			<form:form  action="${pageContext.request.contextPath}/grades/${dept}/save/?studentNo=${student.studentNo}" method="post" modelAttribute="allSemGrades" >
 				<c:forEach var="sg" items="${allSemGrades.semGrades}" varStatus="status">
 					<c:set var="ap" value="" />

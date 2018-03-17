@@ -77,7 +77,7 @@
 			        ]
 			 } );
 			 
-			
+		
 	
 			table.on( 'dblclick', 'tr', function () {
 				var stdNo = table.row( this ).data()[0];
@@ -167,42 +167,42 @@
 		<div style="width: 8.5in; text-align:center" >
 			<div style=" display: inline-block;" >
 				<div style="text-align:center;" class="content">
-					<img src="${pageContext.request.contextPath}/resources/images/bclogo.png" />
-					<p id="header" style="display: inline-block; fon-size:14px; font-weight:bold;">${courseDesc}</p>
+					<div  style="border-bottom: 2px solid grey;">
+						<img src="${pageContext.request.contextPath}/resources/images/bclogo.png" />
+					</div>
+					<h2 style="margin-bottom: 5px;">Master List</h2>
+					<h4 style="margin-top:5px;" >${schoolYear}</h4>
 				</div>
-				
+			
 				<div style="width: 7.5in;" class="content" >
-					<table id="studview" class="compact listTable" >  
-						<thead >
-							<tr>
-								<th >StudentNo</th>
-								<th>Id/LRN</th>
-								<th>Last Name</th>
-								<th>First Name</th>
-								<th>Middle Name</th>
-								<c:if test = "${byCourse ne true}">
-									<th>Course</th>
-								</c:if>
-							</tr>  
-						</thead>
-									
-						<tbody>
-							<c:forEach var="stud" items="${students}" varStatus="status">   
-							   	<tr>  
-								   	<td>${stud.studentNo}</td>  
-								   	<td>${stud.studentID}</td>  
-								   	<td>${stud.lastName}</td>  
-								   	<td>${stud.firstName}</td>  
-								   	<td>${stud.middleName}</td>  
-								   	<c:if test = "${byCourse ne true}">
-										<td>${stud.courseID}</td>
-									</c:if>
-							   	</tr>  
-							</c:forEach>
-						</tbody>  
+					<div style="text-align: left;">
+						<p style="margin-bottom: 0px;" >Subject: ${schedule.subjectCode}</p>
+						<p style="margin-top: 5px; margin-bottom: 5px;" >Schedule: ${schedule.lecTimeStart} - ${schedule.lecTimeEnd} ${schedule.lecDays}</p>
+					</div>
+					<div style="float:right; margin-top:-60px; text-align:left;">
+						<p style="margin-bottom: 0px;" >Teacher: ${schedule.personnelName}</p>
+						<p style="margin-top: 5px;" >Room: ${schedule.lecRoom}</p>
+					</div>
+	
+					<table id="studview" class="compact listTable printTable" >  
+							<thead >
+								<tr><th >StudentNo</th><th>Id/LRN</th><th>Last Name</th><th>First Name</th><th>Middle Name</th></tr>  
+							</thead>
+							
+									<tbody>
+									<c:forEach var="stud" items="${students}">   
+									   	<tr>  
+									   	<td>${stud.studentNo}</td>  
+									   	<td>${stud.studentID}</td>  
+									   	<td>${stud.lastName}</td>  
+									   	<td>${stud.firstName}</td>  
+									   	<td>${stud.middleName}</td>  
+							
+									   	</tr>  
+								   	</c:forEach>
+								   	</tbody>  
 					</table>  
 				</div>
-			</div>
 		</div>
 		<div  class="no-print" style="display: inline-block;	margin-top:100px;">
 			<div id="buttons">

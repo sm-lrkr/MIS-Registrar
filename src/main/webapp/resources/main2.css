@@ -376,3 +376,6 @@ table.dataTable thead .sorting_desc_disabled {
   background-image: image-url("/images/icons/arrow.png");
 }
 
+table.dataTable tbody tr {
+			max-height: 13px; /* or whatever height you need to make them all consistent */
+}
