@@ -166,7 +166,7 @@
 		<div style="width: 8.5in; text-align:center" >
 			<div style=" display: inline-block;" >
 				<div class="content" style="text-align: center;">
-					<p style="font-size: 18px; font-weight: bold;">${teacher.firstName} ${teacher.lastName}</p>
+					<p style="font-size: 18px; font-weight: bold;">${teacher.first_name} ${teacher.last_name}</p>
 					<p  style="font-size: 14px; font-weight: bold; margin-top: -10px;" id="sy"></p>
 				</div>
 		
@@ -224,12 +224,12 @@
 				<select id="db_Option1" >
 					<option value="" label="---Teachers---"/> 
 					<c:forEach var="teacher" items="${teachers}">   
-						<option value="${teacher.personnelID}" label="${teacher.firstName} - ${teacher.lastName}"/>   
+						<option value="${teacher.personnelID}" label="${teacher.first_name} - ${teacher.last_name}"/>   
 				   	</c:forEach>
 				</select>
 				<input type="hidden" id="teacherID" value="${teacher.personnelID}"/> 
 			</div>
-
+			
 			<div style="margin-top:20px;">
 				<select id="db_Option2" >
 					<c:forEach var="schoolYear" items="${schoolYears}">   

@@ -70,10 +70,7 @@
 		
 		<div>
 			<h1 style="display: inline-block; margin-top: 0px;">${subject.subjectCode} - ${subject.subjectDesc}</h1>  
-			<div class="floatright">
-					<a href="${pageContext.request.contextPath}/subjects/editSubject/clg/?subjectCode=${subject.subjectCode}" ><span class="linkButton">Edit</span></a>    
-			</div>
-		
+	
 			<div style="display: flex; flex-direction: horizontal; margin-top:30px;">
 				<div>
 					<form:form id="subjectForm" action="" modelAttribute="subject" >
@@ -100,7 +97,7 @@
 					</form:form>
 					
 					<div class="floatright" style="margin-bottom: 20px;" >
-						<a href="${pageContext.request.contextPath}/subjects/editSubject/${subjectType}/${subject.subjectCode}" ><span class="linkButton">Edit</span></a>   
+							<a href="${pageContext.request.contextPath}/subjects/editSubject/clg/?subjectCode=${subject.subjectCode}" ><span class="linkButton">Edit</span></a>    
 					</div>
 				</div>
 				

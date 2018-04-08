@@ -80,12 +80,12 @@
 		<jsp:include page="includes/main-left.jsp" />
 		
 		<div >
-		
-			<div style="width: 100%; margin-bottom: 25px;">
+
+			<div style="width: 1000px; margin-bottom: 25px;">
 				
 				<h2 style="display: inline-block; margin-top: 0px;" >${course.courseDesc}</h2>  
-				
-				<div class="floatright">
+	
+				<div style="float:right;margin-right: 20px;">
 					<a href="${pageContext.request.contextPath}/curriculums/addCurriculum/${courseID}" class="linkButton">New Curriculum</a>
 					<a href="${pageContext.request.contextPath}/courses/editCourse/${courseID}" class="linkButton">Edit</a>
 									

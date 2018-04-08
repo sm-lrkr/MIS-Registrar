@@ -113,7 +113,6 @@
 		<div>
 			<h1 style="display: inline-block; margin-top: 0px;">${subjectCode}</h1>  
 			<div class="floatright">
-						<a href="newSchedule" class="linkButton">New Schedule</a> 
 						<button type="button" id="print" class="linkButton" >Print</button> 
 			</div>
 			<div style="margin-bottom: 50px;">

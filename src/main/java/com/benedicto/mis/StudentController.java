@@ -407,11 +407,13 @@ public class StudentController {
 		StudentProfile profile = db.getCollegeProfileByNo(studentNo);
 		String profileType = "college";
 		
-		Enrollment e = db.getCollegeEnrollmentBySY(studentNo, "2017-2018", 1);
+		
+		SchoolYear sy = db.getActiveSchoolYear();
+		Enrollment e = db.getCollegeEnrollmentBySY(studentNo, sy.getYear_start()+"-"+sy.getYear_end(), sy.getSemester());
 		SchedulesViewForm enlisted = new SchedulesViewForm();
 		enlisted.setSchedules(db.getCollegeEnlistedSubjects(studentNo, e.getEnrollmentNo()));
 		
-		
+	
 		String [] sems = {"", "1st Sem","2nd Sem", "Summer"};
 		
 		if(profile.getStudentID().equals("")) {
@@ -521,8 +523,8 @@ public class StudentController {
 		model.addObject("bsccurrics", bsccurrics);
 		model.addObject("saveType", "saveEdited");
 		model.addObject("studentFBG", fbg);
-		model.addObject("title", "SPR");
-		
+		model.addObject("title", stud.getLastName()+","+ stud.getFirstName()+" "+stud.getMiddleName());
+	
 		return model;
 	}
 	
@@ -586,9 +588,6 @@ public class StudentController {
 		model.addObject("saveType", "saveNew");
 		return model;
 	}
-	
-	
-	
 	
 	
 	@RequestMapping(value = "/spr/profile/clg/{studentNo}")
@@ -709,12 +708,6 @@ public class StudentController {
 		List<Course> courses = db.getCollegeCourses("");
 		List<Curriculum> currics = db.getCollegeCurriculums("");
 
-		if (!LRN.equals("")) {
-//			stud = db.getStudentByID(studentID);
-//			studCAB = db.getStudentCABByID(studentID);
-//			currics = db.getCurriculum(studCAB.getCourseID());
-		}
-
 		System.out.println("StudentCAB curriculumID is: " + studCAB.getCurriculumID());
 
 		ModelAndView model = new ModelAndView();
@@ -735,10 +728,6 @@ public class StudentController {
 		db.deleteSPR(id);
 		return new ModelAndView("redirect: /index");
 	}
-//
-//	@ModelAttribute("schoolYear")
-//	public String getInitializeMyObject() {
-//		return "2017-2018";
-//	}
+
 
 }

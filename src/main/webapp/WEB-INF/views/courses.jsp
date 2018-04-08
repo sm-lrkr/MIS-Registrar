@@ -86,6 +86,7 @@
 					<a id="clg" class="linkButton" href="${pageContext.request.contextPath}/courses/" > COLLEGE </a> 
 			    	<a id="shs" class="linkButton" href="${pageContext.request.contextPath}/courses/strands	"> SENIOR H </a> 
 			    	<a id="bsc" class="linkButton" href="${pageContext.request.contextPath}/courses/bsc/?curricID="> BASIC </a> 
+					<span class="notifier" >Double click on a record to view more details.</span>
 			</div>
 		
 			<div style="width: 1000px; " >

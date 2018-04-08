@@ -63,7 +63,7 @@
 		<jsp:include page="includes/main-left.jsp" />
 		
 		<div>
-			<h1 style="display: inline-block; margin-top: 0px;">Subjects</h1>  
+			<h1 style="display: inline-block; margin-top: 0px;">Subjects - College</h1>  
 			<div class="floatright">
 					<a href="${pageContext.request.contextPath}/subjects/newSubject/clg" ><span class="linkButton">Add New Subject</span></a>    
 			</div>
@@ -72,8 +72,9 @@
 					<a id="clg" class="linkButton" href="${pageContext.request.contextPath}/subjects/clg" > COLLEGE </a> 
 			    	<a id="shs" class="linkButton" href="${pageContext.request.contextPath}/subjects/sh"> SENIOR H </a> 
 			    	<a id="bsc" class="linkButton" href="${pageContext.request.contextPath}/subjects/bsc"> BASIC </a> 
+					<span class="notifier" >Double click on a record to view more details.</span>
 			</div>
-			
+		
 			<div style="width: 1000px;" >
 				<jsp:include page="includes/subjectsview.jsp" />
 			</div>

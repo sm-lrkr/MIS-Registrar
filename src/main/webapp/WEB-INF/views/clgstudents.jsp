@@ -113,8 +113,9 @@
 			    	<a id="clg" class="linkButton" href="${pageContext.request.contextPath}/students/clg" > COLLEGE </a> 
 			    	<a id="shs" class="linkButton" href="${pageContext.request.contextPath}/students/sh"> SENIOR H </a> 
 			    	<a id="bsc" class="linkButton" href="${pageContext.request.contextPath}/students/bsc"> BASIC </a> 
+			   		<span class="notifier" >Double click on a record to view more details.</span>
 			    </div>
-		
+	
 				<div style="width: 1000px; " >
 					<jsp:include page="includes/studentview.jsp"/>
 			

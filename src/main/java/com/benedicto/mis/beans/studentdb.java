@@ -949,6 +949,42 @@ public class studentdb {
 		});
 	}
 	
+	//Get College Subject Prerequisites
+	public List<Subject> getCollegeSubjectPreRequisites(String param) {
+		String sql = "SELECT * FROM clg_subjects WHERE '"+param+"' LIKE CONCAT('%', name, '%') ";
+		return template.query(sql, new RowMapper<Subject>() {
+			public Subject mapRow(ResultSet rs, int row) throws SQLException {
+				Subject s = new Subject();
+				s.setSubjectCode(rs.getString("SubjectCode"));
+				s.setSubjectDesc(rs.getString("SubjectDesc"));
+				s.setLecUnits(rs.getInt("LecUnits"));
+				s.setLabUnits(rs.getInt("LabUnits"));
+				s.setPreRequisites(rs.getString("PreRequisites"));
+				return s;
+			}
+		});
+	}
+
+	//Get College Credited Requisites
+	public List<Subject> getCollegeCreditedPreRequisites(String param, String studentNo) {
+		String sql = "SELECT clg_grades.SubjectCode, clg_grades.Final , std_enrollments.StudentNo "
+				+ "FROM clg_grades INNER JOIN std_enrollments ON clg_grades.EnrollmentNo = std_enrollments.EnrollmentNo "
+				//+ "INNER JOIN clg_subjects ON clg_grades.SubjectCode = clg_subjects.SubjectCode "
+				+ "WHERE '"+param+"' LIKE CONCAT('%', name, '%') AND clg_grades.Final <= 3 AND std_enrollments.StudentNo = "+ studentNo ;
+		return template.query(sql, new RowMapper<Subject>() {
+			public Subject mapRow(ResultSet rs, int row) throws SQLException {
+				Subject s = new Subject();
+				s.setSubjectCode(rs.getString("SubjectCode"));
+//				s.setSubjectDesc(rs.getString("SubjectDesc"));
+//				s.setLecUnits(rs.getInt("LecUnits"));
+//				s.setLabUnits(rs.getInt("LabUnits"));
+//				s.setPreRequisites(rs.getString("PreRequisites"));
+				return s;
+			}
+		});
+	}
+	
+	
 	// Get SH Subject By Code
 	public Subject getSHSubjectByCode(String subjCode) {
 		String sql = "select * from shs_subjects where SubjectCode=?";

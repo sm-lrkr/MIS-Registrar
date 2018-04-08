@@ -78,10 +78,8 @@
 		<div>	
 			<h1 style="display: inline-block; margin-top: 0px;">${sectionName}</h1>  
 			<div class="floatright">
-					<a href="newspr" ><span class="linkButton" >Add New SPR</span></a>   
-					<button type="button" id="print" class="linkButton" >Export</button>   
 			</div>
-		
+	
 
 			<div style="display: flex; flex-direction: horizontal; margin-top:30px;">
 				<div>
@@ -115,7 +113,7 @@
 									 <form:select path="personnelID" id="db_Personnel" value="${section.personnelID}" style="width:170px;" >
 										<form:option value="" label=""/>
 										<c:forEach var="teacher" items="${teachers}">   
-											<form:option value="${teacher.personnelID}" label="${teacher.firstName} ${teacher.lastName}" /> 
+											<form:option value="${teacher.personnelID}" label="${teacher.first_name} ${teacher.last_name}" /> 
 									   	</c:forEach>  
 									</form:select>	
 								</td>
@@ -124,7 +122,7 @@
 						</table>
 						<br><br>
 					</form:form>
-			
+		
 					<div class="floatright" style="margin-bottom: 20px;" >
 						<button type="button" class="linkButton"> Edit</button>    
 					</div>

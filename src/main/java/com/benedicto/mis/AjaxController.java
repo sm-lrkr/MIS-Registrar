@@ -35,30 +35,6 @@ public class AjaxController {
 	@Autowired  
     studentdb dao;
 	
-//	@RequestMapping(value="searchstudent", method = RequestMethod.GET)
-//	@ResponseBody
-//	//public String ajaxdemo(@PathVariable("param") String param) {
-//	public String searchstudent(@RequestParam("param") String param, @RequestParam("courseID") String courseID) {
-//			
-//		System.out.println("param: " + param);
-//		List<Student> list = dao.getCollegeStudents(param,courseID);
-//		StringBuilder builder = new StringBuilder();
-//		
-//		//builder.append("<tr><th>Id</th><th>Last Name</th><th>First Name</th><th>Middle Name</th><th></th></tr> \n");
-//		for (Student s: list) {
-//			builder.append("<tr> \n");
-//			builder.append("<td>" + s.getStudentID() +"</td> \n");
-//			builder.append("<td>" + s.getLastName() + "</td> \n");
-//			builder.append("<td>" + s.getFirstName() + "</td> \n");
-//			builder.append("<td>" + s.getMiddleName() + "</td> \n");
-//			builder.append("<td><a href=\"student/"+ s.getStudentNo() +"\">View</a></td> \n");
-//			builder.append("</tr>");
-//		}
-//		
-//		//return "{\"msg\":\"success\"}";
-//		return builder.toString();
-//	}
-	
 	@RequestMapping(value="/searchstudent/", method = RequestMethod.GET)
 	@ResponseBody
 	public List<StudentProfile> searchstudent(@RequestParam("param") String param, @RequestParam("courseID") String courseID) {
@@ -259,7 +235,7 @@ public class AjaxController {
 	@ResponseBody
 	public String saveSubjectsToCurric(@RequestParam("subjectCode") String subjectCode,
 			 								@RequestParam("yr") int yr,@RequestParam("sem") int sem) {
-		System.out.println("wahahahah");
+		System.out.println("SubjectCode: "+ subjectCode + " Year: "+ yr + " sem: " + sem );
 		dao.saveCurriculumSubjects("0", subjectCode, yr, sem);
 		return "success";
 	}

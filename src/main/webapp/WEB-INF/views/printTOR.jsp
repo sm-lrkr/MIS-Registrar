@@ -123,29 +123,6 @@
 			            	},
 			            	className: 'blue'
 			            },
-				    	 {
-				    	 	extend: 'collection',
-			                text: 'Export',
-			                autoClose: true,
-			                buttons: [
-			                    'copy',
-			                    {  
-			                    	extend: 'excel', 
-			                    	exportOptions: {
-					                	columns: ':visible'
-					                }
-			                    },
-			                    {  
-			                    	extend: 'csv', 
-			                    	exportOptions: {
-					                	columns: ':visible'
-					                }
-			                    },
-			                    'pdf'
-			              
-			                ],
-			                className: 'blue'
-						},
 						{
 			            	text: 'REMOVE from TOR',
 			            	action: function ( e, dt, node, config ) {
@@ -157,7 +134,7 @@
 			    ]
 			}).container().appendTo($('#buttons'));
 	
-			
+		
 		
 		
 			$("#addone").click(function() {
@@ -302,8 +279,6 @@
 			text-align: left;
 		}
 		
-	
-	
 
 	</style>
 </head>
@@ -317,11 +292,17 @@
 				<div class="content"  style="text-align: center;" >
 					<p style="font-size: 20px; font-weight: bold; ">OFFICIAL TRANSCRIPT OF RECORDS</p>
 				</div>
+				<div style="text-align: center; margin-top: 12px;">
+					<div class="content" style="display: inline-block; text-align:center; width: 2in; height: 2in; border: 1px solid black; ">
+						PHOTO
+					</div>
+				</div>
+	
 				<div class="content" style="width: 100%; border-bottom: 1px solid black; margin-bottom: -350px; text-align:left;">
 					<p style="font-size: 14px; font-weight: bold;  display:inline-block; ">Name: ${student.firstName} ${student.lastName}</p>
 					<p style="font-size: 14px; font-weight: bold; float: right; margin-right: 10px;">I.D. No: ${student.studentID}</p>
 				</div>
-				<div style="width: 7.5in; margin-top:30px; border-top: 1px solid black;" class="content" >
+				<div style="width: 7.5in; margin-top:30px; " class="content" >
 					<form:form  action="${pageContext.request.contextPath}/grades/${dept}/save/?studentNo=${student.studentNo}" method="post" modelAttribute="allSemGrades" >
 							<div style="width: 7.5in;">
 							<table id="gradesview" class="compact pageResize" style="border-collapse: true;">
@@ -338,7 +319,7 @@
 						<c:forEach var="sg" items="${allSemGrades.semGrades}" varStatus="status">
 							<c:set var="ap" value="" />
 								<tr style="height: 0;">
-								
+						
 									<td></td>
 									<td style="text-align:center; font-weight:1500; font-size: 12px;" >
 									 	<strong>Taken at Benedicto College<br>
@@ -349,7 +330,7 @@
 									<td></td>
 									<td>${sg.enrollment.schoolYear}-${sg.enrollment.semester}</td>
 								
-								
+							
 								</tr>
 									<c:forEach var="grade" items="${sg.grades}" varStatus="status1">
 										<tr>
@@ -379,9 +360,9 @@
 							</table>	
 							</div>
 							<div style=" margin-top:-10px; margin-bottom: -10px; text-align: center;">
-									<p style="font-size: 12px; font-weight: bold; padding:0px;">**********(MORE ENTRIES NEXT PAGE)**********</p>
+									<p style="font-size: 12px; font-weight: bold; padding:0px;">**********(NOTHING FOLLOWS)**********</p>
 							</div>
-
+							
 							<div style="text-align: left; margin-top:-10px; border-top: 1px solid black; border-bottom: 2px solid black;">
 								<p style="font-size: 12px; font-weight: bold; padding:0px;">Note: This transcript is not valid if there is/are erasure(s) in the grades</p>
 								<div style="width: 100%; display: flex; flex-direction: horizontal;" >

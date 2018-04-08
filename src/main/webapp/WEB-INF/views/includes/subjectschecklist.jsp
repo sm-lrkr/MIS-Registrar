@@ -3,8 +3,8 @@
 
 
 <form:form id="subjectsForm"  action="" method="post" modelAttribute="subjectsForm">
-					
-						<table   id="subjectsList" class="display compact" >  
+				
+						<table   id="subjectsList" class="display compact listTable" >  
 							<thead>
 								<tr><th></th><th>Code</th><th>Description</th><th>Lab</th><th>Lec</th><th>Units</th><th>Requisite</th></tr>  
 						   	</thead>
@@ -18,11 +18,11 @@
 									   	<td>${subj.lecUnits}</td>
 										<td>${subj.labUnits}</td>
 									   	<td>${subj.lecUnits + subj.labUnits}</td>  
-									   	<td></td>  
+									   	<td>${subj.preRequisites}</td>  
 									</tr>
 								</c:forEach>
 							</tbody>
-							
+						
 							  
 				   		</table>  
 				   

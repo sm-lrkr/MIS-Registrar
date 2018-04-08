@@ -269,6 +269,8 @@
 		
 			$("#btnCreate1").click(function(){
 				var rowData = $("table[id*='semTable']").DataTable().rows().data().toArray();	
+				var rowCount = $("table[id*='semTable']").DataTable().rows().count();
+				var count = 0;
 				var ctx = "${pageContext.request.contextPath}";
 				//alert(rowData);
 			
@@ -285,6 +287,10 @@
 						type: "POST" ,
 						success: function(result){
 							//alert("Success");
+							count += 1;
+							if(count == rowCount){
+								$("#curricTable").submit();
+							}
 						},
 						error: function (jqXHR, exception) {
 						        var msg = '';
@@ -310,7 +316,7 @@
 					
 				});
 				
-				$("#curricTable").submit();
+				
 			});
 			
 			    $("#subb").click(function() {
@@ -324,7 +330,7 @@
 			    
 			  
 			    var table1 = $('#subjectsList').DataTable( {
-				 	"sDom" : 'frt',
+				 	"sDom" : 'rtf',
 			        "scrollY":        "250px",
 			        "scrollCollapse": false,
 			        "paginate": false,
@@ -423,17 +429,14 @@
 			<div>
 					<h1 style="display: inline-block; margin-top: 0px;">New Curriculum</h1>
 					<div class="floatright">
-						<a href="${pageContext.request.contextPath}/" class="linkButton">Back to Main</a>    
+						<a href="${pageContext.request.contextPath}/" class="linkButton">Back</a>    
 			    	</div>
 		  	</div>
-	
+
 			<div style="width: 100%;">
-				<div style="position: fixed;" >
-					<h3>Subjects List</h3>
-					<div id="subjects" style="width:  550px; height: 300px;">
-						<jsp:include page="includes/subjectschecklist.jsp" />
-					</div>
-				
+				<div style="position: fixed; border-right: 1px solid grey;" >
+					<h3 style="margin-top:30px;">Subjects List</h3>
+					
 					<div id="horizontalAlign" style="width: 600px;">
 						
 	
@@ -460,10 +463,12 @@
 							
 						</div>		   
 						
-						<div>
-							<input id="testremove" type="button" value="Remove"/>
-						</div>
+					
+						
 					</div>
+					<div id="subjects" style="width:  550px; height: 300px;">
+							<jsp:include page="includes/subjectschecklist.jsp" />
+						</div>
 				</div>
 			
 				<div style=" float: right; padding-right: 50px;" >
@@ -519,10 +524,13 @@
 							</div>
 						</form:form>
 					</div>
-			
+	
 					<h3>Curriculum Subjects</h3>
+					<div style="float:right;">
+					<input id="testremove" type="button" value="Remove Checked"/>
+					</div>
 					<hr>
-					<div id="curricSubjects" style="width:650px;">
+					<div id="curricSubjects" style="width:600px;">
 				   		<jsp:include page="includes/curriculumForm.jsp" />
 					</div>	
 					

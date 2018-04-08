@@ -243,7 +243,13 @@
 
 <jsp:include page="includes/header.jsp" />
 <div id="main">
-	<jsp:include page="includes/main-left.jsp" />
+	<c:if test="${saveType=='saveNew'}" >
+		<jsp:include page="includes/main-left.jsp" />
+	</c:if>
+	<c:if test="${saveType=='saveEdited'}" >
+		<jsp:include page="includes/student-left-menu.jsp" />
+	</c:if>
+
 	<div>
 		<div>
 			<h1 style="display: inline-block; margin-top: 0px;">${title}</h1>

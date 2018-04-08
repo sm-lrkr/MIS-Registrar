@@ -103,15 +103,27 @@
 		<jsp:include page="includes/main-left.jsp" />
 		
 		<div>
-			<h1 style="display: inline-block; margin-top: 0px;">Schedules</h1>  
+			
+			<h1 style="display: inline-block; margin-top: 0px;">
+				<c:if test="${schedsView == 'schedsViewCLG' }">		
+					Schedules - College
+				</c:if>
+				<c:if test="${schedsView == 'schedsViewSH' }">		
+					Schedules - SH
+				</c:if>
+				<c:if test="${schedsView == 'schedsViewBSC' }">		
+					Schedules - Basic Education
+				</c:if>
+			</h1>  
 			<div class="floatright">
 				<button id="print" class="linkButton">Print</button>   
 			</div>
-		
+
 			<div style="padding-bottom: 5px;">
 					<a id="clg" class="linkButton" href="${pageContext.request.contextPath}/schedules/clg" > COLLEGE </a> 
 			    	<a id="shs" class="linkButton" href="${pageContext.request.contextPath}/schedules/sh"> SENIOR H </a> 
 			    	<a id="bsc" class="linkButton" href="${pageContext.request.contextPath}/schedules/bsc"> BASIC </a> 
+					<span class="notifier" >Double click on a record to view more details.</span>
 			</div>
 		
 			

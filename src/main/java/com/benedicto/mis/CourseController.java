@@ -301,13 +301,6 @@ public class CourseController {
 		model.addObject("strandSubjects", strandSubjects);
 		model.addObject("curriculums", currics);
 		
-
-//		model.addObject("years", years);
-//		model.addObject("sems", sems);
-//		
-//		model.addObject("strand", strand);
-//		model.addObject("strandSubjects", strandSubjects);
-//		model.addObject("curriculums", currics);
 		
 		return model;
 	}

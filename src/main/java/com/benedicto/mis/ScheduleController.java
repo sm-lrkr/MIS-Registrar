@@ -311,6 +311,7 @@ public class ScheduleController {
 		boolean hasConflictsLab = false;
 		boolean hasConflictsLec1 = false;
 		boolean hasConflictsLab1 = false;
+		boolean hasUncreditedPreRequisite = false;
 		
 		for(Schedule S: s.getSchedules()) {
 			if(S.isChecked()) 
@@ -323,6 +324,7 @@ public class ScheduleController {
 			scheds.remove(S);
 			System.out.println(S.getScheduleID()+"-"+S.getSubjectCode()+"-");
 			
+			//Check time conflict
 			hasConflictsLec1 = trapper.timeConflict(scheds, S.getLecTimeStart(), S.getLecTimeEnd(), S.getLecDays(), S.getLecRoom());
 			hasConflictsLec = trapper.timeConflict(enlisted, S.getLecTimeStart(), S.getLecTimeEnd(), S.getLecDays(), S.getLecRoom());
 			if(S.getLabTimeStart() != null) {
@@ -330,15 +332,42 @@ public class ScheduleController {
 				hasConflictsLab1 = trapper.timeConflict(scheds, S.getLabTimeStart(), S.getLabTimeEnd(), S.getLabDays(), S.getLabRoom());
 				
 			}	
-				
+			
 			if(hasConflictsLec || hasConflictsLab) {
 				System.out.println(S.getScheduleID()+"-"+S.getSubjectCode()+"is conflict with one of the checked schedules ");
 				break;
 			}	
 			
+			//Check unenlisted prerequisites
+			Subject _subject = db.getCollegeSubjectByCode(S.getSubjectCode());
+			//List<Subject> prerequisites = db.getCollegeSubjectPreRequisites(_subject.getPreRequisites());
+			List<Subject> creditedPreRequisites = db.getCollegeCreditedPreRequisites(_subject.getPreRequisites(), studentNo);
+			if(creditedPreRequisites.size()<0) {
+				hasUncreditedPreRequisite = true;
+			}
+			
+				
+		
+			
+			if(hasUncreditedPreRequisite){
+				List<Subject> prerequisites = db.getCollegeSubjectPreRequisites(_subject.getPreRequisites());
+				boolean coenlisted = false;
+				for(Subject prerequisite: prerequisites) {
+					for(Schedule sched: scheds) {
+						if(sched.getSubjectCode().equals(prerequisite.getSubjectCode())) {
+							coenlisted = true;
+							break;
+						}
+					}
+					if(coenlisted) {
+						hasUncreditedPreRequisite = false;
+						break;
+					}	
+				}
+			}
 		}
 		
-		if(!hasConflictsLec && !hasConflictsLab && !hasConflictsLec1 && !hasConflictsLab1 ) {
+		if(!hasConflictsLec && !hasConflictsLab && !hasConflictsLec1 && !hasConflictsLab1 && !hasUncreditedPreRequisite ) {
 		//if(!hasConflictsLec && !hasConflictsLab ) {
 			for (Schedule S : s.getSchedules()) {
 				if (S.isChecked()) {
@@ -422,5 +451,4 @@ public class ScheduleController {
 		
 		return "Success";
 	}
-
 }

@@ -62,21 +62,20 @@
 	
 	<jsp:include page="includes/header.jsp" />
 	<div id="main">
-	
+
 		<jsp:include page="includes/main-left.jsp" />
 		<div>	
-			<h1 style="display: inline-block; margin-top: 0px;">Sections</h1>  
+			<h1 style="display: inline-block; margin-top: 0px;">Sections - BSC</h1>  
 			<div class="floatright">
 						<a href="${pageContext.request.contextPath}/sections/newSection/bsc" class="linkButton">New Section</a>    
 			</div>
 			
 			<div style="padding-bottom: 5px;">
-					<a id="all" class="linkButton" href="${pageContext.request.contextPath}/sections/"> ALL </a> 
-			    	<a id="clg" class="linkButton" href="${pageContext.request.contextPath}/sections/clg" > COLLEGE </a> 
-			    	<a id="shs" class="linkButton" href="${pageContext.request.contextPath}/sections/sh"> SENIOR H </a> 
+					<a id="shs" class="linkButton" href="${pageContext.request.contextPath}/sections/sh"> SENIOR H </a> 
 			    	<a id="bsc" class="linkButton" href="${pageContext.request.contextPath}/sections/bsc"> BASIC </a> 
+					<span class="notifier" >Double click on a record to view more details.</span>
 			</div>
-		
+	
 			<div style="width: 1000px; " >
 			   <table id="sectionsview" class="display compact listTable">  
 						<thead>

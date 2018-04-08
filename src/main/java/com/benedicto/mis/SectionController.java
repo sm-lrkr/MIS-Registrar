@@ -40,11 +40,8 @@ public class SectionController {
 	private static final Logger logger = LoggerFactory.getLogger(SectionController.class);
 
 	@Autowired
-	studentdb db;// will inject dao from xml file
+	studentdb db;// will inject db from xml file
 
-	/**
-	 * Simply selects the home view to render by returning its name.
-	 */
 
 	
 	@RequestMapping(value = "/clg", method = RequestMethod.GET)

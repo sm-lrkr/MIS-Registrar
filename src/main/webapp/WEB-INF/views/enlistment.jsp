@@ -84,8 +84,8 @@
 				<h1 style="display: inline-block; margin-top: 0px;">${student.lastName}, ${student.firstName} ${student.middleName}</h1>
 				
 				<div class="floatright">
-					<a href="${pageContext.request.contextPath}/students/newspr" ><span class="linkButton" >History</span></a>   
-			 	</div>
+				
+				</div>
 			</div>
 			<div id="offeredList" class="tableContainer">
 				<jsp:include page="includes/offered.jsp" />

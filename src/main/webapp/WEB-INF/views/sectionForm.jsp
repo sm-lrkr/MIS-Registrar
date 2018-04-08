@@ -86,7 +86,7 @@
 						<tr>
 							<td><form:label path="strandCode" >Strand Code</form:label></td>
 							<td>
-							<form:select  path="strandCode" id="dbStrands" value="${section.strandCode}" >
+							<form:select style="width: 165px;"  path="strandCode" id="dbStrands" value="${section.strandCode}" >
 								<form:option value="" label=""/>
 								<c:forEach var="strand" items="${strands}">   
 									<form:option value="${strand.strandCode}" label="${strand.strandCode}" /> 
@@ -95,7 +95,7 @@
 							</td>
 						</tr>
 					</c:if>
-				
+
 					<tr>
 						<td><form:label path="sectionName" >Name</form:label></td>
 						<td><form:input path="sectionName"/></td>
@@ -104,7 +104,7 @@
 					<tr>
 						<td><form:label path="room" > Room</form:label></td>
 						<td>
-							<form:select  path="room" id="dbPersonnel" value="${section.room}" >
+							<form:select style="width: 165px;" path="room" id="dbPersonnel" value="${section.room}" >
 								<form:option value="" label=""/>
 								<c:forEach var="rm" items="${rooms}">   
 									<form:option value="${rm.facil_name}" label="${rm.facil_name}" /> 
@@ -116,7 +116,7 @@
 					<tr>
 						<td><form:label path="session" >Session</form:label></td>
 						<td>
-							<form:select  path="session"  value="${section.session}" >
+							<form:select style="width: 165px;" path="session"  value="${section.session}" >
 								<form:option value="" label="" />
 								<form:option value="Day" label="Day" />
 								<form:option value="Night" label="Night" />
@@ -128,7 +128,7 @@
 					<tr>
 						<td><form:label path="gradeLevel" >Grade Level</form:label></td>
 						<td>
-							<form:select  path="gradeLevel" id="dbPersonnel" >
+							<form:select style="width: 165px;" path="gradeLevel" id="dbPersonnel" >
 								<form:option value="0" label="" />
 								<c:choose>
 									<c:when test="${sectionType == 'sh'}">
@@ -157,10 +157,10 @@
 					<tr>
 						<td><form:label path="personnelID" >Adviser</form:label></td>
 						<td>
-							<form:select  path="personnelID" id="dbPersonnel" value="${section.personnelID}" >
+							<form:select style="width: 165px;" path="personnelID" id="dbPersonnel" value="${section.personnelID}" >
 								<form:option value="-1" label=""/>
 								<c:forEach var="teacher" items="${teachers}">   
-									<form:option value="${teacher.personnelID}" label="${teacher.firstName}-${teacher.lastName}" /> 
+									<form:option value="${teacher.personnelID}" label="${teacher.first_name}-${teacher.last_name}" /> 
 							   	</c:forEach>  
 							</form:select>
 						</td>
@@ -168,8 +168,9 @@
 				</table>
 				<br><br>
 			</form:form>
-			
+
 			<div style="float: right;">
+				<input type="button" class="linkButton" value="Cancel" >	
 				<input id="submit" type="button" class="linkButton" value="Save" >	
 			</div>
 		</div>

@@ -84,7 +84,7 @@
 						<td><form:label path="courseID" >Program</form:label></td>
 						<td><form:input path="courseID"/></td>
 					</tr>
-				
+	
 					<tr>
 						<td><form:label path="courseDesc" >Description</form:label></td>
 						<td><form:input path="courseDesc"/></td>
@@ -92,7 +92,7 @@
 					<tr>
 						<td><form:label path="departmentCode" >Departments</form:label></td>
 						<td>
-							<form:select  path="departmentCode" id="dbTypes" value="${department.departmentCode}" >
+							<form:select  style="width:160px;" path="departmentCode" id="dbTypes" value="${department.departmentCode}" >
 								<form:option value="" label=""/>
 								<c:forEach var="dept" items="${departments}">   
 									<form:option value="${dept.departmentCode}" label="${dept.departmentCode}" /> 
@@ -103,13 +103,14 @@
 				</table>
 				<br><br>
 			</form:form>
-	
+			
 			<div style="float: right;">
+				<a class="linkButton" href="${pageContext.request.contextPath}/">Cancel</a>
 				<input id="submit" type="button" class="linkButton" value="Save" >	
 			</div>
 		</div>
 	</div>
-	
+
 	<jsp:include page="includes/footer.jsp" />
 
 

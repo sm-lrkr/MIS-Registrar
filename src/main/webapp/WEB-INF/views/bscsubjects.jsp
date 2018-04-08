@@ -66,12 +66,12 @@
 			</div>
 			
 			<div style="padding-bottom: 5px;">
-					<a id="all" class="linkButton" href="${pageContext.request.contextPath}/subjects/"> ALL </a> 
-			    	<a id="clg" class="linkButton" href="${pageContext.request.contextPath}/subjects/clg" > COLLEGE </a> 
+					<a id="clg" class="linkButton" href="${pageContext.request.contextPath}/subjects/clg" > COLLEGE </a> 
 			    	<a id="shs" class="linkButton" href="${pageContext.request.contextPath}/subjects/sh"> SENIOR H </a> 
 			    	<a id="bsc" class="linkButton" href="${pageContext.request.contextPath}/subjects/bsc"> BASIC </a> 
+					<span class="notifier" >Double click on a record to view more details.</span>
 			</div>
-		
+	
 			<div style="width: 1000px;" >
 				<jsp:include page="includes/subjectsview.jsp" />
 			</div>

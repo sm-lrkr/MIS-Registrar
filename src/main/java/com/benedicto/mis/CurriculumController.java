@@ -114,12 +114,6 @@ public class CurriculumController {
 	public ModelAndView addBSCCurriculum() {
 		logger.info("addCurriculum");
 		
-//		String [] years = {"", "1st Year","2nd Year", "3rd Year", "4th Year", "5th Year"};
-//		String [] jyears = {"", "Grade 7","Grade 8", "Grade 9", "Grade 10"};
-//		String [] eyears = {"", "Kinder", "Grade 1","Grade 2", "Grade 3", "Grade 4", "Grade 5", "Grade 6" };
-//		
-//		String [] sems = {"", "1st Sem","2nd Sem", "Summer"};
-		
 		SubjectsViewForm subjects = new SubjectsViewForm();
 		subjects.setSubjects(db.getBSCSubjects(""));
 		
@@ -127,22 +121,17 @@ public class CurriculumController {
 		Curriculum c = new Curriculum();
 		c.setCurriculumID("");
 		c.setCurriculumDesc("");
-		//c.setStrandCode(strandCode);
-		
+	
 		CurriculumForm curriculumForm = new CurriculumForm();
 		curriculumForm.setCurricSubjects(new ArrayList<CurriculumSubject>());
 		curriculumForm.setCurriculum(c);
 		
-		//System.out.println("CourseID: "+ strandCode);
 	
 		ModelAndView model = new ModelAndView();
 		model.setViewName("curriculumbsc");
 		model.addObject("curriculum", c);
-		//model.addObject("strandCode", strandCode);
 		
 		model.addObject("subjectsForm", subjects);
-//		model.addObject("years", years);
-//		model.addObject("sems", sems);
 		model.addObject("saveType", "saveNew");
 		return model;
 	}
@@ -214,13 +203,9 @@ public class CurriculumController {
 		int id = db.createCurriculum(c);
 		String courseID = c.getCourseID();
 		c = db.getLatestCourseCurriculum(courseID);
-	//	db.updateCurricSubjects(Integer.parseInt(c.getCurriculumID()));
 		
 		db.updateCurricSubjects(id);
-//		for(CurriculumSubject cs: cf.getCurricSubjects()) {
-//			db.saveCurriculumSubjects(c.getCurriculumID(),cs.getSubjectCode(), cs.getYear(), cs.getSem());
-//		}	
-		return new ModelAndView("redirect:/courses/");
+	return new ModelAndView("redirect:/courses/");
 	}
 	
 	@RequestMapping(value = "/sh/saveNew/", method = RequestMethod.POST)
@@ -229,11 +214,10 @@ public class CurriculumController {
 		System.out.println("Desc: " + c.getCurriculumDesc());
 		System.out.println("Year: " + c.getYearImplemented());
 		
-		//int id = db.createCurriculum(c);
 		int id = db.createSHCurriculum(c);
 		String strandCode = c.getStrandCode();
 		c = db.getLatestStrandCurriculum(strandCode);
-		db.updateSHCurricSubjects(Integer.parseInt(c.getCurriculumID()));
+		db.updateSHCurricSubjects(id);
 		
 		return new ModelAndView("redirect:/courses/strands");
 	}
@@ -243,10 +227,7 @@ public class CurriculumController {
 		System.out.println("The course ID is: " + c.getCourseID());
 		System.out.println("Desc: " + c.getCurriculumDesc());
 		System.out.println("Year: " + c.getYearImplemented());
-		
-		//int id = db.createCurriculum(c);
 		int id = db.createBSCCurriculum(c);
-		
 		db.updateBSCCurricSubjects(id);
 		return new ModelAndView("redirect:/courses/bsc/?curricID="+id);
 	}
@@ -292,7 +273,6 @@ public class CurriculumController {
 			
 		if(s.getSubjects() != null) {
 			System.out.println("search curriculum Subjects: " + param + "First checked value: " + s.getSubjects().get(0).isChecked());
-		//	s.setSubjects(list);
 		}
 		
 		SubjectsViewForm subs = new SubjectsViewForm();
@@ -407,6 +387,4 @@ public class CurriculumController {
 		model.addObject("sems", sems);
 		return model;
 	}
-	
-
 }

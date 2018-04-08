@@ -84,11 +84,11 @@
 						<td><form:label path="strandCode" >Program</form:label></td>
 						<td><form:input path="strandCode"/></td>
 					</tr>
-					
+				
 					<tr>
 						<td><form:label path="track" >Track</form:label></td>
 						<td>
-							<form:select path="track">
+							<form:select path="track" style="width:160px;">
 								<form:option value="" label=""/>
 								<form:option value="Academic" label="Academic"/>
 								<form:option value="Technical Vocational & Livelihood" label="TVL"/>
@@ -98,7 +98,7 @@
 						</td>
 					</tr>
 			
-				
+			
 					<tr>
 						<td><form:label path="strandDesc" >Description</form:label></td>
 						<td><form:input path="strandDesc"/></td>
@@ -106,7 +106,7 @@
 					<tr>
 						<td><form:label path="departmentCode" >Departments</form:label></td>
 						<td>
-							<form:select  path="departmentCode" id="dbTypes" value="${department.departmentCode}" >
+							<form:select style="width:160px;" path="departmentCode" id="dbTypes" value="${department.departmentCode}" >
 								<form:option value="" label=""/>
 								<c:forEach var="dept" items="${departments}">   
 									<form:option value="${dept.departmentCode}" label="${dept.departmentCode}" /> 
