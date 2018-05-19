@@ -31,15 +31,9 @@ public class Curriculum {
 	public void setYearImplemented(String yearImplemented) {
 		this.yearImplemented = yearImplemented;
 	}
-	/**
-	 * @return the strandCode
-	 */
 	public String getStrandCode() {
 		return strandCode;
 	}
-	/**
-	 * @param strandCode the strandCode to set
-	 */
 	public void setStrandCode(String strandCode) {
 		this.strandCode = strandCode;
 	}

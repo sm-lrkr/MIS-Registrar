@@ -3,10 +3,6 @@ package com.benedicto.mis.beans.containers;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
-
-import com.benedicto.mis.beans.studentdb;
-
 public class TimeTrapper {
 	
 	 private final ArrayList<String> times = new ArrayList<String>();
@@ -51,11 +47,7 @@ public class TimeTrapper {
 	     times.add("10:00 PM");
 	 }
 
-	
-
-	 
-
-     private Boolean daysConflict(String existingdays, String chosendays)
+	 private Boolean daysConflict(String existingdays, String chosendays)
      {
          String[] Days = { "M", "T", "W", "Th", "F", "S", "Su" };
 
@@ -130,10 +122,12 @@ public class TimeTrapper {
          return false;
      }
 
-     public Boolean timeConflict(List<Schedule> schedules, String timeStart, String timeEnd, String days, String room  )
+     public List<Schedule> timeConflict(List<Schedule> schedules, String timeStart, String timeEnd, String days, String room, String teacherID  )
      {
     	 System.out.println("TimeStart: "+ timeStart+" TimeEnd: "+ timeEnd + "Days: "+ days +"Room: " + room);
-         for(Schedule S: schedules)
+         List<Schedule> scheds = new ArrayList<Schedule>();
+    	 
+    	 for(Schedule S: schedules)
     	 {
         	 System.out.println(S.getScheduleID()+"-"+ S.getSubjectCode()+" - TimeStart: "+ S.getLecTimeStart() +" TimeEnd: "+ S.getLecTimeEnd() + " Days: "+ S.getLecDays() +"Room: " + S.getLecRoom());
         	 System.out.println(S.getScheduleID()+"-"+ S.getSubjectCode()+ "- TimeStart: "+ S.getLabTimeStart() +" TimeEnd: "+ S.getLabTimeEnd() + " Days: "+ S.getLabDays() +"Room: " + S.getLabRoom());
@@ -150,10 +144,18 @@ public class TimeTrapper {
                  {
                      if (daysConflict(S.getLecDays(), days))
                      {
-                         //MessageBox.Show("Warning! Conflict on times and days found on schedules in this class.");
                          System.out.println(S.getScheduleID()+"-"+ S.getSubjectCode()+""  +"- Conflict on lecture Time");
-                    	 //if(!S.getLecRoom().equals("") || S.getLecRoom().equals(room))
-                        	 return true;
+//                    	 if(!S.getLecRoom().equals("") && S.getLecRoom().equals(room))
+//                    		 scheds.add(S);	 
+//                    	 if(!S.getPersonnelID().equals("") && S.getPersonnelID().equals(teacherID))
+//                    		 scheds.add(S);	 
+                    	 if(!S.getLecRoom().equals("") || !S.getPersonnelID().equals("")) {
+                    		 if(!S.getPersonnelID().equals(teacherID) && S.getLecRoom().equals(room))
+                        		 scheds.add(S);	 
+                         }
+                    	 else
+                    		 scheds.add(S);	 
+                    	 
                      }
                  }
              }
@@ -172,15 +174,12 @@ public class TimeTrapper {
                          //MessageBox.Show("Warning! Conflict on times and days found on schedules in this class.");
                     	 System.out.println(S.getScheduleID()+"-"+ S.getSubjectCode()+"Conflict on laboratory Time");
                     	 //if(!S.getLabRoom().equals("") || S.getLabRoom().equals(room))
-                        	 return true;
+                    	 scheds.add(S);
+                    	 //return true;
                      }
                  }
              }
          }
-         return false;
+         return scheds;
      }
-
-
-	
-	
 }

@@ -1,36 +1,27 @@
 package com.benedicto.mis;
 
 import java.text.DateFormat;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.servlet.ModelAndView;
-
 import com.benedicto.mis.beans.*;
 import com.benedicto.mis.beans.containers.*;
-import com.benedicto.mis.beans.formbackers.CurriculumForm;
 import com.benedicto.mis.beans.formbackers.StrandSubjects;
 
-/**
- * Handles requests for the application home page.
- */
+
 @Controller
 @RequestMapping("courses")
 public class CourseController {
@@ -39,11 +30,6 @@ public class CourseController {
 
 	@Autowired
 	studentdb db;// will inject dao from xml file
-
-	/**
-	 * Simply selects the home view to render by returning its name.
-	 */
-
 
 	@RequestMapping(value = "/", method = RequestMethod.GET)
 	public ModelAndView courses() {
@@ -58,7 +44,6 @@ public class CourseController {
 		ModelAndView model = new ModelAndView();
 		model.setViewName("courses");
 		model.addObject("serverTime", formattedDate);
-
 		model.addObject("list", list);
 		model.addObject("course", new Course());
 
@@ -75,21 +60,26 @@ public class CourseController {
 		model.setViewName("courseForm");
 		model.addObject("course", new Course());
 		model.addObject("departments",	 depts);
+		model.addObject("saveType","saveNewCourse");
 		
 		return model;
 	}
 	
-	@RequestMapping(value = "/editCourse", method = RequestMethod.GET)
-	public ModelAndView editCollegeCourse() {
-		System.out.println("Add new course");
+	@RequestMapping(value = "/editCourse/", method = RequestMethod.GET)
+	public ModelAndView editCollegeCourse(@RequestParam("courseID") String courseID) {
+		System.out.println("Edit course: " + courseID);
 		List<Department> depts = db.getDepartments("");
+		Course course =  db.getCourseByID(courseID);
+		System.out.println("Edit1 course: " + courseID);
 		
 		ModelAndView model = new ModelAndView();
 		model.setViewName("courseForm");
-		model.addObject("course", new Course());
+		model.addObject("course", course);
 		model.addObject("departments",	 depts);
-		
+		model.addObject("id",	 courseID);
+		model.addObject("saveType","saveEditedCourse");
 		return model;
+		
 	}
 	
 	@RequestMapping(value = "/newStrand", method = RequestMethod.GET)
@@ -116,7 +106,6 @@ public class CourseController {
 
 		ModelAndView model = new ModelAndView();
 		model.setViewName("strands");
-
 		model.addObject("strands", list);
 		return model;
 	}
@@ -185,14 +174,10 @@ public class CourseController {
 			Collections.sort(strandSubjects.getSubjects());
 		}
 		
-	
-		
 		ModelAndView model = new ModelAndView();
 		model.setViewName("strand");
-		
 		model.addObject("years", years);
 		model.addObject("sems", sems);
-		
 		model.addObject("strand", strand);
 		model.addObject("strandSubjects", strandSubjects);
 		model.addObject("curriculums", currics);
@@ -223,7 +208,6 @@ public class CourseController {
 		
 		ModelAndView model = new ModelAndView();
 		model.setViewName("bscCurriculum");
-		
 		model.addObject("strandSubjects", strandSubjects);
 		model.addObject("curriculums", currics);
 		
@@ -288,11 +272,8 @@ public class CourseController {
 			Collections.sort(strandSubjects.getSubjects());
 		}
 		
-	
-		
 		ModelAndView model = new ModelAndView();
 		model.setViewName("printCurriculumSH");
-		
 		model.addObject("years", years);
 		model.addObject("sems", sems);
 		model.addObject("curric", c);
@@ -301,15 +282,21 @@ public class CourseController {
 		model.addObject("strandSubjects", strandSubjects);
 		model.addObject("curriculums", currics);
 		
-		
 		return model;
 	}
 	
 
-	@RequestMapping(value = "/saveNewCourse", method = RequestMethod.POST)
+	@RequestMapping(value = "/saveNewCourse/", method = RequestMethod.POST)
 	public ModelAndView addNewCourse(@ModelAttribute("course") Course c) {
-		System.out.println("Add new course");
+		System.out.println("Add new course: " + c.getCourseID());
 		db.createCourse(c);
+		return new ModelAndView("redirect:/courses/");
+	}
+
+	@RequestMapping(value = "/saveEditedCourse/{courseID}", method = RequestMethod.POST)
+	public ModelAndView editCourse(@PathVariable("courseID") String courseID, @ModelAttribute("course") Course c) {
+		System.out.println("Edit course: "+ courseID);
+		db.editCourse(c, courseID);
 		return new ModelAndView("redirect:/courses/");
 	}
 	

@@ -12,6 +12,4 @@ public class SemGradesForm {
 	public void setSemGrades(List<SemGrades> semGrades) {
 		this.semGrades = semGrades;
 	}
-	
-		
 }

@@ -23,6 +23,4 @@ public class Course {
 	public void setDepartmentCode(String departmentCode) {
 		this.departmentCode = departmentCode;
 	}
-	
-	
 }

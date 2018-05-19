@@ -7,8 +7,6 @@ public class Strand {
 	private String major;
 	private String departmentCode;
 	
-	
-	
 	public String getStrandCode() {
 		return strandCode;
 	}
@@ -33,19 +31,10 @@ public class Strand {
 	public void setMajor(String major) {
 		this.major = major;
 	}
-	/**
-	 * @return the departmentCode
-	 */
 	public String getDepartmentCode() {
 		return departmentCode;
 	}
-	/**
-	 * @param departmentCode the departmentCode to set
-	 */
 	public void setDepartmentCode(String departmentCode) {
 		this.departmentCode = departmentCode;
 	}
-	
-	
-	
 }

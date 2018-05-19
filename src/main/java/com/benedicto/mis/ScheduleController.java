@@ -3,15 +3,11 @@ package com.benedicto.mis;
 import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -21,16 +17,13 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.servlet.ModelAndView;
-
 import com.benedicto.mis.beans.*;
 import com.benedicto.mis.beans.containers.*;
 import com.benedicto.mis.beans.formbackers.DaysCollector;
 import com.benedicto.mis.beans.formbackers.ScheduleForm;
 import com.benedicto.mis.beans.formbackers.SchedulesViewForm;
 
-/**
- * Handles requests for the application home page.
- */
+
 @Controller
 @RequestMapping("schedules")
 public class ScheduleController {
@@ -49,14 +42,16 @@ public class ScheduleController {
 	@RequestMapping(value = "/clg", method = RequestMethod.GET)
 	public ModelAndView clgSchedules() {
 
-		List<Schedule> list = db.getCollegeSchedules("", "");
-
+		SchoolYear sy = db.getActiveSchoolYear();
+		List<Schedule> schedules = db.getCollegeSchedules("",sy.getYear_start()+"-"+sy.getYear_end(), sy.getSemester());
+		
 		ModelAndView model = new ModelAndView();
 		model.setViewName("schedules");
-		model.addObject("schedules", list);
+		model.addObject("schedules", schedules);
+		model.addObject("dept", "clg");
 		model.addObject("schedsView", "schedsViewCLG");
 		model.addObject("daysCollector", new DaysCollector());
-		//model.addObject("subject", new Subject());
+		
 		return model;
 	}
 	
@@ -154,7 +149,6 @@ public class ScheduleController {
 		model.addObject("students", students);
 		model.addObject("classType", _class);
 		model.addObject("teacher", teacher);
-		
 		model.addObject("schoolYear", sy.getYear_start()+"-"+sy.getYear_end()+" "+ sems[sy.getSemester()]);
 		
 		return model;
@@ -162,14 +156,17 @@ public class ScheduleController {
 
 	@RequestMapping(value = "/sh", method = RequestMethod.GET)
 	public ModelAndView shSchedules() {
-
-		List<Schedule> schedules =  db.getSHSchedules("", "");
+		
+		SchoolYear sy = db.getActiveSchoolYear();
+		List<Schedule> schedules = db.getSHSchedules(sy.getYear_start()+"-"+sy.getYear_end(), sy.getSemester());
+		
 		SchedulesViewForm schedulesForm = new SchedulesViewForm();
 		schedulesForm.setSchedules(schedules);
 
 		ModelAndView model = new ModelAndView();
 		model.setViewName("schedules");
 		model.addObject("schedsView", "schedsViewSH");
+		model.addObject("dept", "shs");
 		
 		model.addObject("schedulesForm", schedulesForm);
 		model.addObject("daysCollector", new DaysCollector());
@@ -295,6 +292,7 @@ public class ScheduleController {
 			db.addNewStudentEnrollment(studentNo, sy.getYear_start()+"-"+sy.getYear_end(), sy.getSemester());
 			enrollment = db.getCollegeEnrollmentBySY(studentNo, sy.getYear_start()+"-"+sy.getYear_end(), sy.getSemester());
 		}
+		
 		System.out.println("Enrollment enrollment No: "+ enrollment.getEnrollmentNo());
 		EvaluationProfile eval = db.getEvaluationProfileByEnrollment(enrollment.getEnrollmentNo());
 		System.out.println("EnrollmentNo: " + eval.getEvaluationNo());
@@ -307,68 +305,42 @@ public class ScheduleController {
 		List<Schedule> enlisted = db.getCollegeEnlistedSubjects(studentNo, enrollment.getEnrollmentNo());
 		List<Schedule> temp = new ArrayList<Schedule>();
 		
-		boolean hasConflictsLec = false;
-		boolean hasConflictsLab = false;
-		boolean hasConflictsLec1 = false;
-		boolean hasConflictsLab1 = false;
-		boolean hasUncreditedPreRequisite = false;
+		//boolean hasUncreditedPreRequisite = false;
 		
 		for(Schedule S: s.getSchedules()) {
 			if(S.isChecked()) 
 				temp.add(S);
 		}
 		
+		List<Schedule> enlistedConflicts = new ArrayList<Schedule>();
+		List<Schedule> selectedConflicts = new ArrayList<Schedule>();
+		
+		
 		for(Schedule S: temp) {
 			List<Schedule> scheds = new ArrayList<Schedule>();
+			
 			scheds.addAll(temp);
 			scheds.remove(S);
 			System.out.println(S.getScheduleID()+"-"+S.getSubjectCode()+"-");
 			
 			//Check time conflict
-			hasConflictsLec1 = trapper.timeConflict(scheds, S.getLecTimeStart(), S.getLecTimeEnd(), S.getLecDays(), S.getLecRoom());
-			hasConflictsLec = trapper.timeConflict(enlisted, S.getLecTimeStart(), S.getLecTimeEnd(), S.getLecDays(), S.getLecRoom());
-			if(S.getLabTimeStart() != null) {
-				hasConflictsLab = trapper.timeConflict(enlisted, S.getLabTimeStart(), S.getLabTimeEnd(), S.getLabDays(), S.getLabRoom());
-				hasConflictsLab1 = trapper.timeConflict(scheds, S.getLabTimeStart(), S.getLabTimeEnd(), S.getLabDays(), S.getLabRoom());
-				
-			}	
+			selectedConflicts.addAll(trapper.timeConflict(scheds, S.getLecTimeStart(), S.getLecTimeEnd(), S.getLecDays(), "",""));
+			enlistedConflicts.addAll(trapper.timeConflict(enlisted, S.getLecTimeStart(), S.getLecTimeEnd(), S.getLecDays(), "", ""));
+		
 			
-			if(hasConflictsLec || hasConflictsLab) {
+			if(S.getLabTimeStart() != null) {
+				selectedConflicts.addAll(trapper.timeConflict(scheds, S.getLabTimeStart(), S.getLabTimeEnd(), S.getLabDays(), "", ""));
+				enlistedConflicts.addAll(trapper.timeConflict(enlisted, S.getLabTimeStart(), S.getLabTimeEnd(), S.getLabDays(), "", ""));
+			}	
+		
+			if(!enlistedConflicts.isEmpty() || !selectedConflicts.isEmpty()) {
 				System.out.println(S.getScheduleID()+"-"+S.getSubjectCode()+"is conflict with one of the checked schedules ");
 				break;
 			}	
 			
-			//Check unenlisted prerequisites
-			Subject _subject = db.getCollegeSubjectByCode(S.getSubjectCode());
-			//List<Subject> prerequisites = db.getCollegeSubjectPreRequisites(_subject.getPreRequisites());
-			List<Subject> creditedPreRequisites = db.getCollegeCreditedPreRequisites(_subject.getPreRequisites(), studentNo);
-			if(creditedPreRequisites.size()<0) {
-				hasUncreditedPreRequisite = true;
-			}
-			
-				
-		
-			
-			if(hasUncreditedPreRequisite){
-				List<Subject> prerequisites = db.getCollegeSubjectPreRequisites(_subject.getPreRequisites());
-				boolean coenlisted = false;
-				for(Subject prerequisite: prerequisites) {
-					for(Schedule sched: scheds) {
-						if(sched.getSubjectCode().equals(prerequisite.getSubjectCode())) {
-							coenlisted = true;
-							break;
-						}
-					}
-					if(coenlisted) {
-						hasUncreditedPreRequisite = false;
-						break;
-					}	
-				}
-			}
 		}
 		
-		if(!hasConflictsLec && !hasConflictsLab && !hasConflictsLec1 && !hasConflictsLab1 && !hasUncreditedPreRequisite ) {
-		//if(!hasConflictsLec && !hasConflictsLab ) {
+		if(enlistedConflicts.isEmpty() && selectedConflicts.isEmpty()) {
 			for (Schedule S : s.getSchedules()) {
 				if (S.isChecked()) {
 					db.enlistCollegeStudentSchedules(enrollment, S.getScheduleID());
@@ -377,9 +349,9 @@ public class ScheduleController {
 				}
 			}
 		}
+		
 		return new ModelAndView("redirect:/schedules/enlistment/college/?studentNo=" + studentNo);
 	}
-	
 	
 	@RequestMapping(value = "/withdraw/college/{studentNo}", method = RequestMethod.POST)
 	public ModelAndView unenlistSchedules(@ModelAttribute("enlisted") SchedulesViewForm s,
@@ -399,56 +371,124 @@ public class ScheduleController {
 	}
 
 
-	@RequestMapping(value = "newSchedule", method = RequestMethod.GET)
-	public ModelAndView scheduleForm(@ModelAttribute("subject") Subject s) {
+	@RequestMapping(value = "/newSchedule/{dept}", method = RequestMethod.GET)
+	public ModelAndView scheduleForm(@PathVariable("dept") String dept, @ModelAttribute("subject") Subject s) {
 		System.out.println("Add new schedule");
-		List<Subject> list = db.getCollegeSubjects("");
-
+		
+		List<Subject> subjects = new ArrayList<Subject>();
+		List<Section> sections = db.getSHSections("");
+	
+		if(dept.equals("clg"))
+			subjects = db.getCollegeSubjects("");
+		else if(dept.equals("shs"))
+			subjects = db.getSHSubjects("");	
+		
+		
+		List<Teacher> teachers = db.getPersonnels("");
+		List<Facility> rooms = db.getFacilities();
+		List<String> times = new ArrayList<String>();
+	
+		times.add("");
+		for(int i=5; i<=11; i++) {
+			times.add(String.format("%02d", i).concat(":00 AM"));
+			times.add(String.format("%02d", i).concat(":30 AM"));
+		}
+	
+		times.add("12:00 PM");
+		times.add("12:30 PM");
+		
+		for(int i=1; i<=10; i++) {
+			times.add(String.format("%02d", i).concat(":00 PM"));
+			times.add(String.format("%02d", i).concat(":30 PM"));
+		}
+		
 		ModelAndView model = new ModelAndView();
 		model.setViewName("scheduleForm");
-		model.addObject("subjects", list);
+		model.addObject("subjects", subjects);
+		model.addObject("teachers", teachers);
+		model.addObject("sections", sections);
+		model.addObject("rooms", rooms);
+		model.addObject("times", times);
+		model.addObject("department", dept);
 		model.addObject("scheduleForm", new ScheduleForm());
-		
 	
 		return model;
 	}
 	
-	@RequestMapping(value = "/saveNew", method = RequestMethod.POST)
+	@RequestMapping(value = "/saveNew/{dept}", method = RequestMethod.POST)
 	@ResponseBody
-	public String addNewSchedule(@ModelAttribute("scheduleForm") ScheduleForm sf, BindingResult result) {
+	public String addNewSchedule(@PathVariable("dept") String dept, @ModelAttribute("scheduleForm") ScheduleForm sf, BindingResult result) {
 		System.out.println("Save new Schedule");
-		
 		
 		try {
 			if(result.hasErrors()) {
 				System.out.println("Form has errors");
 			}
 			
-			
 			Schedule s = sf.getSchedule();
-			System.out.println("Subject Code: "+ s.getSubjectCode() );
-			
-			Subject su = db.getCollegeSubjectByCode(s.getSubjectCode());
-
-			s.setLecUnits(su.getLecUnits());
-			s.setLabUnits(su.getLabUnits());
 			s.setLecDays(sf.getLecDays().getStringDays());
-			s.setLabDays(sf.getLabDays().getStringDays());
-			s.setSchoolYear("2018-2019");
-			s.setSemester("1");
+		
+			SchoolYear sy = db.getActiveSchoolYear();
+			List<Schedule> clgScheds = db.getCollegeSchedules("", sy.getYear_start()+"-"+sy.getYear_end(), sy.getSemester());
+			List<Schedule> shsScheds = db.getSHSchedules(sy.getYear_start()+"-"+sy.getYear_end(), sy.getSemester());
 			
-
-			db.createSchedule(s);
+			List<Schedule> lecConflicts = new ArrayList<Schedule> ();
+			List<Schedule> labConflicts = new ArrayList<Schedule> ();
 			
+			TimeTrapper trapper = new TimeTrapper();
+			 
+			lecConflicts.addAll(trapper.timeConflict(clgScheds,s.getLecTimeStart() ,s.getLecTimeEnd(), s.getLecDays(), s.getLecRoom(), s.getPersonnelID()));
+			lecConflicts.addAll(trapper.timeConflict(shsScheds,s.getLecTimeStart() ,s.getLecTimeEnd(), s.getLecDays(), s.getLecRoom(), s.getPersonnelID()));
+		
+			if(dept.equals("clg")) {
+				s.setLabDays(sf.getLabDays().getStringDays());
+				labConflicts.addAll(trapper.timeConflict(clgScheds,s.getLabTimeStart() ,s.getLabTimeEnd(), s.getLabDays(), s.getLabRoom(), s.getPersonnelID()));
+			}
+		
+			//If no conflicts on lecture and laboratory time
+			if(lecConflicts.isEmpty() && labConflicts.isEmpty()) {
+				System.out.println("Subject Code: "+ s.getSubjectCode() );
+				
+				Subject su = new Subject();
+				if(dept.equals("clg")) {
+					su = db.getCollegeSubjectByCode(s.getSubjectCode());
+					s.setLabUnits(su.getLabUnits());
+					s.setLabDays(sf.getLabDays().getStringDays());
+				}else if(dept.equals("shs"))
+					su = db.getSHSubjectByCode(s.getSubjectCode());
+			
+				s.setLecUnits(su.getLecUnits());
+				s.setLecDays(sf.getLecDays().getStringDays());
+				s.setSchoolYear(sy.getYear_start()+"-"+sy.getYear_end());
+				s.setSemester(sy.getSemester());
+				
+				if(dept.equals("clg"))
+					db.createSchedule(s);
+				else if(dept.equals("shs"))
+					db.createSHSchedule(s);
+	
+			}else {
+				String error="";
+				if(!lecConflicts.isEmpty()) {
+					error = error.concat("Conflicts in lecture time<br>");
+					for(Schedule S: lecConflicts) 
+						error = error.concat(S.getSubjectCode()+" "+S.getLecTimeStart()+"-"+S.getLecTimeEnd()+" "+ S.getLecRoom()+" "+ S.getLecDays()+" "+ S.getPersonnelName()+"<br>");
+				}
+				if(!labConflicts.isEmpty()) {
+					error = error.concat("Conflicts in laboratory time<br>");
+					for(Schedule S: labConflicts) 
+						error = error.concat(S.getSubjectCode()+" "+S.getLabTimeStart()+"-"+S.getLabTimeEnd()+" "+ S.getLabRoom()+" "+ S.getLabDays()+" "+ S.getPersonnelName()+"<br>");
+				}
+		
+				return error;
+			}
 		}
 		catch(Exception ex) {
 			System.out.println(ex.getMessage());
 			ex.printStackTrace();
 		}
-		
-
 		System.out.println("Successfully added new schedule");
-		
-		return "Success";
+	
+		return "success";
 	}
 }

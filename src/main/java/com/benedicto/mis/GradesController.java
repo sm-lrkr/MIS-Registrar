@@ -4,35 +4,23 @@ import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.servlet.ModelAndView;
-
 import com.benedicto.mis.beans.*;
 import com.benedicto.mis.beans.containers.*;
-import com.benedicto.mis.beans.formbackers.CurriculumForm;
 import com.benedicto.mis.beans.formbackers.SemGrades;
 import com.benedicto.mis.beans.formbackers.SemGradesForm;
-import com.benedicto.mis.beans.formbackers.SubjectsViewForm;
 
-/**
- * Handles requests for the application home page.
- */
 @Controller
 @RequestMapping("grades")
 public class GradesController {
@@ -131,6 +119,37 @@ public class GradesController {
 		return model;
 	}
 	
+	@RequestMapping(value = "/clg/{scheduleID}", method = RequestMethod.GET)
+	public ModelAndView collegeScheduleGrades(@PathVariable("scheduleID") String scheduleID) {
+		logger.info("grades");
+		Schedule schedule = db.getCollegeScheduleByID(scheduleID);
+		
+		String _class="LEC";
+		
+		if(schedule.getSubjectCode().contains("LAB")) {
+			_class="LAB";
+		}
+		
+		List<SubjectGrades> subjectGrades = db.getCollegeGradesBySchedule(scheduleID);
+		System.out.println("Grades size: " + subjectGrades.size());
+		
+		SemGrades semGrades = new SemGrades();
+		semGrades.setGrades(subjectGrades);
+		
+		for(SubjectGrades sg: semGrades.getGrades()) {
+			sg.setBackupGrade(sg.getFinalGrade());
+		}
+		
+		ModelAndView model = new ModelAndView();
+		model.setViewName("schedulegrades");
+		model.addObject("dept", "clg");
+		model.addObject("semGrades", semGrades);
+		model.addObject("schedule", schedule);
+		model.addObject("classType", _class);
+	
+		return model;
+	}
+	
 	@RequestMapping(value = "/clg/save/", method = RequestMethod.POST)
 	public ModelAndView saveStudentGrades(@RequestParam("studentNo") String studentNo, @ModelAttribute("allSemGrades") SemGradesForm sgf) {
 		logger.info("Update Grades");
@@ -147,24 +166,43 @@ public class GradesController {
 				if(g.getFinalGrade()!=g.getBackupGrade()) {
 					System.out.println("Enrollment: "+ g.getEnrollmentNo());
 					g.setDateModified(formattedDate);
-					db.updateCollegeSubjectGrading(g);
+					g.setEquivalentGrade(g.getFinalGrade());
+					db.updateCollegeStudentGrading(g);
 				}
 			}
-		}
-
+		} 	
 		return new ModelAndView("redirect:/grades/clg/?studentNo="+ studentNo );
+	}
+	
+	@RequestMapping(value = "/clg/save/{scheduleID}", method = RequestMethod.POST)
+	public ModelAndView saveSubjectGrades(@PathVariable("scheduleID") String scheduleID, @ModelAttribute("semGrades") SemGrades sg) {
+		logger.info("Update Grades");
+		
+		Locale locale = new Locale("en_US");
+		Schedule schedule = db.getCollegeScheduleByID(scheduleID);
+		
+		Date date = new Date();
+		DateFormat dateFormat = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT, locale);
+		String formattedDate = dateFormat.format(date);
+		System.out.println("Grades to be saved: " + sg.getGrades().size());
+	
+		for(SubjectGrades g: sg.getGrades()) {
+			if(g.getFinalGrade()!=g.getBackupGrade()) {
+				System.out.println("Enrollment: "+ g.getEnrollmentNo());
+				g.setSubjectCode(schedule.getSubjectCode());
+				g.setDateModified(formattedDate);
+				g.setEquivalentGrade(g.getFinalGrade());
+				db.updateCollegeStudentGrading(g);
+			}
+		}
+		
+		return new ModelAndView("redirect:/grades/clg/"+ scheduleID );
 	}
 	
 	@RequestMapping(value = "/shs/save/", method = RequestMethod.POST)
 	public ModelAndView saveSHGrades(@RequestParam("studentNo") String studentNo, @ModelAttribute("allSemGrades") SemGradesForm sgf) {
 		logger.info("Update Grades");
 		System.out.println("List size: " + sgf.getSemGrades().size());
-		
-		Locale locale = new Locale("en_US");
-		
-		Date date = new Date();
-		DateFormat dateFormat = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT, locale);
-		String formattedDate = dateFormat.format(date);
 		
 		for(SemGrades sg: sgf.getSemGrades()) {
 			for(SubjectGrades g: sg.getGrades()) {
@@ -186,19 +224,16 @@ public class GradesController {
 		System.out.println("Credited Grades: "+ credited.size());
 		String [] sems = {"", "1st Sem","2nd Sem", "Summer"};
 		
-		
 		ModelAndView model = new ModelAndView();
 		model.setViewName("transcriptForm");
 		model.addObject("student", student);
 		model.addObject("dept", "clg");
 		model.addObject("sems", sems);
-		
 		model.addObject("credited", credited);
 		model.addObject("subject", new Subject());
 		
 		
 		return model;
-			
 	}
 
 	@RequestMapping(value = "/clg/tor/print/", method = RequestMethod.GET)
@@ -239,7 +274,6 @@ public class GradesController {
 		model.addObject("student", student);
 		model.addObject("dept", "clg");
 		model.addObject("sems", sems);
-		
 		model.addObject("credited", credited);
 		model.addObject("subject", new Subject());
 		model.addObject("allSemGrades", allSemGrades);

@@ -12,9 +12,6 @@ public class Section {
 	private int gradeLevel;
 	
 	
-	
-	
-	
 	public int getSectionID() {
 		return sectionID;
 	}
@@ -46,63 +43,22 @@ public class Section {
 	public void setPersonnelID(String personnelID) {
 		this.personnelID = personnelID;
 	}
-
-
-
-
-	private String strandDesc;
-	private String track;
-	private String major;
-	
 	public String getStrandCode() {
 		return strandCode;
 	}
 	public void setStrandCode(String strandCode) {
 		this.strandCode = strandCode;
 	}
-	public String getStrandDesc() {
-		return strandDesc;
-	}
-	public void setStrandDesc(String strandDesc) {
-		this.strandDesc = strandDesc;
-	}
-	public String getTrack() {
-		return track;
-	}
-	public void setTrack(String track) {
-		this.track = track;
-	}
-	public String getMajor() {
-		return major;
-	}
-	public void setMajor(String major) {
-		this.major = major;
-	}
-	/**
-	 * @return the personnelName
-	 */
 	public String getPersonnelName() {
 		return personnelName;
 	}
-	/**
-	 * @param personnelName the personnelName to set
-	 */
 	public void setPersonnelName(String personnelName) {
 		this.personnelName = personnelName;
 	}
-	/**
-	 * @return the gradeLevel
-	 */
 	public int getGradeLevel() {
 		return gradeLevel;
 	}
-	/**
-	 * @param gradeLevel the gradeLevel to set
-	 */
 	public void setGradeLevel(int gradeLevel) {
 		this.gradeLevel = gradeLevel;
 	}
-	
-	
-	
 }

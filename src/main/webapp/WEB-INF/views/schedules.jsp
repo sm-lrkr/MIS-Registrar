@@ -3,16 +3,7 @@
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form" %>
     
-    
-<spring:url value="/resources/main2.css" var="css" />
-<spring:url value="/resources/jquery-3.2.1.js" var="jscript" />
-<spring:url value="/resources/myscript.js" var="myscript" />
-<spring:url value="/resources/css/dataTable.min.css" var="dtcss" />
-<spring:url value="/resources/css/dataTableSelect.min.css" var="dtselectcss" />
-<spring:url value="/resources/javascript/dataTable.js" var="dtjs" />
-<spring:url value="/resources/javascript/dataTableSelect.min.js" var="dtselectjs" />
-    
-    
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
@@ -20,14 +11,7 @@
 	<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 	<title>MIS Registrar</title>
 	
-	<link href="${dtcss}" rel="stylesheet">
-	<link href="${dtselectcss}" rel="stylesheet">
-	<link href="${css}" rel="stylesheet">
-	
-	<script type="text/javascript" src="${jscript}" ></script>
-	<script type="text/javascript" src="${myscript}" ></script>
-	<script type="text/javascript" src="${dtjs}" ></script>
-	<script type="text/javascript" src="${dtselectjs}" ></script>
+	<jsp:include page="includes/includes.jsp" />
 
 
 	<script type = "text/javascript">
@@ -44,10 +28,10 @@
 		        	{"targets": 0, "visible" : false }
 			    ]
 		 	} );
-
+			
 			table.on( 'dblclick', 'tr', function () {
 				var scheduleID = table.row( this ).data()[0];
-				var subjectCode = table.row( this ).data()[1]
+				var subjectCode = table.row( this ).data()[1];
 				window.location.href = ctx+"/schedules/clg/"+subjectCode+"/?id=" + scheduleID + "";
 			} );
 	
@@ -86,7 +70,6 @@
 				        }
 				       	alert(msg);
 				    }  
-					
 				});
 			});
 		});
@@ -115,7 +98,9 @@
 					Schedules - Basic Education
 				</c:if>
 			</h1>  
+
 			<div class="floatright">
+				<a href="${pageContext.request.contextPath}/schedules/newSchedule/${dept}" class="linkButton" >Scheduler</a>
 				<button id="print" class="linkButton">Print</button>   
 			</div>
 

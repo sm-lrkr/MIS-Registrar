@@ -1,15 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncoding="ISO-8859-1"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form" %>
-
-
-    
-<spring:url value="/resources/main2.css" var="css" />
-<spring:url value="/resources/jquery-3.2.1.js" var="jscript" />
-
-   
     
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
@@ -17,8 +9,9 @@
 	
 	<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 	<title>MIS Registrar</title>
-	<link href="${css}" rel="stylesheet">
-	<script type="text/javascript" src="${jscript}" ></script>
+	
+	<jsp:include page="includes/includes.jsp" />
+	
 	<script type = "text/javascript">
 		$(document).ready(function(){
 			var ctx = "${pageContext.request.contextPath}";
@@ -73,13 +66,12 @@
 </head>
 <body>
 
-	
 	<jsp:include page="includes/header.jsp" />
 	<div id="main">
 	
 		<jsp:include page="includes/main-left.jsp" />
 		
-		<div >
+		<div>
 
 			<div style="width: 1000px; margin-bottom: 25px;">
 				
@@ -87,12 +79,10 @@
 	
 				<div style="float:right;margin-right: 20px;">
 					<a href="${pageContext.request.contextPath}/curriculums/addCurriculum/${courseID}" class="linkButton">New Curriculum</a>
-					<a href="${pageContext.request.contextPath}/courses/editCourse/${courseID}" class="linkButton">Edit</a>
-									
+					<a href="${pageContext.request.contextPath}/courses/editCourse/?courseID=${courseID}" class="linkButton">Edit</a>
 					<button type="button" id="print" class="linkButton" >Print</button> 
 				</div>
 			</div>
-			
 			
 			<div style=" padding-bottom: 30px;">
 				<select  id="curricSelect" >
@@ -102,9 +92,6 @@
 				</select>
 			</div>
 			
-		
-			
-				
 			<div style="width: 800px;">
 				<c:forEach begin="1" end="5" varStatus="year">
 					<c:set var = "yr"> ${year.index}-1</c:set>
@@ -156,18 +143,8 @@
 					</c:if>
 				</c:forEach>   
 			</div>		
-					
-	
-		
-					
-			
-			
 		</div>
-	
 	</div>
-	
 	<jsp:include page="includes/footer.jsp" />
-
-
 </body>
 </html>

@@ -3,35 +3,14 @@
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form" %>
     
-<spring:url value="/resources/main2.css" var="css" />
-<spring:url value="/resources/jquery-3.2.1.js" var="jscript" />
-<spring:url value="/resources/myscript.js" var="myscript" />
-<spring:url value="/resources/css/dataTable.min.css" var="dtcss" />
-<spring:url value="/resources/css/dataTableSelect.min.css" var="dtselectcss" />
-<spring:url value="/resources/css/dataTables.checkboxes.min.css" var="dtcbcss" />
-<spring:url value="/resources/javascript/dataTable.js" var="dtjs" />
-<spring:url value="/resources/javascript/dataTableSelect.min.js" var="dtselectjs" />
-<spring:url value="/resources/javascript/dataTables.checkboxes.min.js" var="dtcbjs" />
-
-    
-    
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
 	
 	<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 	<title>MIS Registrar</title>
-	<link href="${dtcss}" rel="stylesheet">
-	<link href="${dtselectcss}" rel="stylesheet">
-	<link href="${dtcbcss}" rel="stylesheet">
-	<link href="${css}" rel="stylesheet">
 	
-	
-	<script type="text/javascript" src="${jscript}" ></script>
-	<script type="text/javascript" src="${myscript}" ></script>
-	<script type="text/javascript" src="${dtjs}" ></script>
-	<script type="text/javascript" src="${dtselectjs}" ></script>
-	<script type="text/javascript" src="${dtcbjs}" ></script>
+	<jsp:include page="includes/includes.jsp" />
 	
 	
 	<script type = "text/javascript">
@@ -66,8 +45,6 @@
 				$("#enlistedTable").submit();
 			});
 			
-	
-			
 		});
 	</script>
 	
@@ -87,9 +64,44 @@
 				
 				</div>
 			</div>
+			
 			<div id="offeredList" class="tableContainer">
-				<jsp:include page="includes/offered.jsp" />
+				<form:form id="offeredTable" action="${pageContext.request.contextPath}/schedules/enlist/college/${student.studentNo}" method="post" modelAttribute="offered">
+					<table id="offered" class="listTable">  
+						<tr><th></th><th>Subject</th><th>Section</th><th>Units</th><th>Time Start</th><th>Time End</th><th>Days</th><th>Room</th></tr>
+					   	<c:forEach var="sched" items="${offered.schedules}" varStatus="status">   
+						   <tr>  
+							   	<td>  
+								   	<form:input path="schedules[${status.index}].scheduleID" type="hidden" />
+								   	<form:input path="schedules[${status.index}].subjectCode" type="hidden" />
+								   	<form:input path="schedules[${status.index}].personnelID" type="hidden" />
+								   	<form:checkbox path="schedules[${status.index}].checked" />
+							   	</td>
+							   	<td> ${sched.subjectCode}</td>  
+							   	<td>${sched.section}</td>  
+							   	<td>${sched.lecUnits}</td>  
+							   	<td><form:input type="hidden" path="schedules[${status.index}].lecTimeStart"/> ${sched.lecTimeStart}</td>  
+							   	<td><form:input type="hidden" path="schedules[${status.index}].lecTimeEnd"/> ${sched.lecTimeEnd}</td>  
+							   	<td><form:input type="hidden" path="schedules[${status.index}].lecDays"/> ${sched.lecDays}</td>  
+							   	<td><form:input type="hidden" path="schedules[${status.index}].lecRoom"/> ${sched.lecRoom}</td>  
+						   	</tr>
+							<c:if test="${sched.labDays ne '' }">			   
+							   	<tr>  
+							   		<td></td>
+									<td>${sched.subjectCode}-LAB</td>  
+									<td>${sched.section}</td>  
+									<td>${sched.labUnits}</td>  
+									<td><form:input type="hidden" path="schedules[${status.index}].lecRoom"/> ${sched.labTimeStart}</td>  
+									<td><form:input type="hidden" path="schedules[${status.index}].lecRoom"/> ${sched.labTimeEnd}</td>  
+									<td><form:input type="hidden" path="schedules[${status.index}].lecRoom"/> ${sched.labDays}</td>  
+									<td><form:input type="hidden" path="schedules[${status.index}].lecRoom"/> ${sched.labRoom}</td>  
+								</tr>    
+							</c:if>
+						</c:forEach>  
+			   		</table>  
+			   </form:form>	
 			</div >
+			
 			 <div id="horizontalAlign">
 		   		<div>
 					<button id= "enlist"> Enlist checked</button>
@@ -136,7 +148,6 @@
 				   		</table>  
 				</form:form>
 			</div>
-			
 			<div id="horizontalAlign">
 	   		<div class="divElements" >
 				<button id= "withdraw"> Widthdraw checked</button>
@@ -146,7 +157,5 @@
 	</div>
 	
 	<jsp:include page="includes/footer.jsp" />
-
-
 </body>
 </html>

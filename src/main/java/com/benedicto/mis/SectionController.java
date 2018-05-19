@@ -1,38 +1,24 @@
 package com.benedicto.mis;
 
-import java.text.DateFormat;
-import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.servlet.ModelAndView;
-
 import com.benedicto.mis.beans.*;
 import com.benedicto.mis.beans.containers.*;
-import com.benedicto.mis.beans.formbackers.CurriculumForm;
 import com.benedicto.mis.beans.formbackers.SchedulesViewForm;
 import com.benedicto.mis.beans.formbackers.StrandSubjects;
 import com.benedicto.mis.beans.formbackers.StudentsViewForm;
 
-/**
- * Handles requests for the application home page.
- */
 @Controller
 @RequestMapping("sections")
 public class SectionController {
@@ -47,7 +33,6 @@ public class SectionController {
 	@RequestMapping(value = "/clg", method = RequestMethod.GET)
 	public ModelAndView clgSections() {
 		List<Section> list = db.getSHSections("");
-
 
 		ModelAndView model = new ModelAndView();
 		model.setViewName("sections");
@@ -222,7 +207,6 @@ public class SectionController {
 	public ModelAndView enlistToSection(@RequestParam("sectionID") String sectionID, @ModelAttribute("unEnlisted") StudentsViewForm unenlisted) {
 		SchoolYear sy = db.getActiveSchoolYear();
 		SchedulesViewForm schedules = new SchedulesViewForm();
-		SchedulesViewForm enlisted = new SchedulesViewForm();
 		
 		schedules.setSchedules(db.getSHSchedulesBySection(sectionID, sy.getYear_start()+"-"+sy.getYear_end(), sy.getSemester()));
 		
@@ -257,7 +241,6 @@ public class SectionController {
 	public ModelAndView enlistToBSCSection(@RequestParam("sectionID") String sectionID, @ModelAttribute("unEnlisted") StudentsViewForm unenlisted) {
 		SchoolYear sy = db.getActiveSchoolYear();
 		SchedulesViewForm schedules = new SchedulesViewForm();
-		SchedulesViewForm enlisted = new SchedulesViewForm();
 		
 		schedules.setSchedules(db.getBSCSchedulesBySection(sectionID, sy.getYear_start()+"-"+sy.getYear_end(), sy.getSemester()));
 		
@@ -332,16 +315,13 @@ public class SectionController {
 		
 		ModelAndView model = new ModelAndView();
 		model.setViewName("strand");
-		
 		model.addObject("years", years);
 		model.addObject("sems", sems);
-		
 		model.addObject("strand", strand);
 		model.addObject("strandSubjects", strandSubjects);
 		model.addObject("curriculums", currics);
 		
 		return model;
-		
 	}
 	
 	@RequestMapping(value = "/newSection/sh", method = RequestMethod.GET)
@@ -399,6 +379,4 @@ public class SectionController {
 		db.createBSCSection(section);
 		return new ModelAndView("redirect:/sections/bsc");
 	}
-	
-	
 }

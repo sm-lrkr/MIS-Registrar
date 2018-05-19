@@ -16,7 +16,6 @@
 					</td>
 				</tr>
 			
-			
 				<tr>
 					
 					<td>
@@ -114,64 +113,25 @@
 					</td>
 					<td>
 						<form:select path="profile.yearEntry" value="${profile.yearEntry}">
-							<form:option value="" label="" />
-							<form:option value="2020" label="2020" />
-							<form:option value="2019" label="2019" />
-							<form:option value="2018" label="2018" />
-							<form:option value="2017" label="2017" />
-							<form:option value="2016" label="2016" />
-							<form:option value="2015" label="2015" />
-							<form:option value="2014" label="2014" />
-							<form:option value="2013" label="2013" />
-							<form:option value="2012" label="2012" />
-							<form:option value="2011" label="2011" />
-							<form:option value="2010" label="2010" />
-							<form:option value="2009" label="2009" />
-							<form:option value="2008" label="2008" />
-							<form:option value="2007" label="2007" />
-							<form:option value="2006" label="2006" />
-							<form:option value="2005" label="2005" />
-							<form:option value="2004" label="2004" />
-							<form:option value="2003" label="2003" />
-							<form:option value="2002" label="2002" />
-							<form:option value="2001" label="2001" />
-							<form:option value="2000" label="2000" />
+							<option value="" label="" />
+							<c:forEach begin="2000" end="2099" varStatus="schoolYear">
+								<form:option value="${schoolYear.index}-${schoolYear.index + 1}" label="${schoolYear.index}-${schoolYear.index + 1}" />
+							</c:forEach>
 						</form:select>
 				
-					</td>
-					
-						
+					</td>											
 				</tr>
 		
 				<tr>
-					
 					<td>
 						<form:label path="profile.graduationYear" >Year of Graduation</form:label>
 					</td>
 					<td>
 						<form:select path="profile.graduationYear" value="${profile.graduationYear}">
-							<form:option value="" label="" />
-							<form:option value="2020" label="2020" />
-							<form:option value="2019" label="2019" />
-							<form:option value="2018" label="2018" />
-							<form:option value="2017" label="2017" />
-							<form:option value="2016" label="2016" />
-							<form:option value="2015" label="2015" />
-							<form:option value="2014" label="2014" />
-							<form:option value="2013" label="2013" />
-							<form:option value="2012" label="2012" />
-							<form:option value="2011" label="2011" />
-							<form:option value="2010" label="2010" />
-							<form:option value="2009" label="2009" />
-							<form:option value="2008" label="2008" />
-							<form:option value="2007" label="2007" />
-							<form:option value="2006" label="2006" />
-							<form:option value="2005" label="2005" />
-							<form:option value="2004" label="2004" />
-							<form:option value="2003" label="2003" />
-							<form:option value="2002" label="2002" />
-							<form:option value="2001" label="2001" />
-							<form:option value="2000" label="2000" />
+							<option value="" label="" />
+							<c:forEach begin="2000" end="2099" varStatus="schoolYear">
+								<form:option value="${schoolYear.index}-${schoolYear.index + 1}" label="${schoolYear.index}-${schoolYear.index + 1}" />
+							</c:forEach>
 						</form:select>
 					</td>		
 					
@@ -185,7 +145,7 @@
 						</form:select>
 					</td>			
 				</tr>
-				
+			
 			</table>
 		</div>
 		<hr>

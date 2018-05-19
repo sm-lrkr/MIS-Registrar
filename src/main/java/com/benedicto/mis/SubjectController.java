@@ -1,41 +1,25 @@
 package com.benedicto.mis;
 
-import java.text.DateFormat;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Locale;
-import java.util.Map;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.benedicto.mis.beans.*;
 import com.benedicto.mis.beans.containers.*;
-import com.benedicto.mis.beans.formbackers.CurriculumForm;
-import com.benedicto.mis.beans.formbackers.SubjectsViewForm;
 
 
 
 @Controller
 @RequestMapping("subjects")
 public class SubjectController {
-
-	private static final Logger logger = LoggerFactory.getLogger(SubjectController.class);
 
 	@Autowired
 	studentdb db;
@@ -47,6 +31,7 @@ public class SubjectController {
 		model.setViewName("subjects");
 		model.addObject("subjects", list);
 		model.addObject("subject", new Subject());
+		
 		return model;
 	}
 	
@@ -57,22 +42,24 @@ public class SubjectController {
 		model.setViewName("clgsubjects");
 		model.addObject("subjects", list);
 		model.addObject("subject", new Subject());
+		
 		return model;
 	}
 	
 	@RequestMapping(value = "/clg/", method = RequestMethod.GET)
 	public ModelAndView clgSubject(@RequestParam("subjectCode") String subjectCode) {
+		SchoolYear sy = db.getActiveSchoolYear();
+		List<Schedule> schedules = db.getCollegeSchedules(subjectCode, sy.getYear_start()+"-"+sy.getYear_end(), sy.getSemester());
 		Subject subject = db.getCollegeSubjectByCode(subjectCode);
-		List<Schedule> schedules = db.getCollegeSchedules(subjectCode,"");
 		List<Curriculum> currics = db.getCollegeCurriculumsBySubject(subjectCode);
 		
 		ModelAndView model = new ModelAndView();
-		
 		model.setViewName("subject");
 		model.addObject("subjectType", "clg");
 		model.addObject("subject", subject);
 		model.addObject("schedules", schedules);
 		model.addObject("currics", currics);
+		
 		return model;
 	}
 	
@@ -84,15 +71,17 @@ public class SubjectController {
 		model.addObject("subjects", list);
 		model.addObject("subject", new Subject());
 		model.addObject("subjectType", "shs");
+		
 		return model;
 	}
 
 	@RequestMapping(value = "/sh/", method = RequestMethod.GET)
 	public ModelAndView shSubject(@RequestParam("subjectCode") String subjectCode) {
 		Subject subject = db.getSHSubjectByCode(subjectCode);
-		List<Schedule> schedules = db.getSHSchedules(subjectCode,"");
+		SchoolYear sy = db.getActiveSchoolYear();
+		List<Schedule> schedules = db.getSHSchedules(sy.getYear_start()+"-"+sy.getYear_end(), sy.getSemester());
 		List<Curriculum> currics = db.getSHCurriculumsBySubject(subjectCode);
-		
+	
 		ModelAndView model = new ModelAndView();
 		
 		model.setViewName("subject");
@@ -100,6 +89,7 @@ public class SubjectController {
 		model.addObject("subject", subject);
 		model.addObject("schedules", schedules);
 		model.addObject("currics", currics);
+		
 		return model;
 	}
 	
@@ -111,6 +101,7 @@ public class SubjectController {
 		model.addObject("subjects", list);
 		model.addObject("subjectType", "bsc");
 		model.addObject("subject", new Subject());
+		
 		return model;
 	}
 
@@ -128,8 +119,6 @@ public class SubjectController {
 		model.addObject("formType", "newSubject");
 		model.addObject("pageTitle", "New Subject");
 		
-		
-		
 		return model;
 	}
 	
@@ -138,6 +127,7 @@ public class SubjectController {
 		System.out.println("Add new subject");
 		List<Subject> list = db.getSHSubjects("");
 		System.out.println("List size: "+ list.size());
+		
 		ModelAndView model = new ModelAndView();
 		model.setViewName("subjectForm");
 		model.addObject("subjects", list);
@@ -145,8 +135,7 @@ public class SubjectController {
 		model.addObject("subjectType", "sh");
 		model.addObject("formType", "newSubject");
 		model.addObject("pageTitle", "New Subject");
-		
-		
+	
 		return model;
 	}
 	
@@ -155,6 +144,7 @@ public class SubjectController {
 		System.out.println("Add new subject");
 		List<Subject> list = db.getBSCSubjects("");
 		System.out.println("List size: "+ list.size());
+		
 		ModelAndView model = new ModelAndView();
 		model.setViewName("subjectForm");
 		model.addObject("subjects", list);
@@ -162,8 +152,6 @@ public class SubjectController {
 		model.addObject("subjectType", "bsc");
 		model.addObject("formType", "newSubject");
 		model.addObject("pageTitle", "New Subject");
-		
-		
 		
 		return model;
 	}
@@ -259,5 +247,4 @@ public class SubjectController {
 		db.updateSHSubject(s, subjectCode);
 		return new ModelAndView("redirect:/subjects/clg/"+ s.getSubjectCode());
 	}	
-	
 }

@@ -1,12 +1,11 @@
 package com.benedicto.mis;
 
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
@@ -15,19 +14,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.servlet.ModelAndView;
-
 import com.benedicto.mis.beans.*;
 import com.benedicto.mis.beans.containers.*;
 import com.benedicto.mis.beans.formbackers.SPRForm;
 import com.benedicto.mis.beans.formbackers.SchedulesViewForm;
 
-/**
- * Handles requests for the application home page.
- */
 @Controller
 @RequestMapping("students")
 public class StudentController {
@@ -53,7 +47,6 @@ public class StudentController {
 		model.addObject("departments", departments);
 		model.addObject("courses", courses);
 		
-
 		return model;
 	}
 	
@@ -63,7 +56,6 @@ public class StudentController {
 		logger.info("Welcome home! The client locale is {}.", locale);
 		SchoolYear sy = db.getActiveSchoolYear();
 	
-		//List<StudentProfile> list = db.getAllStudents("","");
 		List<StudentProfile> list = db.getEnrolledCollegeStudents(sy.getYear_start()+"-"+sy.getYear_end(), sy.getSemester());
 		list.addAll(db.getEnrolledSHstudents(sy.getYear_start()+"-"+sy.getYear_end(), sy.getSemester()));
 		
@@ -94,7 +86,6 @@ public class StudentController {
 		List<Department> departments = db.getDepartments("");
 		List<Course> courses = db.getCollegeCourses("");
 		
-
 		ModelAndView model = new ModelAndView();
 		model.setViewName("clgstudents");
 		model.addObject("students", list);
@@ -129,7 +120,6 @@ public class StudentController {
 		List<StudentProfile> list = db.getCollegeStudents(filter,courseID);
 		
 		ModelAndView model = new ModelAndView();
-		
 		model.setViewName("studentsByCourse");
 		model.addObject("courseDesc", course.getCourseDesc());
 		model.addObject("students", list);
@@ -137,12 +127,8 @@ public class StudentController {
 		model.addObject("courses", courses);
 		model.addObject("schoolYear", sy.getYear_start()+"-"+sy.getYear_end()+" "+ sems[sy.getSemester()]);
 		
-		
 		return model;
 	}
-	
-	
-
 	
 	@RequestMapping(value = "/sh", method = RequestMethod.GET)
 	public ModelAndView shStudents() {
@@ -215,7 +201,6 @@ public class StudentController {
 
 		return model;
 	}
-
 
 	@RequestMapping(value = "/spr/saveEdited", method = RequestMethod.POST)
 	public ModelAndView save(@ModelAttribute("sprForm") SPRForm spr, BindingResult result, @RequestParam("profileForm") String profile) {
@@ -362,7 +347,6 @@ public class StudentController {
 		return new ModelAndView("redirect:/students/student/"+ studentNo);
 	}
 
-
 	@RequestMapping(value = "/newspr")
 	public ModelAndView sprFormNew() {
 		logger.info("sprForm");
@@ -390,7 +374,6 @@ public class StudentController {
 		model.setViewName("newspr");
 		model.addObject("sprForm", spr);
 		model.addObject("saveType", "saveNew");
-		
 		model.addObject("courses", courses);
 		model.addObject("strands", strands);
 		model.addObject("clgcurrics", clgcurrics);
@@ -425,8 +408,6 @@ public class StudentController {
 			}
 		}
 		
-		
-		
 		ModelAndView model = new ModelAndView();
 		model.setViewName("studentHome");
 		model.addObject("student", stud);
@@ -434,7 +415,6 @@ public class StudentController {
 		model.addObject("profileType", profileType);
 		model.addObject("sems", sems);
 		model.addObject("enlisted", enlisted);
-		
 		
 		return model;
 	}
@@ -493,14 +473,12 @@ public class StudentController {
 		sprForm.setFbg(fbg);
 		//sprForm.setProfile(profile);
 		
-		
 		currics = clgcurrics;
 		profileForm="collegeProfile";
 		sprForm.setProfile(db.getCollegeProfileByNo(studentNo));
 		sprForm.setProfilesh( db.getSHProfileByNo(studentNo));
 		sprForm.setProfilebsc(db.getBSCProfileByNo(studentNo));
 		
-	
 		if(sprForm.getProfile().getStudentID().equals("")) {
 			profileForm ="shProfile";
 			if(sprForm.getProfilesh().getLRN().equals("")) {
@@ -547,7 +525,6 @@ public class StudentController {
 		model.addObject("profile", sp);
 		model.addObject("courses", courses);
 		model.addObject("clgcurrics", clgcurrics);
-		
 		model.addObject("saveType", "saveNew");
 		return model;
 	}
@@ -575,7 +552,6 @@ public class StudentController {
 		List<Curriculum> shscurrics = db.getSHCurriculums("");
 
 		System.out.println("Student No.: "+ stud.getStudentNo());
-		//System.out.println("Student ID : "+ stud.getStudentID());
 		
 		ModelAndView model = new ModelAndView();
 		model.setViewName("studentAB");
@@ -584,7 +560,6 @@ public class StudentController {
 		model.addObject("profile", new StudentProfile());
 		model.addObject("strands", strands);
 		model.addObject("shscurrics", shscurrics);
-		
 		model.addObject("saveType", "saveNew");
 		return model;
 	}
@@ -633,7 +608,6 @@ public class StudentController {
 		model.addObject("profile", shsProfile);
 		model.addObject("strands", strands);
 		model.addObject("shscurrics", shscurrics);
-		
 		model.addObject("saveType", "saveEdited");
 		return model;
 	}
@@ -651,7 +625,6 @@ public class StudentController {
 		model.addObject("student", stud);
 		model.addObject("profile", bscProfile);
 		model.addObject("bsccurrics", bsccurrics);
-		
 		model.addObject("saveType", "saveEdited");
 		return model;
 	}
@@ -679,8 +652,6 @@ public class StudentController {
 			clgcurrics = db.getCollegeCurriculums(clgProfile.getCourseID());
 		}
 		
-		
-
 		System.out.println("StudentCAB curriculumID is: " + clgProfile.getCurriculumID());
 		System.out.println("Student No.: "+ stud.getStudentNo());
 		//System.out.println("Student ID : "+ stud.getStudentID());
@@ -728,6 +699,4 @@ public class StudentController {
 		db.deleteSPR(id);
 		return new ModelAndView("redirect: /index");
 	}
-
-
 }

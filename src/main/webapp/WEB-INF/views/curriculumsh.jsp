@@ -3,17 +3,7 @@
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form" %>
     
-<spring:url value="/resources/main2.css" var="css" />
-<spring:url value="/resources/jquery-3.2.1.js" var="jscript" />
-<spring:url value="/resources/myscript.js" var="myscript" />
-<spring:url value="/resources/css/dataTable.min.css" var="dtcss" />
-<spring:url value="/resources/css/dataTableSelect.min.css" var="dtselectcss" />
-<spring:url value="/resources/css/dataTables.checkboxes.min.css" var="dtcbcss" />
-<spring:url value="/resources/javascript/dataTable.js" var="dtjs" />
-<spring:url value="/resources/javascript/dataTableSelect.min.js" var="dtselectjs" />
-<spring:url value="/resources/javascript/dataTables.checkboxes.min.js" var="dtcbjs" />
-    
-    
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
@@ -21,252 +11,10 @@
 	<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 	<title>MIS Registrar</title>
 	
-	<link href="${dtcss}" rel="stylesheet">
-	<link href="${dtselectcss}" rel="stylesheet">
-	<link href="${dtcbcss}" rel="stylesheet">
-	<link href="${css}" rel="stylesheet">
-	
-	
-	<script type="text/javascript" src="${jscript}" ></script>
-	<script type="text/javascript" src="${myscript}" ></script>
-	<script type="text/javascript" src="${dtjs}" ></script>
-	<script type="text/javascript" src="${dtselectjs}" ></script>
-	<script type="text/javascript" src="${dtcbjs}" ></script>
-	
+	<jsp:include page="includes/includes.jsp" />
 	
 	<script type = "text/javascript">
 		$(document).ready(function(){
-			$("#btnSearch").click(function(){
-				alert("Pressed");
-				var searchurl = encodeURI('${pageContext.request.contextPath}/curriculums/searchCurriculumSubjects/?param='+$("#search").val());
-				$.ajax({
-					url: searchurl,
-					data: $("#subjectsForm").serialize(),
-					type: "POST" ,
-					success: function(result){
-						alert(result);
-						$('#subjects').html(result);
-					},
-					error: function (jqXHR, exception) {
-					        var msg = '';
-					        if (jqXHR.status === 0) {
-					            msg = 'Not connect.\n Verify Network.';
-					        } else if (jqXHR.status == 404) {
-					            msg = 'Requested page not found. [404]';
-					        } else if (jqXHR.status == 500) {
-					            msg = 'Internal Server Error [500].';
-					        } else if (exception === 'parsererror') {
-					            msg = 'Requested JSON parse failed.';
-					        } else if (exception === 'timeout') {
-					            msg = 'Time out error.';
-					        } else if (exception === 'abort') {
-					            msg = 'Ajax request aborted.';
-					        } else {
-					            msg = 'Uncaught Error.\n' + jqXHR.responseText;
-					        }
-					       	alert(msg);
-					    }
-					
-				});
-			});
-			
-			$("#enlist").click(function(){
-				alert("Pressed");
-				var searchurl = encodeURI('${pageContext.request.contextPath}/curriculums/addCurriculumSubjects/?year='+$("#Year").val()+'&sem='+ $("#Sem").val());
-					
-				$.ajax({
-					
-					url: searchurl,
-					data: $("#subjectsForm").serialize() + $("#curricFormTable").serialize() + $("#curricTable").serialize(),
-					type: "POST" ,
-					success: function(result){
-						alert(result);
-						$('#curricSubjects').html(result);
-					},
-					error: function (jqXHR, exception) {
-					        var msg = '';
-					        if (jqXHR.status === 0) {
-					            msg = 'Not connect.\n Verify Network.';
-					        } else if (jqXHR.status == 404) {
-					            msg = 'Requested page not found. [404]';
-					        } else if (jqXHR.status == 500) {
-					            msg = 'Internal Server Error [500].';
-					        } else if (exception === 'parsererror') {
-					            msg = 'Requested JSON parse failed.';
-					        } else if (exception === 'timeout') {
-					            msg = 'Time out error.';
-					        } else if (exception === 'abort') {
-					            msg = 'Ajax request aborted.';
-					        } else {
-					            msg = 'Uncaught Error.\n' + jqXHR.responseText;
-					        }
-					       	alert(msg);
-					    }
-					
-				});
-			});
-			
-		
-			
-			$("#remove").click(function(){
-				alert("Pressed");
-				var searchurl = encodeURI('${pageContext.request.contextPath}/curriculums/removeCurriculumSubjects/');
-					
-				$.ajax({
-					
-					url: searchurl,
-					data: $("#curricFormTable").serialize(),
-					type: "POST" ,
-					success: function(result){
-						alert(result);
-						$('#curricSubjects').html(result);
-					},
-					error: function (jqXHR, exception) {
-					        var msg = '';
-					        if (jqXHR.status === 0) {
-					            msg = 'Not connect.\n Verify Network.';
-					        } else if (jqXHR.status == 404) {
-					            msg = 'Requested page not found. [404]';
-					        } else if (jqXHR.status == 500) {
-					            msg = 'Internal Server Error [500].';
-					        } else if (exception === 'parsererror') {
-					            msg = 'Requested JSON parse failed.';
-					        } else if (exception === 'timeout') {
-					            msg = 'Time out error.';
-					        } else if (exception === 'abort') {
-					            msg = 'Ajax request aborted.';
-					        } else {
-					            msg = 'Uncaught Error.\n' + jqXHR.responseText;
-					        }
-					       	alert(msg);
-					    }
-					
-				});
-			});
-			
-			
-			$("#btnSubmit").click(function(){
-				var searchurl = encodeURI('${pageContext.request.contextPath}/curriculums/saveNew/?curricDesc='+$("#tb_Desc").val()+'&curricYear='+ $("#tb_Year").val());
-					
-				$.ajax({
-					
-					url: searchurl,
-					data: $("#curricFormTable").serialize() + $("#curricTable").serialize(),
-					type: "POST" ,
-					success: function(result){
-						alert("Success");
-						 window.location.replace("/mis/");
-					},
-					error: function (jqXHR, exception) {
-					        var msg = '';
-					        if (jqXHR.status === 0) {
-					            msg = 'Not connect.\n Verify Network.';
-					        } else if (jqXHR.status == 404) {
-					            msg = 'Requested page not found. [404]';
-					        } else if (jqXHR.status == 500) {
-					            msg = 'Internal Server Error [500].';
-					        } else if (exception === 'parsererror') {
-					            msg = 'Requested JSON parse failed.';
-					        } else if (exception === 'timeout') {
-					            msg = 'Time out error.';
-					        } else if (exception === 'abort') {
-					            msg = 'Ajax request aborted.';
-					        } else {
-					            msg = 'Uncaught Error.\n' + jqXHR.responseText;
-					        }
-					       	alert(msg);
-					    }
-					
-				});
-			});
-			
-			
-			
-			$("#btnCreate").click(function(){
-				var searchurl = encodeURI('${pageContext.request.contextPath}/curriculums/saveNewTest/');
-				
-				var heads = ["checked","subjectCode","subjectDesc","lecUnits","labUnits","preRequisites", "year", "sem" ];
-				var rowData = $("table[id*='semTable']").DataTable().rows().data().toArray();	
-				var subjects = [];
-				var curriculum = {};
-				var stringsubjects = "[";
-				curriculum["curriculumID"] = "";
-				curriculum["courseID"] = $("#courseID").val();
-				curriculum["curriculumDesc"] = $("#curriculumDesc").val();
-				curriculum["yearImplemented"] = $("#yearImplemented").val();
-				alert(JSON.stringify(curriculum));			
-				
-				
-				
-				alert("Getting all subjects");			
-				$.each(rowData, function(i, row){
-					
-					var subject = {}
-					subject[heads[1]] = row[1];
-					subject[heads[2]] = row[2];
-					subject[heads[3]] = row[3];
-					subject[heads[4]] = row[4];
-					subject[heads[5]] = "value";
-					subject[heads[6]] = row[7];
-					subject[heads[7]] = row[8];
-					
-					
-					alert(JSON.stringify(subject));
-					subjects.push(JSON.stringify(subject));
-					stringsubjects += JSON.stringify(subject)
-					if(i < rowData.length-1)
-					{
-						 stringsubjects +=  ",";	
-					}
-					
-				});
-				stringsubjects += "]";
-				alert( JSON.stringify(subjects));
-				
-				alert("Subjects stringified");
-				
-				var postData = {
-					curriculum: curriculum,
-			        subjects: subjects
-			        
-			   };
-				
-				$.ajax({
-					
-					url: searchurl,
-					type: "POST" ,
-					dataType: "json",
-					contentType :'application/json; charset=utf-8',
-					data:   JSON.stringify(subjects).replace(/\\/g, '' ),
-					success: function(result){
-						alert("Success");
-						 window.location.replace("/mis/");
-					},
-					error: function (jqXHR, exception) {
-					        var msg = '';
-					        if (jqXHR.status === 0) {
-					            msg = 'Not connect.\n Verify Network.';
-					        } else if (jqXHR.status == 404) {
-					            msg = 'Requested page not found. [404]';
-					        } else if (jqXHR.status == 500) {
-					            msg = 'Internal Server Error [500].';
-					        } else if (exception === 'parsererror') {
-					            msg = 'Requested JSON parse failed.';
-					        } else if (exception === 'timeout') {
-					            msg = 'Time out error.';
-					        } else if (exception === 'abort') {
-					            msg = 'Ajax request aborted.';
-					        } else {
-					            msg = 'Uncaught Error.\n' + jqXHR.responseText;
-					        }
-					       	alert(msg);
-					    }
-					
-					
-					
-				});
-			});
-		
 			$("#btnCreate1").click(function(){
 				var rowData = $("table[id*='semTable']").DataTable().rows().data().toArray();	
 				var ctx = "${pageContext.request.contextPath}";
@@ -433,10 +181,10 @@
 			<div class="no-print">
 					<h1 style="display: inline-block; margin-top: 0px;">New Curriculum - ${strandCode}</h1>
 					<div class="floatright">
-						<a href="${pageContext.request.contextPath}/" class="linkButton">Back to Main</a>    
+						<a href="${pageContext.request.contextPath}/courses/strands" class="linkButton">Back to Main</a>    
 			    	</div>
 		  	</div>
-		
+	
 			<div style="width: 100%;">
 				<div style="position: fixed;" >
 					<h3>Subjects List</h3>
@@ -459,10 +207,7 @@
 															</tr>
 														</c:forEach>
 													</tbody>
-													
-													  
 										   		</table>  
-										   
 						</form:form>
 
 					</div>
@@ -512,8 +257,11 @@
 							<div style="display: flex; flex-direction: row; padding-top:15px;">
 								<div><p style="display: inline; padding-right:15px;" >Year: </p></div>
 								<div>
-									<form:input  type="text" path="yearImplemented"  />
-									<div  style="padding-top: 15px;"><input type="button" id="btnSubmit" value="Create"/></div>
+									<form:select  id="schoolYear" path="yearImplemented">
+										<c:forEach begin="2000" end="2099" varStatus="schoolYear">
+											<form:option value="${schoolYear.index}-${schoolYear.index + 1}" label="${schoolYear.index}-${schoolYear.index + 1}" />
+										</c:forEach>
+									</form:select>
 									<div  style="padding-top: 15px;"><input type="button" id="btnCreate1" value="Create New"/></div>
 								</div>
 							</div>

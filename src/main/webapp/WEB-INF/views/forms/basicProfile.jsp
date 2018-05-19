@@ -3,7 +3,6 @@
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form" %>
 
-
 <div class="bsc">
 <h4>Basic Profile</h4>
 		<div>
@@ -73,27 +72,9 @@
 					<td>
 						<form:select path="profilebsc.yearEntry" value="${profilebsc.yearEntry}">
 							<option value="" label="" />
-							<option value="2020" label="2020" />
-							<option value="2019" label="2019" />
-							<option value="2018" label="2018" />
-							<option value="2017" label="2017" />
-							<option value="2016" label="2016" />
-							<option value="2015" label="2015" />
-							<option value="2014" label="2014" />
-							<option value="2013" label="2013" />
-							<option value="2012" label="2012" />
-							<option value="2011" label="2011" />
-							<option value="2010" label="2010" />
-							<option value="2009" label="2009" />
-							<option value="2008" label="2008" />
-							<option value="2007" label="2007" />
-							<option value="2006" label="2006" />
-							<option value="2005" label="2005" />
-							<option value="2004" label="2004" />
-							<option value="2003" label="2003" />
-							<option value="2002" label="2002" />
-							<option value="2001" label="2001" />
-							<option value="2000" label="2000" />
+							<c:forEach begin="2000" end="2099" varStatus="schoolYear">
+								<form:option value="${schoolYear.index}-${schoolYear.index + 1}" label="${schoolYear.index}-${schoolYear.index + 1}" />
+							</c:forEach>
 						</form:select>
 					
 					</td>
@@ -109,27 +90,9 @@
 					<td>
 						<form:select path="profilebsc.graduationYear" value="${profilebsc.graduationYear}" >
 							<option value="" label="" />
-							<option value="2020" label="2020" />
-							<option value="2019" label="2019" />
-							<option value="2018" label="2018" />
-							<option value="2017" label="2017" />
-							<option value="2016" label="2016" />
-							<option value="2015" label="2015" />
-							<option value="2014" label="2014" />
-							<option value="2013" label="2013" />
-							<option value="2012" label="2012" />
-							<option value="2011" label="2011" />
-							<option value="2010" label="2010" />
-							<option value="2009" label="2009" />
-							<option value="2008" label="2008" />
-							<option value="2007" label="2007" />
-							<option value="2006" label="2006" />
-							<option value="2005" label="2005" />
-							<option value="2004" label="2004" />
-							<option value="2003" label="2003" />
-							<option value="2002" label="2002" />
-							<option value="2001" label="2001" />
-							<option value="2000" label="2000" />
+							<c:forEach begin="2000" end="2099" varStatus="schoolYear">
+								<form:option value="${schoolYear.index}-${schoolYear.index + 1}" label="${schoolYear.index}-${schoolYear.index + 1}" />
+							</c:forEach>
 						</form:select>
 					</td>			
 					

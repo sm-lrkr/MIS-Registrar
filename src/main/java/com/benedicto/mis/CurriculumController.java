@@ -1,19 +1,15 @@
 package com.benedicto.mis;
 
-import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -23,15 +19,11 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.servlet.ModelAndView;
-
 import com.benedicto.mis.beans.*;
 import com.benedicto.mis.beans.containers.*;
 import com.benedicto.mis.beans.formbackers.CurriculumForm;
 import com.benedicto.mis.beans.formbackers.SubjectsViewForm;
 
-/**
- * Handles requests for the application home page.
- */
 @Controller
 @RequestMapping("curriculums")
 public class CurriculumController {
@@ -57,11 +49,6 @@ public class CurriculumController {
 		c.setCurriculumDesc("");
 		c.setCourseID(courseID);
 		
-		
-		CurriculumForm curriculumForm = new CurriculumForm();
-		curriculumForm.setCurricSubjects(new ArrayList<CurriculumSubject>());
-		curriculumForm.setCurriculum(c);
-		
 		System.out.println("CourseID: "+ courseID);
 		
 		ModelAndView model = new ModelAndView();
@@ -69,11 +56,53 @@ public class CurriculumController {
 		model.addObject("curriculum", c);
 		model.addObject("courseID", courseID);
 		model.addObject("courseDesc", course.getCourseDesc());
-		
 		model.addObject("subjectsForm", subjects);
 		model.addObject("years", years);
 		model.addObject("sems", sems);
 		model.addObject("saveType", "saveNew");
+		
+		return model;
+	}
+	
+	@RequestMapping(value = "/editCurriculum/")
+	public ModelAndView editCurriculum(@RequestParam("curricID") String curricID) {
+		logger.info("addCurriculum");
+		
+		SchoolYear sy = db.getActiveSchoolYear();
+		
+		String [] years = {"", "1st Year","2nd Year", "3rd Year", "4th Year", "5th Year"};
+		String [] sems = {"", "1st Sem","2nd Sem", "Summer"};
+		
+		
+		Map<String, List<CurriculumSubject>> curricSubjects = new HashMap<String, List<CurriculumSubject>>();
+		
+		SubjectsViewForm subjects = new SubjectsViewForm();
+		subjects.setSubjects(db.getCollegeSubjects(""));
+		Curriculum c = db.getCollegeCurriculumByID(curricID);
+		
+		for(Subject S: subjects.getSubjects()) {
+			
+		}
+		
+		for (int i = 1; i <= 5; ++i) {
+			curricSubjects.put(i + "-1", db.getCurriculumSubjects(c.getCurriculumID(), i, 1));
+			curricSubjects.put(i + "-2", db.getCurriculumSubjects(c.getCurriculumID(), i, 2));
+			curricSubjects.put(i + "-3", db.getCurriculumSubjects(c.getCurriculumID(), i, 3));
+		}
+		
+		//System.out.println("CourseID: "+ courseID);
+		
+		ModelAndView model = new ModelAndView();
+		model.setViewName("curriculum");
+		model.addObject("curriculum", c);
+		//model.addObject("courseID", courseID);
+		//model.addObject("courseDesc", course.getCourseDesc());
+		model.addObject("subjectsForm", subjects);
+		model.addObject("curricSubjects", curricSubjects);
+		model.addObject("years", years);
+		model.addObject("sems", sems);
+		model.addObject("saveType", "saveNew");
+		
 		return model;
 	}
 	
@@ -102,7 +131,6 @@ public class CurriculumController {
 		model.setViewName("curriculumsh");
 		model.addObject("curriculum", c);
 		model.addObject("strandCode", strandCode);
-		
 		model.addObject("subjectsForm", subjects);
 		model.addObject("years", years);
 		model.addObject("sems", sems);
@@ -117,7 +145,6 @@ public class CurriculumController {
 		SubjectsViewForm subjects = new SubjectsViewForm();
 		subjects.setSubjects(db.getBSCSubjects(""));
 		
-	
 		Curriculum c = new Curriculum();
 		c.setCurriculumID("");
 		c.setCurriculumDesc("");
@@ -126,11 +153,9 @@ public class CurriculumController {
 		curriculumForm.setCurricSubjects(new ArrayList<CurriculumSubject>());
 		curriculumForm.setCurriculum(c);
 		
-	
 		ModelAndView model = new ModelAndView();
 		model.setViewName("curriculumbsc");
 		model.addObject("curriculum", c);
-		
 		model.addObject("subjectsForm", subjects);
 		model.addObject("saveType", "saveNew");
 		return model;
@@ -205,7 +230,7 @@ public class CurriculumController {
 		c = db.getLatestCourseCurriculum(courseID);
 		
 		db.updateCurricSubjects(id);
-	return new ModelAndView("redirect:/courses/");
+		return new ModelAndView("redirect:/courses/");
 	}
 	
 	@RequestMapping(value = "/sh/saveNew/", method = RequestMethod.POST)

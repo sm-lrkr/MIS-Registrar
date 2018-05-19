@@ -114,7 +114,7 @@ public class subjectsdb {
 				s.setLabTimeEnd(rs.getString(12));
 				s.setLabUnits(rs.getInt(13));
 				s.setSchoolYear(rs.getString(14));
-				s.setSemester(rs.getString(15));
+				s.setSemester(rs.getInt(15));
 
 				return s;
 			}
@@ -204,9 +204,9 @@ public class subjectsdb {
 					s.setLabTimeStart(rs.getString(12));
 					s.setLabTimeEnd(rs.getString(13));
 					s.setLabUnits(rs.getInt(14));
-
+				
 					s.setSchoolYear(rs.getString(15));
-					s.setSemester(rs.getString(16));
+					s.setSemester(rs.getInt(16));
 
 					return s;
 				}

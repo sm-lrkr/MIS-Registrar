@@ -3,31 +3,15 @@
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form" %>
     
-    
-<spring:url value="/resources/main2.css" var="css" />
-<spring:url value="/resources/jquery-3.2.1.js" var="jscript" />
-<spring:url value="/resources/myscript.js" var="myscript" />
-<spring:url value="/resources/css/dataTable.min.css" var="dtcss" />
-<spring:url value="/resources/css/dataTableSelect.min.css" var="dtselectcss" />
-<spring:url value="/resources/javascript/dataTable.js" var="dtjs" />
-<spring:url value="/resources/javascript/dataTableSelect.min.js" var="dtselectjs" />
-    
-    
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
 	
 	<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 	<title>MIS Registrar</title>
-	
-	<link href="${dtcss}" rel="stylesheet">
-	<link href="${dtselectcss}" rel="stylesheet">
-	<link href="${css}" rel="stylesheet">
-	
-	<script type="text/javascript" src="${jscript}" ></script>
-	<script type="text/javascript" src="${myscript}" ></script>
-	<script type="text/javascript" src="${dtjs}" ></script>
-	<script type="text/javascript" src="${dtselectjs}" ></script>
+
+	<jsp:include page="includes/includes.jsp" />
 
 
 	<script type = "text/javascript">
@@ -96,6 +80,7 @@
 				var scheduleID = '${schedule.scheduleID}';
                 window.open( encodeURI(ctx+"/schedules/clg/printEnlisted/?schedID="+scheduleID),'_blank');
 			});
+		
 			
 		});
 	</script>
@@ -116,6 +101,7 @@
 						<button type="button" id="print" class="linkButton" >Print</button> 
 			</div>
 			<div style="margin-bottom: 50px;">
+				
 				<form:form id="scheduleForm" action="" modelAttribute="schedule">
 					<table class="formTable" style="margin-top: 30px;">
 						<tr>
@@ -183,15 +169,15 @@
 					</table>
 				</form:form>
 			</div>
-		
-	
 			<div style="width: 1000px; " >
+					<div style="float:right; margin-bottom: 20px;" >
+						<a id="editGrades" class="linkButton" href="${pageContext.request.contextPath}/grades/clg/${schedule.scheduleID}"> Edit Grades </a> 
+			    	</div>
 					<jsp:include page="includes/studentview.jsp"/>
 			</div>
-		
 		</div>
 	</div>
-	
+
 	<jsp:include page="includes/footer.jsp" />
 
 

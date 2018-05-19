@@ -6,8 +6,6 @@
 			<li><a href="${pageContext.request.contextPath}/subjects/">Subjects</a></li>
 			<li><a href="${pageContext.request.contextPath}/schedules/">Schedules</a></li>
 			<li><a href="${pageContext.request.contextPath}/sections/sh">Sections</a></li>
-		
 		</ul>
-	
 	</div>
 </div>

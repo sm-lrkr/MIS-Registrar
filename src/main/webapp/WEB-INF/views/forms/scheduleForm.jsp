@@ -6,9 +6,7 @@
 					<table class="formTable">
 						<tr>
 							<td><form:label path="schedule.subjectCode" >Subject Code</form:label></td>
-							<td><form:input path="schedule.subjectCode"/></td>
-							
-							 	
+							<td><form:input path="schedule.subjectCode"/></td> 
 						</tr>
 						
 						<tr>

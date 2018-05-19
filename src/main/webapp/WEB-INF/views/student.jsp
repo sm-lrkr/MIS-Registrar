@@ -2,20 +2,17 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form" %>
+    
 
-    
-<spring:url value="/resources/jquery-3.2.1.js" var="jscript" />
-    
-    
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
 	
 	<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 	<title>MIS Registrar</title>
-	<link href="<c:url value="/resources/main2.css" />" rel="stylesheet">
 	
-	<script type="text/javascript" src="${jscript}" ></script>
+	<jsp:include page="includes/includes.jsp" />
+	
 	<script type = "text/javascript">
 		$(document).ready(function(){
 			$("#db_Course").on('change', function(){
@@ -305,24 +302,9 @@
 								<td>
 									<form:select path="profile.yearEntry" value="${profile.yearEntry}">
 										<form:option value="NONE" label="" />
-										<form:option value="2017" label="2017" />
-										<form:option value="2016" label="2016" />
-										<form:option value="2015" label="2015" />
-										<form:option value="2014" label="2014" />
-										<form:option value="2013" label="2013" />
-										<form:option value="2012" label="2012" />
-										<form:option value="2011" label="2011" />
-										<form:option value="2010" label="2010" />
-										<form:option value="2009" label="2009" />
-										<form:option value="2008" label="2008" />
-										<form:option value="2007" label="2007" />
-										<form:option value="2006" label="2006" />
-										<form:option value="2005" label="2005" />
-										<form:option value="2004" label="2004" />
-										<form:option value="2003" label="2003" />
-										<form:option value="2002" label="2002" />
-										<form:option value="2001" label="2001" />
-										<form:option value="2000" label="2000" />
+										<c:forEach begin="2000" end="2099" varStatus="schoolYear">
+											<form:option value="${schoolYear.index}-${schoolYear.index + 1}" label="${schoolYear.index}-${schoolYear.index + 1}" />
+										</c:forEach>
 									</form:select>
 								
 								</td>
@@ -336,25 +318,9 @@
 								<td>
 									<form:select path="profile.graduationYear" value="${profile.graduationYear}">
 										<form:option value="NONE" label="" />
-										<form:option value="2018" label="2018" />
-										<form:option value="2017" label="2017" />
-										<form:option value="2016" label="2016" />
-										<form:option value="2015" label="2015" />
-										<form:option value="2014" label="2014" />
-										<form:option value="2013" label="2013" />
-										<form:option value="2012" label="2012" />
-										<form:option value="2011" label="2011" />
-										<form:option value="2010" label="2010" />
-										<form:option value="2009" label="2009" />
-										<form:option value="2008" label="2008" />
-										<form:option value="2007" label="2007" />
-										<form:option value="2006" label="2006" />
-										<form:option value="2005" label="2005" />
-										<form:option value="2004" label="2004" />
-										<form:option value="2003" label="2003" />
-										<form:option value="2002" label="2002" />
-										<form:option value="2001" label="2001" />
-										<form:option value="2000" label="2000" />
+										<c:forEach begin="2000" end="2099" varStatus="schoolYear">
+											<form:option value="${schoolYear.index}-${schoolYear.index + 1}" label="${schoolYear.index}-${schoolYear.index + 1}" />
+										</c:forEach>
 									</form:select>
 								</td>			
 								
@@ -375,10 +341,6 @@
 					</div>
 					<hr>
 			</form:form>
-			
-		
-		
-			
 		</div>
 	</div>
 	

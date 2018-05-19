@@ -1,24 +1,18 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncoding="ISO-8859-1"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form" %>
-
-
     
-<spring:url value="/resources/main2.css" var="css" />
-<spring:url value="/resources/jquery-3.2.1.js" var="jscript" />
 
-    
-    
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
 	
 	<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 	<title>MIS Registrar</title>
-	<link href="${css}" rel="stylesheet">
-	<script type="text/javascript" src="${jscript}" ></script>
+	
+	<jsp:include page="includes/includes.jsp" />
+	
 	<script type = "text/javascript">
 		$(document).ready(function(){
 			$("#btnSearch").click(function(){
@@ -47,6 +41,13 @@
 				var curricID = $("#db_curriculum").val();
 				window.location.href = encodeURI("${pageContext.request.contextPath}/courses/strands/" + strandCode+"/?curricID="+curricID);
 			});
+		
+			$("#print").click(function(){
+				alert("clicked");
+				var curricID = $("#curricSelect").val();
+                window.open( encodeURI(ctx+"/courses/strands/printCurriculum/?curricID="+curricID),'_blank');
+			});
+			
 		});
 	</script>
 	
@@ -62,12 +63,14 @@
 		
 		<div>
 		
-		<div style="width: 100%; margin-bottom: 25px;">
+		<div style="width: 1000px; margin-bottom: 25px;">
 			
 			<h2 style="display: inline-block; margin-top: 0px;" >Basic Education Curriculum</h2>  
 			
 			<div class="floatright">
 				<a href="${pageContext.request.contextPath}/curriculums/addCurriculum/bsc" class="linkButton">New Curriculum</a>
+				<button type="button" id="edit" class="linkButton" >Edit</button> 
+				<button type="button" id="print" class="linkButton" >Print</button> 
 			</div>
 		</div>
 	
@@ -79,12 +82,12 @@
 					</c:forEach>  
 			</select>
 		</div>
-	
-		<div>
+
+		<div style="width: 800px;">
 			<div id="kg">
 				<h3>Pre-school</h3>
 							<div>
-									<table id="semsubjects" class="listTable">  
+									<table id="semsubjects" class="listTable printTable">  
 										<tr><th colspan="4" >Kinder</th></tr>
 										<tr><th>CODE</th><th>DESCRIPTIVE TITLE</th></tr>  
 										<c:forEach var="subj" items="${strandSubjects.subjects}" varStatus="status">
@@ -104,7 +107,7 @@
 				<c:forEach begin="1" end="6" varStatus="year">
 							<div>
 								
-									<table id="semsubjects" class="listTable">  
+									<table id="semsubjects" class="listTable printTable">  
 										<tr><th colspan="4" >Grade - ${year.index}</th></tr>
 										<tr><th>CODE</th><th>DESCRIPTIVE TITLE</th></tr>  
 										<c:forEach var="subj" items="${strandSubjects.subjects}" varStatus="status">
@@ -119,13 +122,13 @@
 							</div>
 				</c:forEach>
 			</div>
-			
+		
 			<div id="jh">
 				<h3>Junior High School</h3>
 				<c:forEach begin="7" end="10" varStatus="year">
 							<div>
 								
-									<table id="semsubjects" class="listTable">  
+									<table id="semsubjects" class="listTable printTable">  
 										<tr><th colspan="4" >Grade - ${year.index}</th></tr>
 										<tr><th>CODE</th><th>DESCRIPTIVE TITLE</th></tr>  
 										<c:forEach var="subj" items="${strandSubjects.subjects}" varStatus="status">
@@ -141,10 +144,7 @@
 				</c:forEach>
 			</div>
 		</div>
-		
-					
-			
-		
+
 		</div>
 	
 	</div>

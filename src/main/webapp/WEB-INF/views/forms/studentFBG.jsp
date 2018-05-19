@@ -4,9 +4,6 @@
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form" %>
 
 
-
-
-	
 		<div>
 		<hr>
 		<table style="border-collapse: separate; border-spacing: 20px; width: 800px; ">

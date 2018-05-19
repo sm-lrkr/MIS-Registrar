@@ -27,8 +27,4 @@ public class StrandSubjects {
 	public void setCurriculum(Curriculum curriculum) {
 		this.curriculum = curriculum;
 	}
-
-
-
-
 }

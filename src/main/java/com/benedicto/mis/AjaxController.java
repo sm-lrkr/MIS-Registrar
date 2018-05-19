@@ -1,15 +1,8 @@
 package com.benedicto.mis;
 
-import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,10 +11,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ModelAttribute;  
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.servlet.ModelAndView;
-
 import com.benedicto.mis.beans.*;
 import com.benedicto.mis.beans.containers.*;
 import com.benedicto.mis.beans.formbackers.CurriculumForm;
@@ -33,7 +23,7 @@ import com.benedicto.mis.beans.formbackers.SubjectsViewForm;
 public class AjaxController {
 
 	@Autowired  
-    studentdb dao;
+    studentdb db;
 	
 	@RequestMapping(value="/searchstudent/", method = RequestMethod.GET)
 	@ResponseBody
@@ -41,7 +31,7 @@ public class AjaxController {
 		System.out.println("search param: " + param);
 		System.out.println("course ID: " + courseID);
 		
-		List<StudentProfile> list = dao.getCollegeStudents(param,courseID);
+		List<StudentProfile> list = db.getCollegeStudents(param,courseID);
 		System.out.println("list size: " + list.size());
 		
 		return list;
@@ -54,28 +44,22 @@ public class AjaxController {
 		System.out.println("search param: " + param);
 		System.out.println("strandCode: " + strandCode);
 		
-		List<StudentProfile> list = dao.getSHStudents(param, strandCode);
+		List<StudentProfile> list = db.getSHStudents(param, strandCode);
 		System.out.println("list size: " + list.size());
 		return list;
 	}
-
-	
-
 	
 	@RequestMapping(value="selectValueChanged", method = RequestMethod.GET)
 	@ResponseBody
 	public String getSelectElements(@RequestParam("param") String param) {
 			
 		System.out.println("at selectedvaluechanged param: " + param);
-		List<Curriculum> list = dao.getCollegeCurriculums(param);
+		List<Curriculum> list = db.getCollegeCurriculums(param);
 		StringBuilder builder = new StringBuilder();
-		//builder.append("<form:select id=\"dbCurriculum\" path=\"curriculum\">\n");
 		builder.append("<option value=\"NONE\" label=\"\" /> \n");
 		for (Curriculum c: list) {
 			builder.append("<option value=\""+c.getCurriculumID()+"\" label=\" "+ c.getCurriculumDesc() +" \" /> \n");
 		}
-		//builder.append("</form:select> \n");
-		//return "{\"msg\":\"success\"}";
 		return builder.toString();
 	}
 	
@@ -84,7 +68,7 @@ public class AjaxController {
 	public String getSHCurricus(@RequestParam("param") String param) {
 			
 		System.out.println("at selectedvaluechanged param: " + param);
-		List<Curriculum> list = dao.getSHCurriculums(param);
+		List<Curriculum> list = db.getSHCurriculums(param);
 		StringBuilder builder = new StringBuilder();
 		builder.append("<option value=\"NONE\" label=\"\" /> \n");
 		for (Curriculum c: list) {
@@ -98,7 +82,7 @@ public class AjaxController {
 	public String getDepartmentSelectElements(@RequestParam("param") String param) {
 			
 		System.out.println("at selectedvaluechanged param: " + param);
-		List<Course> list = dao.getCollegeCourses(param);
+		List<Course> list = db.getCollegeCourses(param);
 		StringBuilder builder = new StringBuilder();
 		builder.append("<option value=\"\" label=\"\" /> \n");
 		for (Course c: list) {
@@ -113,11 +97,10 @@ public class AjaxController {
 			
 		if(s.getSubjects() != null) {
 			System.out.println("search curriculum Subjects: " + param + "First checked value: " + s.getSubjects().get(0).isChecked());
-		//	s.setSubjects(list);
 		}
 		
 		SubjectsViewForm subs = new SubjectsViewForm();
-		subs.setSubjects(dao.getCollegeSubjects(param));
+		subs.setSubjects(db.getCollegeSubjects(param));
 		
 		return new ModelAndView("includes/subjectschecklist", "subjectsForm", subs);
 	}
@@ -126,12 +109,11 @@ public class AjaxController {
 	@RequestMapping(value="/studentIDExists/", method = RequestMethod.GET)
 	@ResponseBody
 	public String studentIDExists(@RequestParam("studentID") String studentID) {
-		StudentProfile sp = dao.getCollegeProfileByID(studentID);
+		StudentProfile sp = db.getCollegeProfileByID(studentID);
 		
 	
 		return sp.getStudentID();
 	}
-	
 	
 	
 	@RequestMapping(value="/enlistSubjects", method = RequestMethod.POST)
@@ -225,8 +207,9 @@ public class AjaxController {
 		//System.out.println("schedules: "+ schedules.size());
 		System.out.println("Getting schedules");
 		
-		List<Schedule> schedules= dao.getCollegeSchedules(param, days);
-		
+		SchoolYear sy = db.getActiveSchoolYear();
+		List<Schedule> schedules = db.getCollegeSchedules("", sy.getYear_start()+"-"+sy.getYear_end(), sy.getSemester());
+	
 		return new ModelAndView("includes/classesview", "schedules", schedules);
 	}
 	
@@ -236,7 +219,7 @@ public class AjaxController {
 	public String saveSubjectsToCurric(@RequestParam("subjectCode") String subjectCode,
 			 								@RequestParam("yr") int yr,@RequestParam("sem") int sem) {
 		System.out.println("SubjectCode: "+ subjectCode + " Year: "+ yr + " sem: " + sem );
-		dao.saveCurriculumSubjects("0", subjectCode, yr, sem);
+		db.saveCurriculumSubjects("0", subjectCode, yr, sem);
 		return "success";
 	}
 	
@@ -245,7 +228,7 @@ public class AjaxController {
 	public String saveSubjectsSHToCurric(@RequestParam("subjectCode") String subjectCode,
 			 								@RequestParam("yr") int yr,@RequestParam("sem") int sem) {
 		System.out.println("wahahahah");
-		dao.saveSHCurriculumSubjects("0", subjectCode, yr, sem);
+		db.saveSHCurriculumSubjects("0", subjectCode, yr, sem);
 		return "success";
 	}
 	
@@ -255,7 +238,7 @@ public class AjaxController {
 	public String saveSubjectsBSCToCurric(@RequestParam("subjectCode") String subjectCode,
 			 								@RequestParam("yr") int yr) {
 		System.out.println("wahahahah");
-		dao.saveBSCCurriculumSubjects("0", subjectCode, yr);
+		db.saveBSCCurriculumSubjects("0", subjectCode, yr);
 		return "success";
 	}
 

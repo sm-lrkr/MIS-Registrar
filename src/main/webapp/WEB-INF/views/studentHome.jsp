@@ -3,18 +3,7 @@
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form" %>
     
-<spring:url value="/resources/main2.css" var="css" />
-<spring:url value="/resources/jquery-3.2.1.js" var="jscript" />
-<spring:url value="/resources/myscript.js" var="myscript" />
-<spring:url value="/resources/css/dataTable.min.css" var="dtcss" />
-<spring:url value="/resources/css/dataTableSelect.min.css" var="dtselectcss" />
-<spring:url value="/resources/css/dataTables.checkboxes.min.css" var="dtcbcss" />
-<spring:url value="/resources/javascript/dataTable.js" var="dtjs" />
-<spring:url value="/resources/javascript/dataTableSelect.min.js" var="dtselectjs" />
-<spring:url value="/resources/javascript/dataTables.checkboxes.min.js" var="dtcbjs" />
 
-    
-    
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
@@ -22,16 +11,7 @@
 	<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 	<title>MIS Registrar</title>
 	
-	<link href="${dtcss}" rel="stylesheet">
-	<link href="${dtselectcss}" rel="stylesheet">
-	<link href="${dtcbcss}" rel="stylesheet">
-	<link href="${css}" rel="stylesheet">
-	
-	<script type="text/javascript" src="${jscript}" ></script>
-	<script type="text/javascript" src="${myscript}" ></script>
-	<script type="text/javascript" src="${dtjs}" ></script>
-	<script type="text/javascript" src="${dtselectjs}" ></script>
-	<script type="text/javascript" src="${dtcbjs}" ></script>
+	<jsp:include page="includes/includes.jsp" />
 	
 	<script type = "text/javascript">
 		$(document).ready(function(){
@@ -40,7 +20,7 @@
 			departmentSelect($('#deptSelect'), $('#courseSelect'), ctx);
 			courseSelect($('#search'), $('#courseSelect'), $('#studview'), ctx);
 			searchStudents($('#search'), $('#searchBtn'), $('#courseSelect'), $('#studview'), ctx);	
-		
+	
 		
 			$("#profileForm :input").prop("disabled", true);
 			$("#profileForm :input").addClass("disabledInput");

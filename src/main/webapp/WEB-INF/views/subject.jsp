@@ -2,16 +2,6 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form" %>
-
-
-<spring:url value="/resources/main2.css" var="css" />
-<spring:url value="/resources/jquery-3.2.1.js" var="jscript" />
-<spring:url value="/resources/myscript.js" var="myscript" />
-<spring:url value="/resources/css/dataTable.min.css" var="dtcss" />
-<spring:url value="/resources/css/dataTableSelect.min.css" var="dtselectcss" />
-<spring:url value="/resources/javascript/dataTable.js" var="dtjs" />
-<spring:url value="/resources/javascript/dataTableSelect.min.js" var="dtselectjs" />
-    
     
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
@@ -20,15 +10,7 @@
 	<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 	<title>MIS Registrar</title>
 	
-	<link href="${dtcss}" rel="stylesheet">
-	<link href="${dtselectcss}" rel="stylesheet">
-	<link href="${css}" rel="stylesheet">
-	
-	<script type="text/javascript" src="${jscript}" ></script>
-	<script type="text/javascript" src="${myscript}" ></script>
-	<script type="text/javascript" src="${dtjs}" ></script>
-	<script type="text/javascript" src="${dtselectjs}" ></script>
-
+	<jsp:include page="includes/includes.jsp" />
 
 	<script type = "text/javascript">
 		$(document).ready(function(){
@@ -49,8 +31,18 @@
 		        "paging": false,
 		        "select": {
 		        	style : 'single'
-		        }
+		        },"columnDefs": [
+		        	{"targets": 1, "visible" : false }
+				 ]
 		 	} );
+
+			scheds.on( 'dblclick', 'tr', function () {
+				alert("dblclicked");
+				var scheduleID = scheds.row( this ).data()[0];
+				var subjectCode = "${subject.subjectCode}";
+				window.location.href = "${pageContext.request.contextPath}/schedules/clg/"+subjectCode+"/?id=" + scheduleID + "";
+	
+			} );
 			
 			$("#subjectForm :input").prop("disabled", true);
 			$("#subjectForm :input").addClass("disabledInput");
@@ -126,13 +118,14 @@
 				 	<c:choose>
 							<c:when test = "${subjectType == 'clg'}">
 								<thead>
-										<tr><th>Section</th><th>Units</th><th>Time</th><th>Days</th><th>Room</th></tr>
+										<tr><th>ScheduleID</th><th>Section</th><th>Units</th><th>Time</th><th>Days</th><th>Room</th></tr>
 								</thead>
-							
+				
 								<tbody>
 										<c:forEach var="sched" items="${schedules}">   
 											<tr>  
-											   	<td> ${sched.section}</td>  
+											   	<td> ${sched.scheduleID}</td>  
+					   						   	<td> ${sched.section}</td>  
 											   	<td> ${sched.lecUnits}</td>  
 											   	<td> ${sched.lecTimeStart}-${sched.lecTimeEnd}</td>  
 											   	<td> ${sched.lecDays}</td>  
@@ -140,7 +133,8 @@
 										   	</tr>
 											<c:if test="${sched.labDays ne '' }">			   
 											   	<tr>  
-													<td> ${sched.section}-LAB</td>  
+											   		<td> ${sched.scheduleID}</td>  
+					   								<td> ${sched.section}-LAB</td>  
 													<td> ${sched.labUnits}</td>  
 													<td> ${sched.labTimeStart}-${sched.labTimeEnd}</td>  
 													<td> ${sched.labDays}</td>  
